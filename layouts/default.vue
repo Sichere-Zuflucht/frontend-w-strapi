@@ -1,118 +1,364 @@
 <template>
-  <v-app dark>
+  <v-app>
     <v-navigation-drawer
       v-model="drawer"
-      :mini-variant="miniVariant"
-      :clipped="clipped"
-      fixed
       app
+      class="secondary"
+      dark
+      fixed
+      disable-resize-watcher
     >
-      <v-list>
-        <v-list-item
-          v-for="(item, i) in items"
-          :key="i"
-          :to="item.to"
-          router
-          exact
-        >
-          <v-list-item-action>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title v-text="item.title" />
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
+      <client-only>
+        <v-list>
+          <div v-for="(item, i) in noUser" :key="i">
+            <v-list-group
+              v-if="item.subgroup"
+              :value="true"
+              no-action
+              :to="item.to"
+              nuxt
+              exact
+              active-class="white--text"
+            >
+              <template #activator>
+                <v-list-item-icon
+                  ><v-icon>{{ item.icon }}</v-icon></v-list-item-icon
+                >
+                <v-list-item-content>{{ item.title }}</v-list-item-content>
+              </template>
+              <v-list-item
+                v-for="(sub, n) in item.subgroup"
+                :key="n"
+                :to="sub.to"
+                nuxt
+                exact
+                active-class="white--text"
+                @click="drawer = false"
+              >
+                <v-list-item-content>
+                  {{ sub.title }}
+                </v-list-item-content>
+              </v-list-item></v-list-group
+            >
+            <v-list-item v-else :to="item.to" @click="drawer = false">
+              <v-list-item-icon
+                ><v-icon>{{ item.icon }}</v-icon></v-list-item-icon
+              >
+              <v-list-item-content>
+                {{ item.title }}
+              </v-list-item-content>
+            </v-list-item>
+          </div>
+        </v-list>
+        <v-divider />
+        <v-list v-if="user">
+          <div v-if="user.role === 'Woman'">
+            <v-list-group
+              v-for="(item, i) in loggedInWoman"
+              :key="i"
+              :value="true"
+              no-action
+              active-class="white--text"
+            >
+              <template #activator>
+                <v-list-item-icon
+                  ><v-icon>{{ item.icon }}</v-icon></v-list-item-icon
+                >
+                <v-list-item-content>{{ item.title }}</v-list-item-content>
+              </template>
+              <v-list-item
+                v-for="(sub, n) in item.subgroup"
+                :key="n"
+                :to="sub.to"
+                nuxt
+                exact
+                active-class="white--text"
+                @click="drawer = false"
+              >
+                <v-list-item-content>
+                  {{ sub.title }}
+                </v-list-item-content>
+              </v-list-item></v-list-group
+            >
+          </div>
+          <div v-else>
+            <v-list-group
+              v-for="(item, i) in loggedInCoach"
+              :key="i"
+              :value="true"
+              no-action
+              active-class="white--text"
+            >
+              <template #activator>
+                <v-list-item-icon
+                  ><v-icon>{{ item.icon }}</v-icon></v-list-item-icon
+                >
+                <v-list-item-content>{{ item.title }}</v-list-item-content>
+              </template>
+              <v-list-item
+                v-for="(sub, n) in item.subgroup"
+                :key="n"
+                :to="
+                  sub.appendUser
+                    ? sub.to + (user.public ? user.public.uid : '')
+                    : sub.to
+                "
+                nuxt
+                exact
+                active-class="white--text"
+                @click="drawer = false"
+              >
+                <v-list-item-content>
+                  {{ sub.title }}
+                </v-list-item-content>
+              </v-list-item></v-list-group
+            >
+          </div>
+          <v-divider class="my-2" />
+          <v-list-item>
+            <v-btn block to="/" color="accent" @click="logout">Abmelden</v-btn>
+          </v-list-item>
+        </v-list>
+        <v-list v-else>
+          <v-spacer />
+          <v-list-item>
+            <v-btn
+              to="/registration/signup"
+              color="accent"
+              exact
+              nuxt
+              block
+              @click="drawer = false"
+              >Registrieren</v-btn
+            >
+          </v-list-item>
+          <v-list-item>
+            <v-btn
+              to="/registration/signin"
+              exact
+              nuxt
+              block
+              text
+              @click="drawer = false"
+              >Einloggen</v-btn
+            >
+          </v-list-item>
+        </v-list>
+      </client-only>
     </v-navigation-drawer>
-    <v-app-bar
-      :clipped-left="clipped"
-      fixed
-      app
-    >
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <v-btn
-        icon
-        @click.stop="miniVariant = !miniVariant"
-      >
-        <v-icon>mdi-{{ `chevron-${miniVariant ? 'right' : 'left'}` }}</v-icon>
-      </v-btn>
-      <v-btn
-        icon
-        @click.stop="clipped = !clipped"
-      >
-        <v-icon>mdi-application</v-icon>
-      </v-btn>
-      <v-btn
-        icon
-        @click.stop="fixed = !fixed"
-      >
-        <v-icon>mdi-minus</v-icon>
-      </v-btn>
-      <v-toolbar-title v-text="title" />
-      <v-spacer />
-      <v-btn
-        icon
-        @click.stop="rightDrawer = !rightDrawer"
-      >
-        <v-icon>mdi-menu</v-icon>
-      </v-btn>
+    <v-app-bar app>
+      <v-row no-gutters align-content="center">
+        <v-col cols="1" sm="4" align-self="center"
+          ><v-app-bar-nav-icon @click.stop="drawer = !drawer"
+        /></v-col>
+        <v-col cols="10" sm="4" align-self="center"
+          ><v-toolbar-title class="pa-0 d-flex justify-center"
+            ><v-btn to="/" nuxt exact text plain :ripple="false"
+              ><v-img
+                contain
+                width="200"
+                src="Sichere-Zuflucht-Logo.svg" /></v-btn></v-toolbar-title
+        ></v-col>
+        <v-col cols="1" sm="4" align-self="center" class="d-flex justify-end">
+          <div
+            v-if="!user && $vuetify.breakpoint.smAndUp"
+            class="d-flex justify-end"
+            style="max-width: 300px"
+          >
+            <v-btn
+              v-if="$vuetify.breakpoint.mdAndUp"
+              to="/registration/signin"
+              exact
+              nuxt
+              text
+              >Einloggen</v-btn
+            >
+            <v-btn to="/registration/signup" color="accent" exact nuxt
+              >Registrieren</v-btn
+            >
+          </div>
+          <client-only>
+            <v-btn
+              v-if="user && user.confirmed"
+              nuxt
+              exact
+              icon
+              plain
+              :to="user.role === 'Coach' ? '/beratung' : null"
+              @click="user.role === 'Coach' ? null : logout()"
+            >
+              <v-avatar
+                v-if="user.role === 'Coach'"
+                size="38"
+                color="grey lighten-2"
+                ><v-img v-if="user.public.avatar" :src="user.public.avatar" />
+                <v-icon v-else>mdi-account</v-icon>
+                <!-- <SharedCoachIcon
+              v-else
+              color="#b3b3b3"
+              style="border: 1px solid #b3b3b3"
+              class="pa-2"
+            />--> </v-avatar
+              ><v-icon v-else>mdi-logout</v-icon></v-btn
+            >
+          </client-only>
+        </v-col>
+      </v-row>
     </v-app-bar>
-    <v-main>
-      <v-container>
-        <Nuxt />
-      </v-container>
+    <v-card
+      dark
+      color="red"
+      width="70"
+      style="position: fixed; bottom: 50px; right: 0; z-index: 100"
+      href="https://www.brigitte.de/"
+      tile
+    >
+      <v-card-text class="pa-1 d-flex flex-column align-center">
+        <v-icon small>mdi-eye-off</v-icon>
+        <p style="font-size: 10px; line-height: 10px" class="text-center mb-0">
+          Seite verstecken
+        </p>
+      </v-card-text>
+    </v-card>
+    <v-main style="hyphens: auto" class="pb-0">
+      <nuxt />
     </v-main>
-    <v-navigation-drawer
-      v-model="rightDrawer"
-      :right="right"
-      temporary
-      fixed
-    >
-      <v-list>
-        <v-list-item @click.native="right = !right">
-          <v-list-item-action>
-            <v-icon light>
-              mdi-repeat
-            </v-icon>
-          </v-list-item-action>
-          <v-list-item-title>Switch drawer (click me)</v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
-    <v-footer
-      :absolute="!fixed"
-      app
-    >
-      <span>&copy; {{ new Date().getFullYear() }}</span>
-    </v-footer>
+    <!-- <UtilsFooter></UtilsFooter> -->
   </v-app>
 </template>
 
 <script>
 export default {
-  name: 'DefaultLayout',
-  data () {
+  data() {
     return {
-      clipped: false,
       drawer: false,
-      fixed: false,
-      items: [
+      loggedInWoman: [
         {
-          icon: 'mdi-apps',
-          title: 'Welcome',
-          to: '/'
+          icon: 'mdi-view-dashboard',
+          title: 'Mein Bereich',
+          subgroup: [
+            {
+              icon: 'mdi-account-box',
+              title: 'Beratung',
+              to: '/frauen',
+            },
+            {
+              icon: 'mdi-cog',
+              title: 'Konto',
+              to: '/frauen/settings',
+            },
+            /* {
+              icon: 'mdi-shield-home',
+              title: 'Wohnungen',
+              to: '/frauen/wohnungssuche',
+            }, */
+          ],
+        },
+      ],
+      loggedInCoach: [
+        {
+          icon: 'mdi-view-dashboard',
+          title: 'Mein Bereich',
+          subgroup: [
+            {
+              icon: 'mdi-account-box',
+              title: 'Beratung',
+              to: '/beratung',
+            },
+            {
+              icon: 'mdi-account-box',
+              title: 'Mein Profil',
+              to: '/berater/',
+              appendUser: true,
+            },
+            {
+              icon: 'mdi-cog',
+              title: 'Konto',
+              to: '/beratung/settings',
+            },
+            {
+              icon: 'mdi-credit-card',
+              title: 'Bezahlung',
+              to: '/beratung/bezahlung',
+            },
+          ],
+        },
+      ],
+      noUser: [
+        {
+          icon: 'mdi-newspaper-variant',
+          title: 'Magazin',
+          to: '/magazine',
         },
         {
-          icon: 'mdi-chart-bubble',
-          title: 'Inspire',
-          to: '/inspire'
-        }
+          icon: 'mdi-face-woman',
+          title: 'Für Frauen',
+          subgroup: [
+            {
+              icon: 'mdi-information-variant',
+              title: 'Informationen',
+              to: '/info-frauen',
+            },
+            {
+              icon: 'mdi-account-search',
+              title: 'Beratung finden',
+              to: '/berater/suche',
+            },
+          ],
+        },
+        {
+          icon: 'mdi-hand-heart',
+          title: 'Helfen Sie',
+          subgroup: [
+            {
+              icon: 'mdi-hand-heart',
+              title: 'Als Berater*innen',
+              to: '/info-berater',
+            },
+            {
+              icon: 'mdi-hand-heart',
+              title: 'Mit einer Unterkunft',
+              to: '/info-unterkunft',
+            },
+          ],
+        },
+        {
+          icon: 'mdi-gift',
+          title: 'Spenden',
+          to: '/spenden',
+        },
+        {
+          icon: 'mdi-account-group',
+          title: 'Über uns',
+          to: '/ueber-uns',
+        },
       ],
-      miniVariant: false,
-      right: true,
-      rightDrawer: false,
-      title: 'Vuetify.js'
+      nuid: '',
     }
-  }
+  },
+  computed: {
+    /* loginText() {
+      return !this.loggedIn ? 'Login' : 'Logout'
+    },
+    loggedIn() {
+      return this.$store.getters['modules/user/isAuthenticated']
+    },*/
+    user() {
+      console.log('user?',this.$store.getters['getUser'])
+      return this.$store.getters['getUser']
+    },
+    /* membership() {
+      return this.$store.getters['modules/user/membership']
+    },*/
+  },
+  methods: {
+    login() {
+      this.$router.push('/registration/signup')
+    },
+    logout() {
+      this.$fire.auth.signOut()
+      this.$router.push('/')
+    },
+  },
 }
 </script>

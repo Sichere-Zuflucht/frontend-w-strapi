@@ -47,23 +47,31 @@ export default {
     '@nuxtjs/axios'
   ],
 
-  axios: {
+/*  axios: {
     baseURL: process.env.STRAPI_URL || 'http://localhost:1337/api', // Used as fallback if no runtime config is provided
   },
 
   publicRuntimeConfig: {
     axios: {
-      browserBaseURL: process.env.STRAPI_URL + '/api'
+      browserBaseURL: process.env.STRAPI_URL + '/api' || 'http://localhost:1337/api',
+    }
+  }, */
+
+  axios: {
+    baseURL: 'http://localhost:1337/api', // Used as fallback if no runtime config is provided
+  },
+
+  publicRuntimeConfig: {
+    axios: {
+      browserBaseURL: process.env.BROWSER_STRAPI_URL
     }
   },
 
-  /*axios: {
-    proxy: true // Can be also an object with default options
+  privateRuntimeConfig: {
+    axios: {
+      baseURL: process.env.STRAPI_URL
+    }
   },
-
-  proxy: {
-    '/api/': process.env.STRAPI_URL,
-  },*/
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {

@@ -54,17 +54,36 @@ Your account is now linked with: ${email}.`,
   },
   methods: {
     async login(){
+      /*this.$store.dispatch('login', {
+        email: 'random@random.com',
+        password: 'password!',
+      })*/
       await this.$axios.$post('/auth/local', {
         identifier: 'random@random.com',
         password: 'password!',
       }).then((response)=>{
-        this.$store.commit('changeUser', response.user)
-        this.$store.commit('changeJWT', response.jwt)
+        this.$store.commit('setUserData', response.user)
+        this.$store.commit('setJWT', response.jwt)
         console.log('logged in as: ', response.user)
         this.user = response.user
         this.jwt = response.jwt
-      }).catch((e)=> {
-        console.log('e', e)
+      }).catch(function (error) {
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        } else if (error.request) {
+          // The request was made but no response was received
+          // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+          // http.ClientRequest in node.js
+          console.log(error.request);
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          console.log('Error', error.message);
+        }
+        console.log(error.config);
       })
     },
     load(){
