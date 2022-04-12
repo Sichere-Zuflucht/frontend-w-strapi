@@ -50,7 +50,7 @@ Your account is now linked with: ${email}.`,
     }
   },
   async fetch() {
-    this.userList = await this.$axios.$get('users')
+    this.userList = await this.$strapi.$users.find() //this.$axios.$get('users')
   },
   methods: {
     async login(){
@@ -58,10 +58,8 @@ Your account is now linked with: ${email}.`,
         email: 'random@random.com',
         password: 'password!',
       })*/
-      await this.$axios.$post('/auth/local', {
-        identifier: 'random@random.com',
-        password: 'password!',
-      }).then((response)=>{
+      await this.$strapi.login({ identifier: 'random@random.com', password: 'password!' })
+      .then(async(response)=>{
         this.$store.commit('setUserData', response.user)
         this.$store.commit('setJWT', response.jwt)
         console.log('logged in as: ', response.user)
@@ -87,11 +85,12 @@ Your account is now linked with: ${email}.`,
       })
     },
     load(){
-      this.$axios.$get('meetings',{
+      this.$strapi.$meetings.find()
+      /*this.$axios.$get('meetings',{
         headers: {
           Authorization: `Bearer ${this.$store.state.jwt}`
         },
-      })
+      })*/
       .then((response)=>{
         console.log('meetings: ',response.data)
         this.meetings = response.data

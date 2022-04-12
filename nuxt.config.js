@@ -44,7 +44,8 @@ export default {
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
-    '@nuxtjs/axios'
+    '@nuxtjs/axios',
+    '@nuxtjs/strapi',
   ],
 
 /*  axios: {
@@ -57,20 +58,9 @@ export default {
     }
   }, */
 
-  axios: {
-    baseURL: process.env.STRAPI_URL, // Used as fallback if no runtime config is provided
-  },
-
-  publicRuntimeConfig: {
-    axios: {
-      browserBaseURL: process.env.BROWSER_STRAPI_URL
-    }
-  },
-
-  privateRuntimeConfig: {
-    axios: {
-      baseURL: process.env.STRAPI_URL
-    }
+  strapi: {
+    url: process.env.STRAPI_URL + '/api' || 'http://localhost:1337/api',
+    entities: ['meetings', 'users'],
   },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify

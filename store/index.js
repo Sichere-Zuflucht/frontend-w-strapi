@@ -21,10 +21,7 @@ export const getters = {
 
 export const actions = {
   async login({commit}, form) {
-    const data = await this.$axios.$post('/auth/local', {
-      identifier: form.email, //'random@random.com',
-      password: form.password //'password!',
-    })
+    this.$strapi.login({ identifier: form.email, password: form.password })
     console.log(data)
     commit('setUserData', data.user)
     commit('setJWT', data.jwt)
