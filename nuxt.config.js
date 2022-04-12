@@ -58,7 +58,7 @@ export default {
   }, */
 
   axios: {
-    baseURL: 'http://localhost:1337/api', // Used as fallback if no runtime config is provided
+    baseURL: process.env.STRAPI_URL, // Used as fallback if no runtime config is provided
   },
 
   publicRuntimeConfig: {
@@ -76,19 +76,32 @@ export default {
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
+    treeShake: true,
+    options: {
+      customProperties: true,
+    },
     theme: {
-      dark: true,
+      dark: false,
       themes: {
+        light: {
+          primary: colors.pink.lighten3, // purple.lighten3,
+          accent: colors.pink.darken4, // grey.darken3,
+          secondary: colors.yellow.darken3, // amber.darken3,
+          info: colors.teal.lighten1,
+          warning: colors.amber.base,
+          error: colors.deepOrange.accent4,
+          success: colors.teal.darken1,
+        },
         dark: {
-          primary: colors.blue.darken2,
+          primary: colors.purple.lighten4,
           accent: colors.grey.darken3,
           secondary: colors.amber.darken3,
           info: colors.teal.lighten1,
           warning: colors.amber.base,
           error: colors.deepOrange.accent4,
-          success: colors.green.accent3
-        }
-      }
+          success: colors.teal.darken1,
+        },
+      },
     }
   },
 
