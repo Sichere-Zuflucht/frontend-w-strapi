@@ -1,23 +1,23 @@
 <template>
   <v-row v-if="meetings">
     <v-col  v-for="(meeting, n) in meetings" :key="n" class="text-center">
-      {{meeting.message}}
+      {{meeting.attributes.message}}
     </v-col>
   </v-row>
 </template>
 
 <script>
 export default {
-  name: 'InspirePage',
+  middleware: 'auth',
   data(){
     return {
       meetings: null
     }
   },
   async mounted() {
-    const m = await this.$axios.$get('meetings').data
-    this.meetings = m
-    console.log(m)
+    const {data} = await this.$strapi.$meetings.find()
+    this.meetings = data
+    console.log(data)
   },
 }
 </script>

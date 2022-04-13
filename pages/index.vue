@@ -15,9 +15,11 @@
         <p v-if="meetings">{{meetings}}</p>
         <v-card-actions>
           <v-btn @click="login">login</v-btn>
+          <v-btn @click="logout">logout</v-btn>
+          
           <v-spacer />
           <v-btn :disabled="user ? false : true" @click="load">load</v-btn>
-          <v-btn :disabled="user ? false : true" @click="create">create</v-btn>
+          <v-btn :disabled="user ? false : false" @click="create">create</v-btn>
           <SendEmailBtn to="bene-groovy@web.de" :template="mailTemplate(user.email)" />
         </v-card-actions>
         
@@ -59,13 +61,7 @@ Your account is now linked with: ${email}.`,
         password: 'password!',
       })*/
       await this.$strapi.login({ identifier: 'random@random.com', password: 'password!' })
-      .then(async(response)=>{
-        this.$store.commit('setUserData', response.user)
-        this.$store.commit('setJWT', response.jwt)
-        console.log('logged in as: ', response.user)
-        this.user = response.user
-        this.jwt = response.jwt
-      }).catch(function (error) {
+      .catch(function (error) {
         if (error.response) {
           // The request was made and the server responded with a status code
           // that falls out of the range of 2xx
@@ -86,13 +82,7 @@ Your account is now linked with: ${email}.`,
     },
     load(){
       this.$strapi.$meetings.find()
-      /*this.$axios.$get('meetings',{
-        headers: {
-          Authorization: `Bearer ${this.$store.state.jwt}`
-        },
-      })*/
       .then((response)=>{
-        console.log('meetings: ',response.data)
         this.meetings = response.data
       })
       .catch(function (error) {
@@ -114,18 +104,14 @@ Your account is now linked with: ${email}.`,
         console.log(error.config);
       })
     },
+    logout(){
+      this.$strapi.logout()
+    },
     create(){
       const data = {
         message: "Test API",
       }
-      this.$axios.$post('/meetings', {data}, {
-        headers: {
-          Authorization: `Bearer ${this.$store.state.jwt}`
-        },
-      })
-      .then(async()=>{
-        this.load()
-      })
+      this.$strapi.$meetings.create({data})
       .catch(function (error) {
         if (error.response) {
           // The request was made and the server responded with a status code
