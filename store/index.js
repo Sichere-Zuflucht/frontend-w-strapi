@@ -21,10 +21,19 @@ export const getters = {
 
 export const actions = {
   async login({commit}, form) {
-    this.$strapi.login({ identifier: form.email, password: form.password })
+    const data = await this.$strapi.login({ identifier: form.email, password: form.password })
     console.log(data)
+    if(this.$strapi.user) {
+      this.$auth.$storage.setCookie("authenticated", true)
+    }
     commit('setUserData', data.user)
     commit('setJWT', data.jwt)
+  },
+  logout({commit}, form) {
+    this.$strapi.logout()
+    this.$auth.$storage.setCookie("authenticated", false)
+    commit('setUserData', null)
+    commit('setJWT', null)
   },
 }
 

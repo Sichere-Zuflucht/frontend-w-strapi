@@ -46,6 +46,7 @@ export default {
   modules: [
     '@nuxtjs/axios',
     '@nuxtjs/strapi',
+    '@nuxtjs/auth-next',
   ],
 
 /*  axios: {
@@ -61,6 +62,10 @@ export default {
   strapi: {
     url: process.env.STRAPI_URL + '/api' || 'http://localhost:1337/api',
     entities: ['meetings', 'users'],
+    expires: '30d',
+    cookie: {
+      path: '/'
+    }
   },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify

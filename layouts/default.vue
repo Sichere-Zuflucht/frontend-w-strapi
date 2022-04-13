@@ -352,11 +352,8 @@ export default {
     },*/
   },
   methods: {
-    login() {
-      this.$router.push('/registration/signup')
-    },
     logout() {
-      this.$fire.auth.signOut()
+      this.$store.dispatch('logout')
       this.$router.push('/')
     },
   },

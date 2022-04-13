@@ -4,7 +4,9 @@
       <v-card>
         <v-card-title class="headline">
           Testing
+          <v-btn to="meetings">meetings</v-btn>
         </v-card-title>
+        {{this.$strapi.user}}
         <v-card-text>
           <v-row>
             <v-col  v-for="(u, n) in userList" :key="n" class="text-center">
@@ -18,7 +20,7 @@
           <v-btn @click="logout">logout</v-btn>
           
           <v-spacer />
-          <v-btn :disabled="user ? false : true" @click="load">load</v-btn>
+          <v-btn :disabled="user ? false : false" @click="load">load</v-btn>
           <v-btn :disabled="user ? false : false" @click="create">create</v-btn>
           <SendEmailBtn to="bene-groovy@web.de" :template="mailTemplate(user.email)" />
         </v-card-actions>
@@ -56,56 +58,26 @@ Your account is now linked with: ${email}.`,
   },
   methods: {
     async login(){
-      /*this.$store.dispatch('login', {
+      this.$store.dispatch('login', {
         email: 'random@random.com',
         password: 'password!',
-      })*/
-      await this.$strapi.login({ identifier: 'random@random.com', password: 'password!' })
+      })
       .catch(function (error) {
-        if (error.response) {
-          // The request was made and the server responded with a status code
-          // that falls out of the range of 2xx
-          console.log(error.response.data);
-          console.log(error.response.status);
-          console.log(error.response.headers);
-        } else if (error.request) {
-          // The request was made but no response was received
-          // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-          // http.ClientRequest in node.js
-          console.log(error.request);
-        } else {
-          // Something happened in setting up the request that triggered an Error
-          console.log('Error', error.message);
-        }
-        console.log(error.config);
+        errorhandling(error)
       })
     },
     load(){
-      this.$strapi.$meetings.find()
+      this.meetings = this.$strapi.user
+      /*this.$strapi.$meetings.find()
       .then((response)=>{
         this.meetings = response.data
       })
       .catch(function (error) {
-        if (error.response) {
-          // The request was made and the server responded with a status code
-          // that falls out of the range of 2xx
-          console.log(error.response.data);
-          console.log(error.response.status);
-          console.log(error.response.headers);
-        } else if (error.request) {
-          // The request was made but no response was received
-          // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-          // http.ClientRequest in node.js
-          console.log(error.request);
-        } else {
-          // Something happened in setting up the request that triggered an Error
-          console.log('Error', error.message);
-        }
-        console.log(error.config);
-      })
+        errorhandling(error)
+      })*/
     },
     logout(){
-      this.$strapi.logout()
+      this.$store.dispatch('logout')
     },
     create(){
       const data = {
@@ -113,7 +85,11 @@ Your account is now linked with: ${email}.`,
       }
       this.$strapi.$meetings.create({data})
       .catch(function (error) {
-        if (error.response) {
+        errorhandling(error)
+      })
+    },
+    errorhandling(error){
+      if (error.response) {
           // The request was made and the server responded with a status code
           // that falls out of the range of 2xx
           console.log(error.response.data);
@@ -129,9 +105,7 @@ Your account is now linked with: ${email}.`,
           console.log('Error', error.message);
         }
         console.log(error.config);
-      })
-    },
-    
+    }
   }
 }
 
