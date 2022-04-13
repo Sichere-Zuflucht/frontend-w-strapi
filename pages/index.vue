@@ -1,12 +1,22 @@
 <template>
   <v-row justify="center" align="center">
     <v-col cols="12" sm="8" md="6">
+      <v-row>
+      <v-col v-for="(t,i) in test" :key="i" cols="4">
+        <v-card v-if="t.attributes.users_permissions_users.data.length != 0">
+          <v-card-text>
+            <v-chip v-for="(c,j) in t.attributes.users_permissions_users.data" :key="j">
+              {{c.attributes.username}}
+            </v-chip>
+          </v-card-text>
+        </v-card>
+      </v-col>
+      </v-row>
       <v-card>
         <v-card-title class="headline">
           Testing
           <v-btn to="meetings">meetings</v-btn>
         </v-card-title>
-        {{this.$strapi.user}}
         <v-card-text>
           <v-row>
             <v-col  v-for="(u, n) in userList" :key="n" class="text-center">
@@ -32,10 +42,19 @@
 
 <script>
 // https://www.youtube.com/watch?v=vcopLqUq594
+// (await this.$strapi.$meetings.find({'populate': '*'})).data
+
+const qs = require('qs');
+const query = qs.stringify({
+  populate: '*', 
+}, {
+  encodeValuesOnly: true,
+});
+
 export default {
-  name: 'IndexPage',
   data(){
     return{
+      test: '',
       meetings: '',
       user: '',
       userList:'',
@@ -55,6 +74,15 @@ Your account is now linked with: ${email}.`,
   },
   async fetch() {
     this.userList = await this.$strapi.$users.find() //this.$axios.$get('users')
+    
+    //await request(`${this.$strapi.options.url}/users?${query}`);//await this.$strapi.$users.find({'role': 'Coach'})
+  },
+  computed: {
+    async test2(){
+      const u = await this.$strapi.$users.find({'role': 'Coach'})
+      
+      return u
+    }
   },
   methods: {
     async login(){
@@ -62,12 +90,17 @@ Your account is now linked with: ${email}.`,
         email: 'random@random.com',
         password: 'password!',
       })
-      .catch(function (error) {
-        errorhandling(error)
+      .catch((error)=>{
+        this.$store.dispatch('errorhandling',error)
       })
     },
-    load(){
-      this.meetings = this.$strapi.user
+    async load(){
+      const t = (await this.$strapi.$meetings.find({'populate': 'users_permissions_users'})).data// (await this.$strapi.find('meetings?populate=*')).data
+      this.test = t
+      //this.test = (await this.$axios.$get('meetings?populate=users_permissions_users')).data
+      //this.test2 = (await this.$axios.$get('users/me')).data
+      console.log('t',t)
+      //this.meetings = this.$strapi.user
       /*this.$strapi.$meetings.find()
       .then((response)=>{
         this.meetings = response.data
@@ -84,28 +117,10 @@ Your account is now linked with: ${email}.`,
         message: "Test API",
       }
       this.$strapi.$meetings.create({data})
-      .catch(function (error) {
-        errorhandling(error)
+      .catch((error)=>{
+        this.$store.dispatch('errorhandling',error) //errorhandling(error)
       })
     },
-    errorhandling(error){
-      if (error.response) {
-          // The request was made and the server responded with a status code
-          // that falls out of the range of 2xx
-          console.log(error.response.data);
-          console.log(error.response.status);
-          console.log(error.response.headers);
-        } else if (error.request) {
-          // The request was made but no response was received
-          // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-          // http.ClientRequest in node.js
-          console.log(error.request);
-        } else {
-          // Something happened in setting up the request that triggered an Error
-          console.log('Error', error.message);
-        }
-        console.log(error.config);
-    }
   }
 }
 

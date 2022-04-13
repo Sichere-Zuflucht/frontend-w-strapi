@@ -336,20 +336,13 @@ export default {
       nuid: '',
     }
   },
+  async fetch() {
+    this.$store.dispatch('checkAuth')
+  },
   computed: {
-    /* loginText() {
-      return !this.loggedIn ? 'Login' : 'Logout'
-    },
-    loggedIn() {
-      return this.$store.getters['modules/user/isAuthenticated']
-    },*/
     user() {
-      console.log('user?',this.$store.getters['getUser'])
-      return this.$store.getters['getUser']
+      return this.$store.getters['getActiveUser']
     },
-    /* membership() {
-      return this.$store.getters['modules/user/membership']
-    },*/
   },
   methods: {
     logout() {

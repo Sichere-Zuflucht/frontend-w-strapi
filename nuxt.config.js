@@ -46,10 +46,9 @@ export default {
   modules: [
     '@nuxtjs/axios',
     '@nuxtjs/strapi',
-    '@nuxtjs/auth-next',
   ],
 
-/*  axios: {
+  axios: {
     baseURL: process.env.STRAPI_URL || 'http://localhost:1337/api', // Used as fallback if no runtime config is provided
   },
 
@@ -57,7 +56,7 @@ export default {
     axios: {
       browserBaseURL: process.env.STRAPI_URL + '/api' || 'http://localhost:1337/api',
     }
-  }, */
+  },
 
   strapi: {
     url: process.env.STRAPI_URL + '/api' || 'http://localhost:1337/api',

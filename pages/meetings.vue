@@ -8,11 +8,7 @@
 
 <script>
 export default {
-  middleware({$strapi, redirect}){
-    if (!$strapi.user) {
-      redirect('/')
-    }
-  },
+  middleware: 'authCoach',
   data(){
     return {
       meetings: null
