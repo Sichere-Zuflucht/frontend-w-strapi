@@ -223,7 +223,7 @@
     <v-main style="hyphens: auto" class="pb-0">
       <nuxt />
     </v-main>
-    <!-- <UtilsFooter></UtilsFooter> -->
+    <UtilsFooter></UtilsFooter>
   </v-app>
 </template>
 
