@@ -357,7 +357,13 @@ export default {
       this.$router.push('/')
     },
     testlogin(){
-      this.$store.dispatch('login')
+      this.$store.dispatch('login', {
+        email: 'random@random.com',
+        password: 'password!',
+      })
+      .catch((error)=>{
+        this.$store.dispatch('errorhandling',error)
+      })
     }
   },
 }
