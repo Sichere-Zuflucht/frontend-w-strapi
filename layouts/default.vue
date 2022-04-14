@@ -165,12 +165,19 @@
             class="d-flex justify-end"
             style="max-width: 300px"
           >
-            <v-btn
+            <!--<v-btn
               v-if="$vuetify.breakpoint.mdAndUp"
               to="/registration/signin"
               exact
               nuxt
               text
+              >Einloggen</v-btn
+            >-->
+            <v-btn
+              exact
+              nuxt
+              text
+              @click="testlogin"
               >Einloggen</v-btn
             >
             <v-btn to="/registration/signup" color="accent" exact nuxt
@@ -349,6 +356,9 @@ export default {
       this.$store.dispatch('logout')
       this.$router.push('/')
     },
+    testlogin(){
+      this.$store.dispatch('login')
+    }
   },
 }
 </script>
