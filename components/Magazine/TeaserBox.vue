@@ -6,8 +6,9 @@
     class="d-flex flex-column"
   >
     <v-img
+      v-if="this.magazineData.attributes.cover.data"
       height="200"
-      :src="'http://localhost:1337'+magazineData.attributes.cover.data.attributes.url"
+      :src="(this.magazineData.attributes.cover.data.attributes.url.includes('http') ? '' : 'http://localhost:1337') + this.magazineData.attributes.cover.data.attributes.url"
       class="flex-grow-0 flex-shrink-1"
     />
     <v-card-actions>
@@ -52,5 +53,11 @@ export default {
       default: false,
     },
   },
+  computed:{
+    imgUrl(){ 
+      (this.magazineData.attributes.cover.data.attributes.url.includes("http") ? '' : 'http://localhost:1337') 
+      + this.magazineData.attributes.cover.data.attributes.url
+    }
+  }
 }
 </script>
