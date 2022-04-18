@@ -1,19 +1,18 @@
 <template>
   <div>
     <UtilsBanner icon="mdi-account-cog-outline" />
-    <v-container v-if="pubData && privData">
+    <v-container>
       <h1 class="text-h1 primary--text mb-4">Einstellungen<br />einsehen</h1>
       <small>Name:</small>
       <p>
-        {{ pubData.firstName || privData.firstName }}
-        {{ pubData.lastName || privData.lastName }}
+        {{ pubData.username }}
       </p>
       <small>NutzerID:</small>
-      <p>{{ pubData.uid }}</p>
+      <p>{{ pubData.id }}</p>
       <small>E-Mail:</small>
-      <p>{{ privData.email }}</p>
+      <p>{{ pubData.email }}</p>
       <small>Mitglied als:</small>
-      <p v-if="pubData.membership">{{ pubData.membership.name }}</p>
+      <p v-if="pubData.roleName">{{ pubData.roleName == 'Woman' ? 'gewaltbetroffene Frau' : 'Berater:in' }}</p>
 
       <v-btn
         :disabled="btn.disabled"
@@ -22,10 +21,12 @@
         @click="resetPassword"
         >Passwort ändern</v-btn
       >
-      <v-alert v-if="btn.success" type="success" color="success"
-        >Es wurde eine E-Mail an {{ privData.email }} geschickt. Bitte folgen
-        Sie den dort beschriebenen Anweisungen.</v-alert
-      >
+      <div v-if="btn.success">
+        <v-alert type="success" color="success"
+          >Es wurde eine E-Mail an {{ pubData.email }} geschickt. Bitte folgen
+          Sie den dort beschriebenen Anweisungen.</v-alert
+        >
+      </div>
       <v-dialog v-model="overlay" width="300">
         <template #activator="{ on }">
           <v-btn color="error" text v-on="on">Account löschen</v-btn>
@@ -41,7 +42,7 @@
               werden unwiederuflich von unserer Datenbank gelöscht.
             </p>
             <p>
-              Bitte fügen dein Passwort ein, wenn du dein Profil wirklich
+              Bitte fügen "Löschen" ein, wenn du dein Profil wirklich
               löschen möchtest.
             </p>
           </v-card-text>
@@ -52,13 +53,13 @@
               @submit.prevent="deleteUser"
             >
               <v-text-field
-                v-model="userProvidedPassword"
+                v-model="userProvidedErase"
                 outlined
-                label="Passwort einfügen"
-                type="password"
+                label="Löschen einfügen"
                 :rules="rules.delete"
-                color="error"
+                color="grey"
                 required
+                placeholder="Löschen"
               ></v-text-field>
               <v-btn
                 color="error"
@@ -111,27 +112,28 @@ export default {
         msg: '',
       },
       overlay: false,
-      userProvidedPassword: null,
+      userProvidedErase: null,
       deleteVal: false,
       deleteLoading: false,
       rules: {
-        delete: [(v) => !!v || 'Passwort einfügen.'],
+        delete: [
+          (v) => !!v || 'Passwort einfügen.',
+          (v) => v == 'Löschen' || 'Löschen schreiben',
+        ],
       },
     }
   },
   computed: {
     pubData() {
-      return this.$store.getters['modules/user/public']
-    },
-    privData() {
-      return this.$store.getters['modules/user/private']
+      return this.$store.getters['getActiveUser']
     },
   },
   methods: {
     resetPassword() {
       this.btn.loading = true
-      this.$fire.auth
-        .sendPasswordResetEmail(this.privData.email)
+      this.$strapi.forgotPassword({ email: this.$strapi.user.email })
+     //this.$fire.auth
+       // .sendPasswordResetEmail(this.privData.email)
         .then(() => {
           this.btn.loading = false
           this.btn.disabled = true
@@ -145,24 +147,17 @@ export default {
     },
     async deleteUser() {
       this.deleteLoading = true
-      await this.$fire.auth
-        .signInWithEmailAndPassword(
-          this.privData.email,
-          this.userProvidedPassword
-        )
-        .then(async () => {
-          await this.$fire.functions.httpsCallable('user-delete')(
-            this.pubData.uid,
-            this.privData.email // email stimmt
-          )
-          this.$router.go('/')
-        })
-        .catch(() => {
-          this.err.status = true
-          this.err.msg = 'Falsches Passwort eingegeben.'
-          this.overlay = false
-        })
-      this.deleteLoading = false
+      this.$strapi.$users.delete(this.$strapi.user.id)
+      .then((e)=>{
+        this.$router.push('/')
+        this.deleteLoading = false
+      })
+      .catch((err) => {
+        this.deleteLoading = false
+        this.err.status = true
+        this.err.msg = 'Falsches Passwort eingegeben.'
+        this.overlay = false
+      })
     },
   },
 }

@@ -17,12 +17,12 @@
                 ><v-img
                   contain
                   max-width="100"
-                  src="partner/project-together-logo.png" /></v-col
+                  src="/partner/project-together-logo.png" /></v-col
               ><v-col class="d-flex flex-column align-center"
                 ><v-img
                   contain
                   max-width="100"
-                  src="partner/solution-enabler.png" /></v-col></v-row></v-card-text></v-card
+                  src="/partner/solution-enabler.png" /></v-col></v-row></v-card-text></v-card
       ></v-col>
       <v-col class="mt-6" cols="12" md="4">
         <v-card
@@ -36,18 +36,18 @@
                   class="mb-2"
                   width="30"
                   contain
-                  src="ssl-zertifiziert.svg"
+                  src="/ssl-zertifiziert.svg"
                 /><b style="line-height: 1em">SSL</b>zertifiziert</v-col
               ><v-col cols="4" class="d-flex flex-column align-center"
                 ><v-img
                   class="mb-2"
                   width="30"
                   contain
-                  src="serverstandort-deutschland.svg"
+                  src="/serverstandort-deutschland.svg"
                 /><b style="line-height: 1em">Serverstandort</b
                 >Deutschland</v-col
               ><v-col cols="4" class="d-flex flex-column align-center"
-                ><v-img class="mb-2" width="50" contain src="dsgvo.svg" />
+                ><v-img class="mb-2" width="50" contain src="/dsgvo.svg" />
                 <b style="line-height: 1em">DSGVO</b>konform</v-col
               ></v-row
             ></v-card-text
@@ -62,7 +62,7 @@
             <v-img
               contain
               max-width="100"
-              src="partner/stripe.png"
+              src="/partner/stripe.png"
               class="mx-auto" /></v-card-text></v-card
       ></v-col>
     </v-row>
@@ -72,7 +72,7 @@
       <v-img
         contain
         max-width="60"
-        src="android-chrome-512x512.png"
+        src="/android-chrome-512x512.png"
         class="mt-4 mb-8"
       />
     </v-row>

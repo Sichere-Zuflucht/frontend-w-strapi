@@ -138,7 +138,19 @@
                 </div>
               </v-stepper-content>
               <v-stepper-content step="3" class="pa-0">
-                <h2 class="text-h1 primary--text mb-4">
+                <h3 class="text-h2 secondary--text mb-8">
+                  Danke, dass du dich bei Sichere Zuflucht registrieren möchtest!
+                </h3>
+                <p class="caption">
+                  Bitte folge dem Prozess und erstelle ein Profil
+                </p>
+                <v-btn
+                  color="primary"
+                  class="mb-4"
+                  to="membership-selection"
+                  >Profil erstellen</v-btn
+                >
+                <!--<h2 class="text-h1 primary--text mb-4">
                   Danke für deine Anmeldung!
                 </h2>
                 <h3 class="text-h2 secondary--text mb-8">
@@ -161,7 +173,7 @@
                   class="mb-4"
                   @click="register"
                   >Erneut senden</v-btn
-                >
+                >-->
               </v-stepper-content>
             </v-stepper-items>
           </v-stepper>
@@ -219,21 +231,37 @@ export default {
     next() {
       if (!this.$refs.form.validate()) return
       this.showConfirmation = false
-      this.$nuxt.$fire.auth
-        .fetchSignInMethodsForEmail(this.email)
-        .then((loginMethods) => {
-          if (loginMethods.length > 1) {
+      this.$strapi.count('users', {
+        email: this.email
+      })
+      .then((loginMethods) => {
+        if (loginMethods > 0) {
             this.requestPassword = true
           } else {
             this.requestPassword = false
           }
           this.step = 2
-        })
+      })
     },
     login() {
       this.loading = true
       if (process.client) {
-        this.$store
+        this.$store.dispatch('login', {
+          email: this.email,
+          password: this.password,
+        })
+        .then((e) => {
+            this.loading = false
+            this.$router.push('/frauen')
+          })
+        .catch((err)=>{
+          this.loading = false
+          this.error.status = true
+          this.error.message = err.message
+          this.$store.dispatch('errorhandling',err)
+          
+        })
+        /*this.$store
           .dispatch('modules/user/login', {
             email: this.email,
             password: this.password,
@@ -245,15 +273,38 @@ export default {
             this.loading = false
             this.error.status = true
             this.error.message = err.message
-          })
+          })*/
       }
     },
     register() {
       // if (!this.$refs.form.validate()) return
       this.step = 3
-      this.loading = true
+      //this.loading = true
 
-      this.$fire.auth
+      window.localStorage.setItem('emailForSignIn', this.email)
+
+      /* await this.$axios.$post('auth/local/register', {
+        username: this.email,
+        email: this.email,
+        password: '12345678', //this.password,
+      }) */
+      /*this.$axios.$post('auth/send-email-confirmation', {
+        email: 'ulrichbenedikt+random@gmail.com',
+      })*/
+      /*
+      this.$strapi.sendEmailConfirmation({ email: this.email })*/
+      /*.then((s) => {
+        this.buttonText = 'Gesendet'
+        this.valid = false
+        this.loading = false
+        this.showConfirmation = true
+        console.log('email sended:', s)
+        // window.localStorage.setItem('emailForSignIn', this.email)
+      })
+      .catch((e)=>{
+        console.log('error:', e)
+      })*/
+      /*this.$fire.auth
         .sendSignInLinkToEmail(this.email, {
           url: this.$config.baseUrl + '/registration/confirm-register-link',
           handleCodeInApp: true,
@@ -264,7 +315,7 @@ export default {
           this.loading = false
           this.showConfirmation = true
           window.localStorage.setItem('emailForSignIn', this.email)
-        })
+        })*/
     },
   },
 }

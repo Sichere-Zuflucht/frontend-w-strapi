@@ -51,14 +51,14 @@ export default {
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
-    //'@nuxtjs/axios',
+    '@nuxtjs/axios',
     '@nuxtjs/strapi',
   ],
-/*
+
   axios: {
     baseURL: process.env.STRAPI_URL || 'http://localhost:1337/api', // Used as fallback if no runtime config is provided
   },
-
+/*
   publicRuntimeConfig: {
     axios: {
       browserBaseURL: process.env.STRAPI_URL + '/api' || 'http://localhost:1337/api',

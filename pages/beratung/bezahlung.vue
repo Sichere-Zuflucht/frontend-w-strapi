@@ -113,6 +113,7 @@
 
 <script>
 export default {
+  middleware: 'authCoach',
   data() {
     return {
       stripeRegisterURL: null,

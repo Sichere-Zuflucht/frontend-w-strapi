@@ -8,6 +8,7 @@
     <v-img
       v-if="this.magazineData.attributes.cover.data"
       height="200"
+      :lazy-src="(this.magazineData.attributes.cover.data.attributes.url.includes('http') ? '' : 'http://localhost:1337') + this.magazineData.attributes.cover.data.attributes.formats.thumbnail.url"
       :src="(this.magazineData.attributes.cover.data.attributes.url.includes('http') ? '' : 'http://localhost:1337') + this.magazineData.attributes.cover.data.attributes.url"
       class="flex-grow-0 flex-shrink-1"
     />

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <UtilsBanner url="le-buzz-tVnm9I9jb8I-unsplash.jpg" pos="center 23%" />
+    <UtilsBanner url="/le-buzz-tVnm9I9jb8I-unsplash.jpg" pos="center 23%" />
     <v-container>
       <h1 class="text-h1 primary--text">Beratung und Hilfe</h1>
       <p class="mb-6">

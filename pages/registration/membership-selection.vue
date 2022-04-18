@@ -9,6 +9,7 @@
           <h1 class="text-h2 white--text text-uppercase pb-8">
             SCHÖN, DASS DU DA BIST! <br />DU KANNST DIREKT LOSLEGEN.
           </h1>
+          <p>{{email}}</p>
           <p>Bitte schließe als erstes deine Registrierung ab.</p>
           <v-icon large>mdi-arrow-right-thin</v-icon></v-container
         ></v-sheet
@@ -117,13 +118,18 @@
                   :rules="rules.passwordRules"
                   :type="hidePassword ? 'password' : 'text'"
                   :append-icon="hidePassword ? 'mdi-eye' : 'mdi-eye-off'"
+                  hint="Bitte beachten Sie folgende Passwortvorgaben"
                   persistent-hint
-                  hint="Nutzen Sie ein sicheres Passwort. Mindestens 8 Zeichen, eine Zahl, ein Sonderzeichen (#?!@$ %^&*-), einmal Groß- und Kleinschreibung."
                   @click:append="() => (hidePassword = !hidePassword)"
                 ></v-text-field>
+                <v-chip :color="/^(?=.*?[A-Z]).{1,}$/.test(password) ? 'green' : 'grey'" dark class="mt-2">Großbuchstaben</v-chip>
+                <v-chip :color="/^(?=.*?[a-z]).{1,}$/.test(password) ? 'green' : 'grey'" dark class="mt-2">Kleinbuchstaben</v-chip>
+                <v-chip :color="/^(?=.*?[0-9]).{1,}$/.test(password) ? 'green' : 'grey'" dark class="mt-2">Zahlen</v-chip>
+                <v-chip :color="/^(?=.*?[#?!@$ %^&*-]).{1,}$/.test(password) ? 'green' : 'grey'" dark class="mt-2">Sonderzeichen (#?!@$ %^&*-)</v-chip>
+                <v-chip :color="/^.{8,}$/.test(password) ? 'green' : 'grey'" dark class="mt-2">mind. 8 Zeichen</v-chip>
                 <v-text-field
                   v-model="password2"
-                  class="secondary--text font-weight-bold"
+                  class="secondary--text font-weight-bold mt-4"
                   :rules="rules.passwordRules2"
                   label="Passwort wiederholen"
                   type="password"
@@ -133,6 +139,7 @@
                   color="secondary"
                   class="mt-4"
                   style="float: right"
+                  :loading="loading"
                   :disabled="!validMem"
                   @click="updateProfile"
                   >Weiter</v-btn
@@ -144,6 +151,7 @@
                   style="float: right"
                   :loading="loading"
                   :disabled="!validMem"
+                  exact
                   @click="updateProfile"
                   >Passwort speichern</v-btn
                 ></v-form
@@ -152,7 +160,7 @@
           >
           <v-stepper-items>
             <v-stepper-content step="3">
-              <SharedVerificationPage editprofile /> </v-stepper-content
+              <SharedVerificationPage editprofile :userdata="userdata"/> </v-stepper-content
           ></v-stepper-items>
         </v-stepper> </v-container></v-col
   ></v-row>
@@ -165,7 +173,7 @@ export default {
     return {
       validMem: false,
       stepper: 1,
-      // email: this.$store.getters['modules/user/user'].claims.email,
+      email: null, //this.$store.getters['modules/user/user'].claims.email,
       lastName: null,
       firstName: null,
       rules: {
@@ -178,7 +186,7 @@ export default {
             /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/.test(
               v
             ) ||
-            'Nutzen Sie ein sicheres Passwort. Mindestens 8 Zeichen, eine Zahl, ein Sonderzeichen (#?!@$ %^&*-), einmal Groß- und Kleinschreibung.',
+            'Ihr Passwort erfüllt nicht alle Vorgaben.',
         ],
         passwordRules2: [
           (v) => !!v || 'Passwortüberprüfung nicht vergessen',
@@ -191,62 +199,65 @@ export default {
       password2: '',
       showError: false,
       loading: false,
-      memberships: [],
+      memberships: [
+        {
+          description: "Ich suche Beratung",
+          icon: "mdi-face-woman",
+          id: "Woman",
+          name: "Frau",
+        },
+        {
+          description: "Ich möchte Beratung anbieten",
+          icon: "mdi-message",
+          id: "Coach",
+          name: "Beratung",
+        },
+      ],
       membership: undefined,
+      userdata: null,
     }
   },
   async fetch() {
-    this.memberships = (
-      await this.$fire.firestore.collection('memberships').get()
-    ).docs.map((doc) => doc.data())
-    this.memberships.reverse()
     this.membership = this.memberships[0]
+    this.email = window.localStorage.getItem('emailForSignIn')
   },
-  fetchOnServer: false,
   methods: {
-    updateProfile() {
-      this.loading = true
-      this.$fire.auth.currentUser
-        .updatePassword(this.password)
-        .catch((e) => {
+    load(){
+      console.log(this.$strapi.user.id)
+      this.$strapi.$users.update(this.$strapi.user,{
+        blocked: true, //this.membership.id.toLowerCase() 
+      }).then(()=>{
+        console.log('done')
+      }).catch((e) => {
           // eslint-disable-next-line no-console
           console.error(e)
           this.showError = true
           this.loading = false
         })
-        .then(() => {
-          const createdUserData = {}
-          if (this.membership.id === 'Coach') {
-            this.stepper++
-            createdUserData.public = {
-              firstName: this.firstName,
-              lastName: this.lastName,
-              membership: this.membership.id,
-              // avatar: this.$config.baseUrl + '/coach-avatar.jpg',
-            }
-            createdUserData.private = {
-              email: this.$fire.auth.currentUser.email,
-            }
-            return this.$store.dispatch('modules/user/createFirebaseUser', {
-              userData: createdUserData,
-              redirectTo: false,
-            })
-          } else {
-            createdUserData.public = {
-              membership: this.membership.id,
-            }
-            createdUserData.private = {
-              firstName: this.firstName,
-              lastName: this.lastName,
-              email: this.$fire.auth.currentUser.email,
-            }
-            window.localStorage.setItem('newWoman', true)
-            return this.$store.dispatch('modules/user/createFirebaseUser', {
-              userData: createdUserData,
-              redirectTo: true,
-            })
-          }
-        })
+    },
+    updateProfile() {
+      this.loading = true
+      const d = new Date()
+
+      const username = this.firstName 
+        ? this.firstName + ' ' + this.lastName 
+        : d.getMilliseconds().toString().slice(0,1) + d.getSeconds().toString() + d.getDay().toString() +d.getMonth().toString() + d.getFullYear().toString().slice(2)
+
+      this.$strapi.register({ 
+        username: username, 
+        email: this.email, 
+        password: this.password,
+        roleName: this.membership.id,
+        blocked: true,
+        isVerifying: false,
+        //role: havetofixproblem,
+      }).then(()=>{
+          this.$store.dispatch('checkAuth')
+          window.localStorage.removeItem('emailForSignIn')
+          this.loading = false
+          this.userdata = this.$store.getters['getActiveUser']
+          this.membership.id === 'Coach' ? this.stepper++ : this.$router.push('/frauen')
+      })
     },
   },
 }

@@ -1,6 +1,6 @@
 <template>
   <v-img
-    src="teaser-news.jpg"
+    src="/teaser-news.jpg"
     class="pa-8 d-flex align-center justify-center"
     max-height="300"
     ><h2 class="white--text text-h2 text-center">News</h2>

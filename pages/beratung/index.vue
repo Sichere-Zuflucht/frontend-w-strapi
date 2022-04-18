@@ -375,6 +375,7 @@
 
 <script>
 export default {
+  middleware: 'authCoach',
   data() {
     return {
       requests: null,
@@ -402,7 +403,7 @@ export default {
       return this.user.public.firstName + ' ' + this.user.public.lastName
     },
     user() {
-      return this.$store.state.modules.user
+      return this.$store.getters['getActiveUser']
     },
     private() {
       return this.$store.getters['modules/user/private']

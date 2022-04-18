@@ -37,7 +37,7 @@ export default {
           btn: 'Registrieren',
           link: '/registration/signup',
           textStyle: false,
-          rule: !this.$store.getters['modules/user/uid'],
+          rule: !this.$store.getters['getActiveUser'],
         },
         {
           icon: 'mdi-account-search',

@@ -2,7 +2,7 @@
   <v-row style="max-width: 1185px" class="mx-auto pa-0 pa-md-8 mb-md-16">
     <v-col cols="12" md="6" class="pa-0">
       <v-img
-        src="teaser-spenden.jpg"
+        src="/teaser-spenden.jpg"
         class="pa-8 d-flex align-center justify-center"
         max-height="300"
       >

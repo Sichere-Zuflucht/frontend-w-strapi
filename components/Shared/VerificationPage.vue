@@ -1,6 +1,6 @@
 <template>
-  <div class="py-4">
-    <div v-if="!success && !verified && !isVerifying">
+  <div v-if="userdata" class="py-4">
+    <div v-if="!success && !userdata.blocked && !userdata.isVerifying">
       <h2 class="text-h2 secondary--text pb-4">Verifizierung</h2>
       <p>
         Wir nehmen innerhalb der nächsten Tage mit Ihnen Kontakt auf, um Sie
@@ -35,6 +35,12 @@
           class="secondary--text font-weight-bold"
           label="Webseite (optional)"
         ></v-text-field>
+        <!--<sendEmailBtn 
+          :to="$strapi.user.email"
+          text="Verifizierung starten"
+          color="secondary"
+          :loading="loading"
+          :disabled="!validRef"/>-->
         <v-btn
           color="secondary"
           :loading="loading"
@@ -46,7 +52,7 @@
         >
       </v-form>
     </div>
-    <div v-else-if="(isVerifying && !verified) || success">
+    <div v-else-if="(!userdata.blocked && !userdata.isVerifying) || success">
       <h2 class="text-h2 secondary--text pb-4">VERIFIZIERUNG GESTARTET</h2>
       <div v-if="editprofil">
         <p>
@@ -62,7 +68,7 @@
         Ihr Profil online und Sie können mit der Beratung beginnen.
       </p>
     </div>
-    <div v-else-if="verified">
+    <div v-else-if="userdata.blocked">
       <h2 class="text-h2 secondary--text pb-4">VERIFIZIERUNG GESCHAFFT</h2>
     </div>
     <v-alert v-if="error">{{ error ? error : '' }}</v-alert>
@@ -76,6 +82,9 @@ export default {
       type: Boolean,
       default: true,
     },
+    userdata: {
+      type: Object,
+    }
   },
   data() {
     return {
@@ -99,20 +108,34 @@ export default {
             'Ungültiges Format',
         ],
       },
+      mailTemplate(email) {
+        return {
+          subject: "Hello Nuxt Template",
+          text: 
+`Welcome on mywebsite.fr!
+Your account is now linked with: ${email}.`,
+          html: 
+`<h1>Welcome on mywebsite.fr!</h1>
+<p>Your account is now linked with: ${email}.<p>`,
+        }
+      }
     }
   },
-  computed: {
+  /*computed: {
     verified() {
-      return this.$store.getters['modules/user/verified']
+      return this.$store.getters['getActiveUser'].blocked
     },
     isVerifying() {
-      return this.$store.getters['modules/user/isVerifying']
+      return this.$store.getters['getActiveUser'].isVerifying
     },
-  },
+  },*/
   methods: {
-    verifyProfil() {
+    async verifyProfil() {
       this.loading = true
-      this.$store
+      //this.$strapi.setUser({
+      //  isVerifying: userdata.isVerifying
+      // await this.$strapi.$http.$post('email', {mailTemplate})
+      /*this.$strapi.
         .dispatch('modules/user/requestVerify', {
           tel: this.verPhone,
           www: this.verWeb,
@@ -121,7 +144,7 @@ export default {
         .then(() => {
           this.loading = false
           this.success = true
-        })
+        })*/
     },
   },
 }

@@ -23,15 +23,15 @@
         ' !important'
       "
     >
-      <v-avatar color="primary ma-5" size="35%">
+      <v-avatar v-if="coach.avatar" color="primary ma-5" size="35%">
         <v-img :src="coach.avatar" />
       </v-avatar>
       <div class="ma-5 ml-2 d-flex flex-column justify-center">
         <h2 class="secondary--text text-h2">
-          {{ coach.firstName }} {{ coach.lastName }}
+          {{ coach.username }}
         </h2>
         <h3 class="mt-2 text-h5">
-          {{ coach.info.profession }}
+          {{ coach.info ? coach.info.profession : '' }}
         </h3>
       </div>
     </v-sheet>
@@ -48,7 +48,7 @@
           <v-col cols="12">
             <v-select
               v-model="selectedDate"
-              :items="response.suggestions"
+              :items="response.suggestion"
               outlined
               dense
               hide-details
@@ -62,12 +62,12 @@
                     <v-list-item-title class="font-weight-bold mb-0">
                       {{ formatDate(item.date) }}
                     </v-list-item-title>
-                    <p class="caption">{{ item.time }} Uhr</p>
+                    <div class="caption">{{ formatTime(item.date) }} Uhr</div>
                   </v-list-item-content>
                 </v-list-item>
               </template>
               <template #selection="{ item }"
-                ><p>{{ formatDate(item.date) }} | {{ item.time }}</p>
+                >{{ formatDate(item.date) }} | {{ formatTime(item.date) }}
               </template>
             </v-select>
             <p class="font-weight-bold mb-0 my-4">Preis: 50€</p>
@@ -140,7 +140,7 @@
         outlined
         nuxt
         :to="'/berater/' + response.coachId"
-        >{{ coach.id }} Neue Anfrage stellen
+        >Neue Anfrage stellen
       </v-btn>
       <v-dialog v-model="isDelete" persistent max-width="290">
         <template #activator="{ on, attrs }">
@@ -327,6 +327,13 @@ export default {
         year: 'numeric',
         month: 'long',
         day: 'numeric',
+      })
+    },
+    formatTime(date) {
+      const d = new Date(date)
+      return d.toLocaleTimeString('de-DE', {
+        hour: 'numeric',
+        minute: 'numeric'
       })
     },
   },

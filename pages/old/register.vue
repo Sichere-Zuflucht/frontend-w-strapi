@@ -30,6 +30,7 @@ export default {
   methods: {
     async register() {
       // this.$refs.register.validate()
+      // this.$strapi.register({ username: this.email, email: this.email, password: '' })
       this.submitDisabled = true
       await this.$axios
         .$post('auth/local/register', {

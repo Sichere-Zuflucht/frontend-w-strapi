@@ -33,7 +33,7 @@
           >
             Jede 3. Frau
           </h3>
-          <v-img src="jede-dritte-frau.jpg" />
+          <v-img src="/jede-dritte-frau.jpg" />
           <p class="caption pt-2 mb-8">
             <b>Jede 3. Frau</b> ist einmal in ihrem Leben von häuslicher Gewalt
             betroffen! Das heißt jede*r von uns <b>kennt mindestens EINE.</b>
@@ -45,7 +45,7 @@
           >
             42 Millionen Frauen
           </h3>
-          <v-img src="diagramm.jpg" />
+          <v-img src="/diagramm.jpg" />
           <p class="caption pt-2 mb-8">
             <b>Frauenhäuser und Beratungsstellen</b> melden seit Jahren, dass
             sie der <b>Nachfrage nicht gerecht</b> werden können.
@@ -170,7 +170,7 @@
               >
             </div></v-col
           ><v-col cols="12" md="7"
-            ><v-img src="jede-dritte-frau.jpg" /></v-col></v-row></v-container
+            ><v-img src="/jede-dritte-frau.jpg" /></v-col></v-row></v-container
     ></v-sheet>
     <v-container>
       <h3 class="text-h4 secondary--text py-8 text-uppercase font-weight-bold">

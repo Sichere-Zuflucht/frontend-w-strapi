@@ -1,10 +1,9 @@
 export default function ({ redirect, $strapi }) {
-    console.log($strapi.user)
     if (!$strapi.user) {
-        redirect('/login')
+        redirect('/registration/signin')
     } else {
-        if($strapi.user.roleName != 'woman') {
-            redirect('/')
+        if($strapi.user.roleName != 'Woman') {
+            redirect('/frauen')
         }
     }
   }

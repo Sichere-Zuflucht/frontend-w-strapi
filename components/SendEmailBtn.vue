@@ -1,5 +1,10 @@
 <template>
-  <v-btn @click="sendEmail" :disabled="submitDisabled">{{submitText}}</v-btn>
+  <v-btn 
+    @click="sendEmail" 
+    :disabled="submitDisabled"
+    :loading="loading"
+    :color="color"
+  >{{text}}</v-btn>
 </template>
 
 <script>
@@ -10,12 +15,27 @@ export default {
     },
     template: {
       type: Object,
-    }
+    },
+    color: {
+      type: String,
+      defualt: 'secondary',
+    },
+    loading: {
+      type: Boolean,
+      default: false,
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+    text: {
+      type: String,
+      defualt: 'secondary',
+    },
   },
   data(){
     return {
-      submitText: 'send email',
-      submitDisabled: false,
+      submitDisabled: this.disabled,
     }
   },
   methods: {
@@ -31,8 +51,7 @@ export default {
           html: this.template.html
         })
         .then(()=>{
-          this.submitText = "sended"
-          
+          // this.text = "sended"
         })
         .catch(function (error) {
           if (error.response) {

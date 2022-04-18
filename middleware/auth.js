@@ -1,5 +1,5 @@
 export default function ({ redirect, $strapi }) {
     if (!$strapi.user) {
-        redirect('/login')
+        redirect('/registration/signin')
     }
   }

@@ -6,3 +6,9 @@
     </v-container>
   </div>
 </template>
+
+<script>
+export default {
+  middleware: 'authCoach',
+}
+</script>

@@ -43,7 +43,7 @@
         </v-alert>
       </v-card-text>
     </v-card>
-
+{{email}}
     <p class="text--secondary text-center mt-4 mb-0">
       Du kennst dein Passwort?
     </p>
@@ -61,6 +61,7 @@ export default {
       loading: false,
       showConfirmation: false,
       buttonText: 'Passwort zurücksetzen',
+      disabled: false,
       email: '',
       error: {
         status: false,
@@ -77,7 +78,21 @@ export default {
   methods: {
     resetPassword() {
       this.loading = true
-      this.$fire.auth
+      this.$strapi.forgotPassword({ email: this.email })
+      .then(() => {
+          // Email sent.
+          this.loading = false
+          this.buttonText = 'Versendet'
+          this.showConfirmation = true
+          this.valid = false
+        })
+        .catch((err) => {
+          this.$store.dispatch('errorhandling',err)
+          // An error happened.
+          this.error.status = true
+          this.error.message = err.message
+        })
+      /*this.$fire.auth
         .sendPasswordResetEmail(this.email)
         .then(() => {
           // Email sent.
@@ -90,7 +105,7 @@ export default {
           console.log(err)
           this.error.status = true
           this.error.message = err.message
-        })
+        })*/
     },
   },
 }

@@ -129,6 +129,7 @@
 
 <script>
 export default {
+  middleware: 'authCoach',
   data() {
     return {
       select: true,

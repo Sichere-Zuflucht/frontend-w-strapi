@@ -12,9 +12,10 @@
         </h2>
       </v-container>
       <v-container v-if="responses.length === 1">
+        
         <CoachingContactStatus
           :coach="responses[0].coach"
-          :response="responses[0]"
+          :response="responses[0].attributes"
           :clickable="false"
           @cancel="responses = []"
         />
@@ -39,7 +40,7 @@
           >
             <CoachingContactStatus
               :coach="response.coach"
-              :response="response"
+              :response="response.attributes"
               :clickable="false"
               :now="
                 response.acceptedDate
@@ -55,7 +56,7 @@
           </div>
         </v-slide-item>
       </v-slide-group>
-      <!-- <v-container>
+      <!--<v-container>
         <nuxt-link to="info-berater" text color="primary" small
           >Wie läuft das Beratungsgespräch ab?
         </nuxt-link>
@@ -67,7 +68,7 @@
         <nuxt-link to="info-frauen" text color="primary" small
           >Infos zu Preisen</nuxt-link
         >
-      </v-container> -->
+      </v-container>-->
       <UtilsBtn
         v-if="responses.length != 0"
         text="Beratungsangebote ansehen"
@@ -102,6 +103,7 @@
 
 <script>
 export default {
+  middleware: 'authWoman',
   data() {
     return {
       userData: null,
@@ -124,14 +126,26 @@ export default {
       newDate: new Date(new Date().setHours(new Date().getHours() - 2)),
     }
   },
-  async fetch() {
+  async mounted(){
+  //async fetch() {
     // these responses contain only communication where this user was involved
-    const responses = (
-      await this.$fire.functions.httpsCallable('request-getRequests')()
-    ).data
+    const responses = (await this.$strapi.$http.$get(`meetings?populate=suggestion&filters[${this.$strapi.user.roleName.toLowerCase()}ID][$eq]=${this.$strapi.user.id}`)).data
+
+    const res = await Promise.all(
+      responses.map(async (response) => {
+        //console.log('response',response)
+        const coach = (
+          await this.$strapi.$http
+            .$get(`users?filters[id][$eq]=${response.attributes.coachID}`)
+        )[0]
+        return { coach, ...response }
+      })
+    )
+    console.log(res)
+    this.responses = res
     // get the data for each coach and add it to the response
     // then push it to the responses list
-    const res = await Promise.all(
+    /*const res = await Promise.all(
       responses.map(async (response) => {
         const coach = (
           await this.$fire.firestore
@@ -143,17 +157,16 @@ export default {
         ).data()
         return { coach, ...response }
       })
-    )
+    )*/
 
-    this.responses = res.sort((a, b) => {
+    /*this.responses = res.sort((a, b) => {
       return a.createdAt._seconds - b.createdAt._seconds
-    })
-  },
-  fetchOnServer: false,
-  mounted() {
+    })*/
+
     this.newWoman = window.localStorage.getItem('newWoman')
     window.localStorage.removeItem('newWoman')
   },
+  fetchOnServer: false,
   methods: {
     cancel(response) {
       this.responses = this.responses.filter((r) => r !== response)

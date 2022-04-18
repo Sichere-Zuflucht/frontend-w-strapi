@@ -52,7 +52,7 @@
         </v-list>
         <v-divider />
         <v-list v-if="user">
-          <div v-if="user.role === 'Woman'">
+          <div v-if="user.roleName === 'Woman'">
             <v-list-group
               v-for="(item, i) in loggedInWoman"
               :key="i"
@@ -157,7 +157,7 @@
               ><v-img
                 contain
                 width="200"
-                src="Sichere-Zuflucht-Logo.svg" /></v-btn></v-toolbar-title
+                src="/Sichere-Zuflucht-Logo.svg" /></v-btn></v-toolbar-title
         ></v-col>
         <v-col cols="1" sm="4" align-self="center" class="d-flex justify-end">
           <div

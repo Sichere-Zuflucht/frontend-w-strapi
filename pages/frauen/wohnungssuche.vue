@@ -141,6 +141,7 @@
 
 <script>
 export default {
+  middleware: 'authWoman',
   data() {
     return {
       valid: false,

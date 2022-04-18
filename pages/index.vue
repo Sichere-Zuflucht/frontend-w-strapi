@@ -13,7 +13,7 @@
       </p>
     </v-container>
     <v-img
-      src="paige-cody-bOVZ_f3fbQM-unsplash.jpg"
+      src="/paige-cody-bOVZ_f3fbQM-unsplash.jpg"
       min-height="50vh"
       max-height="300px"
       :style="
@@ -41,7 +41,7 @@
           </v-col>
           <v-col cols="12" md="6">
             <v-card class="mx-auto" max-width="320">
-              <v-img src="le-buzz-tVnm9I9jb8I-unsplash.jpg" height="200px" />
+              <v-img src="/le-buzz-tVnm9I9jb8I-unsplash.jpg" height="200px" />
 
               <v-card-title
                 class="text-h3 secondary--text font-weight-bold mb-2"
@@ -91,7 +91,7 @@
         </v-col>
         <v-col cols="12" md="6">
           <v-card class="mx-auto" max-width="320">
-            <v-img src="AdobeStock_342417877.jpeg" height="200px"></v-img>
+            <v-img src="/AdobeStock_342417877.jpeg" height="200px"></v-img>
 
             <v-card-text
               ><h3 class="text-h3 primary--text font-weight-bold mb-2">
