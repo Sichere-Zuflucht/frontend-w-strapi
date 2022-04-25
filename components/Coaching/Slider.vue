@@ -41,8 +41,21 @@ export default {
       },
     }
   },
-  async mounted() {
-    try {
+  mounted() {
+    this.$strapi.$http.$get(
+      `users?populate=avatar&filters[roleName][$eq]=Coach`)
+    .then((d) => {
+      console.log('list of alternative coaches:',d)
+      d.forEach((single)=>{
+        if (this.withoutid != single.id) this.allCoaches.push(single)
+      })
+      this.loading = false
+    })
+    .catch((err)=>{
+      this.$store.dispatch('errorhandling',err)
+    })
+
+    /*try {
       await this.$fire.functions
         .httpsCallable('user-getCoaches')()
         .then((d) => {
@@ -59,9 +72,8 @@ export default {
     } catch (error) {
       error.status = true
       error.text = error
-    }
+    }*/
   },
-  fetchOnServer: false,
 }
 </script>
 

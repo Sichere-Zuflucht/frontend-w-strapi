@@ -24,14 +24,17 @@
       "
     >
       <v-avatar v-if="coach.avatar" color="primary ma-5" size="35%">
-        <v-img :src="coach.avatar" />
+        <v-img 
+          :lazy-src="(coach.avatar.url.includes('http') ? '' : 'http://localhost:1337') + coach.avatar.url"
+          :src="(coach.avatar.url.includes('http') ? '' : 'http://localhost:1337') + coach.avatar.url"
+        />
       </v-avatar>
       <div class="ma-5 ml-2 d-flex flex-column justify-center">
         <h2 class="secondary--text text-h2">
           {{ coach.username }}
         </h2>
         <h3 class="mt-2 text-h5">
-          {{ coach.info ? coach.info.profession : '' }}
+          {{ coach.profession }}
         </h3>
       </div>
     </v-sheet>
@@ -139,7 +142,7 @@
         color="primary"
         outlined
         nuxt
-        :to="'/berater/' + response.coachId"
+        :to="'/berater/' + coach.id"
         >Neue Anfrage stellen
       </v-btn>
       <v-dialog v-model="isDelete" persistent max-width="290">
@@ -183,6 +186,10 @@ export default {
       type: Object,
       default: () => {},
     },
+    id: {
+      type: Number,
+      default: null,
+    },
     clickable: {
       type: Boolean,
       default: true,
@@ -220,13 +227,10 @@ export default {
     },
   },
   methods: {
-    cancel(doc) {
+    cancel() {
       this.eraseLoading = true
-      this.$fire.functions
-        .httpsCallable('request-delete')({
-          docId: doc.id,
-          email: doc.coachEmail,
-        })
+      console.log(this.id)
+      this.$strapi.$meetings.delete(this.id)
         .then(() => {
           console.log('erased')
           this.isDelete = false
@@ -242,6 +246,7 @@ export default {
         })
     },
     async pay(dateInput) {
+      console.log(dateInput)
       this.payButtonLoading = true
       this.redirectWarning = true
       let redReq, data, video
@@ -264,9 +269,7 @@ export default {
             video = {
               codeArzt:
                 'https://video.redmedical.de/#/login?name=' +
-                this.response.coach.firstName +
-                ' ' +
-                this.response.coach.lastName +
+                this.coach.username +
                 '&code=' +
                 redRes.codeArzt,
               codePatient:
@@ -281,32 +284,37 @@ export default {
           })
       } else {
         video =
-          'https://meet.jit.si/' +
-          this.response.coach.firstName.toLowerCase() +
-          '_' +
-          this.response.coach.lastName.toLowerCase() +
-          '_' + // no ?:&'"%# symbols allowed
-          this.response.id
+          'https://meet.jit.si/' + this.coach.username.toLowerCase().replace(' ','-') + '-meetingid-' + this.id // no ?:&'"%# symbols allowed
         this.standardPayment(video, dateInput)
       }
     },
     standardPayment(v, dI) {
-      this.$fire.functions
+      console.log('v',v)
+      console.log('date', dI.date.toString())
+      const data = {
+        acceptedDate: dI.date,
+        video: v,
+      }
+      this.$strapi.$meetings
+        .update(this.id, {
+          data
+        })
+      /*this.$fire.functions
         .httpsCallable('request-acceptDate')({
           coachName:
             this.response.coach.firstName + ' ' + this.response.coach.lastName,
           acceptedDate: dI,
           requestId: this.response.id,
           video: v,
-        })
-        .then(async () => {
+        })*/
+        .then((r) => {
+          console.log('result',r)
           this.payButtonLoading = false
           this.btn.isDisabled = true
-          // eslint-disable-next-line vue/no-mutating-props
           this.response.acceptedDate = dI
-          // eslint-disable-next-line vue/no-mutating-props
           this.response.video = v
-          const paymentID = (
+          console.log('payment end too early')
+          /*const paymentID = (
             await this.$fire.functions.httpsCallable('stripe-payCoaching')({
               responseID: this.response.id,
               isDev: this.$config.isDev,
@@ -317,7 +325,10 @@ export default {
             // available to this file, so you can provide it as argument here
             // instead of the {{CHECKOUT_SESSION_ID}} placeholder.
             sessionId: paymentID,
-          })
+          })*/
+        })
+        .catch((e)=>{
+          this.$store.dispatch('errorhandling',e)
         })
     },
     formatDate(date) {

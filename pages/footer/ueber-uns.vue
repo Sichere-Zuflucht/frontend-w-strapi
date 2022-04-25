@@ -67,7 +67,7 @@
       <p>
         Alle finanziellen Aufwändungen begleichen wir aus eigener Tasche.
         Deshalb freuen wir uns riesig über Unterstützung in Form von
-        <nuxt-link to="spenden">Spenden</nuxt-link> :)
+        <nuxt-link to="/footer/spenden">Spenden</nuxt-link> :)
       </p>
     </v-container>
     <UtilsDonation />

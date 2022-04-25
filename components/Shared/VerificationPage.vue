@@ -1,6 +1,6 @@
 <template>
-  <div v-if="userdata" class="py-4">
-    <div v-if="!success && !userdata.blocked && !userdata.isVerifying">
+  <div v-if="userdata" class="pa-3">
+    <div v-if="!success && !userdata.isVerifyed && !userdata.isVerifying">
       <h2 class="text-h2 secondary--text pb-4">Verifizierung</h2>
       <p>
         Wir nehmen innerhalb der nächsten Tage mit Ihnen Kontakt auf, um Sie
@@ -17,30 +17,42 @@
           label="Telefonnummer"
           type="tel"
           persistent-hint
-          hint="Wir nehmen innerhalb der nächsten Tage mit Ihnen Kontakt
-                    auf, um Sie kennenzulernen und offene Fragen klären zu
-                    können."
+          hint="Wir werden Sie telefonisch kontaktieren."
         ></v-text-field>
+        <v-checkbox
+          v-if="!userAltEmail"
+          v-model="userAltEmail"
+          label="Alterative Email nutzen"
+          :hint="'Nutze zur Verifizierung eine alternative Emailadresse, anstatt ' + userdata.email"
+          persistent-hint
+        ></v-checkbox>
         <v-text-field
+          v-else
           v-model="verEmail"
-          class="secondary--text font-weight-bold"
+          class="secondary--text font-weight-bold mt-4"
           :rules="rules.email"
-          label="E-Mail-Adresse"
+          label="E-Mail-Adresse (optional)"
           type="email"
           persistent-hint
-          hint="Über die wir mit Ihnen Kontakt aufnehmen dürfen."
+          append-icon="mdi-close"
+          hint="Wir werden Sie eventuell per Email kontaktieren."
+          @click:append="userAltEmail = !userAltEmail"
         ></v-text-field>
+        <v-checkbox
+          v-if="!useWeb"
+          v-model="useWeb"
+          label="Webseite hinzufügen"
+          hint="Geben Sie Ihre offizielle Webseite an, um Ihre Seriösität zu beweisen."
+          persistent-hint
+        ></v-checkbox>
         <v-text-field
+          v-if="useWeb"
           v-model="verWeb"
-          class="secondary--text font-weight-bold"
+          class="secondary--text font-weight-bold mt-4"
           label="Webseite (optional)"
+          append-icon="mdi-close"
+          @click:append="useWeb = !useWeb"
         ></v-text-field>
-        <!--<sendEmailBtn 
-          :to="$strapi.user.email"
-          text="Verifizierung starten"
-          color="secondary"
-          :loading="loading"
-          :disabled="!validRef"/>-->
         <v-btn
           color="secondary"
           :loading="loading"
@@ -52,7 +64,7 @@
         >
       </v-form>
     </div>
-    <div v-else-if="(!userdata.blocked && !userdata.isVerifying) || success">
+    <div v-else-if="(!userdata.isVerifyed && !userdata.isVerifying) || success">
       <h2 class="text-h2 secondary--text pb-4">VERIFIZIERUNG GESTARTET</h2>
       <div v-if="editprofil">
         <p>
@@ -68,7 +80,7 @@
         Ihr Profil online und Sie können mit der Beratung beginnen.
       </p>
     </div>
-    <div v-else-if="userdata.blocked">
+    <div v-else-if="userdata.isVerifyed">
       <h2 class="text-h2 secondary--text pb-4">VERIFIZIERUNG GESCHAFFT</h2>
     </div>
     <v-alert v-if="error">{{ error ? error : '' }}</v-alert>
@@ -95,6 +107,8 @@ export default {
       verEmail: '',
       verWeb: '',
       loading: false,
+      userAltEmail: false,
+      useWeb: false,
       rules: {
         phone: [
           (v) => !!v || 'Telefonnummer nicht vergessen',
@@ -108,43 +122,24 @@ export default {
             'Ungültiges Format',
         ],
       },
-      mailTemplate(email) {
-        return {
-          subject: "Hello Nuxt Template",
-          text: 
-`Welcome on mywebsite.fr!
-Your account is now linked with: ${email}.`,
-          html: 
-`<h1>Welcome on mywebsite.fr!</h1>
-<p>Your account is now linked with: ${email}.<p>`,
-        }
-      }
     }
   },
-  /*computed: {
-    verified() {
-      return this.$store.getters['getActiveUser'].blocked
-    },
-    isVerifying() {
-      return this.$store.getters['getActiveUser'].isVerifying
-    },
-  },*/
   methods: {
-    async verifyProfil() {
+    verifyProfil() {
       this.loading = true
-      //this.$strapi.setUser({
-      //  isVerifying: userdata.isVerifying
-      // await this.$strapi.$http.$post('email', {mailTemplate})
-      /*this.$strapi.
-        .dispatch('modules/user/requestVerify', {
-          tel: this.verPhone,
-          www: this.verWeb,
-          email: this.verEmail,
-        })
-        .then(() => {
+      const data = {
+        isVerifying: true,
+        tel: this.verPhone,
+        www: this.verWeb,
+        altEmail: this.verEmail,
+      }
+      this.$strapi.$users
+        .update(this.$strapi.user.id, data)
+        .then((r) => {
+          console.log('updated',r)
           this.loading = false
           this.success = true
-        })*/
+        })
     },
   },
 }

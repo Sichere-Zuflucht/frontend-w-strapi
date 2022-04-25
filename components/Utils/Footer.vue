@@ -108,35 +108,35 @@ export default {
         },
         {
           title: 'Über uns',
-          to: '/ueber-uns',
+          to: '/footer/ueber-uns',
         },
         {
           title: 'Unterstützen',
-          to: '/spenden',
+          to: '/footer/spenden',
         },
         {
           title: 'Impressum',
-          to: '/impressum',
+          to: '/footer/impressum',
         },
         {
           title: 'Datenschutz',
-          to: '/datenschutz',
+          to: '/footer/datenschutz',
         },
         {
           title: 'AGB',
-          to: '/agb',
+          to: '/footer/agb',
         },
         {
           title: 'Kontakt',
-          to: '/kontakt',
+          to: '/footer/kontakt',
         },
         {
           title: 'FAQ',
-          to: '/faq',
+          to: '/footer/faq',
         },
         {
           title: 'Hilfe',
-          to: '/hilfe',
+          to: '/footer/hilfe',
         },
       ],
     }

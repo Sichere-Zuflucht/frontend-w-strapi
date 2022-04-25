@@ -18,7 +18,7 @@
             entwickeln wir in unserer Freizeit und finanzieren es aus unseren
             privaten Mitteln. Deshalb sind wir für jede Spende dankbar!
           </p>
-          <UtilsBtn text="Jetzt spenden" classname="py-2" link="spenden" />
+          <UtilsBtn text="Jetzt spenden" classname="py-2" link="/footer/spenden" />
         </div>
       </v-img> </v-col
     ><v-col v-if="$vuetify.breakpoint.mdAndUp" cols="12" md="6" class="pa-0"
@@ -41,7 +41,7 @@
         <UtilsBtn
           text="Jetzt spenden"
           classname="py-2"
-          link="spenden" /></v-sheet
+          link="/footer/spenden" /></v-sheet
     ></v-col>
   </v-row>
 </template>

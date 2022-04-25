@@ -43,14 +43,14 @@ export default {
         {
           title: 'Sichere Zuflucht-Magazin',
           text: 'Hier sammeln wir Erfahrungsberichte und Geschichten von betroffenen Frauen, um anderen Frauen Mut zu machen. Außerdem finden Sie hier Videos und Podcasts zum Thema häusliche Gewalt.',
-          img: 'le-buzz-tVnm9I9jb8I-unsplash.jpg',
+          img: '/le-buzz-tVnm9I9jb8I-unsplash.jpg',
           link: '/magazine',
           btntext: 'Zum Magazin',
         },
         {
           title: 'Berater*innen und Coaches',
           text: 'Schauen Sie sich gern um, welche Kolleg*innen noch ihre Hilfe anbieten.',
-          img: 'le-buzz-tVnm9I9jb8I-unsplash.jpg',
+          img: '/le-buzz-tVnm9I9jb8I-unsplash.jpg',
           link: '/berater/suche',
           btntext: 'Berater*innen Übersicht',
         },

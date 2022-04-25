@@ -1,73 +1,77 @@
 <template>
   <div v-if="pubData">
     <v-sheet class="d-flex justify-center pt-8" style="position: relative"
-      ><v-avatar :lazy-src="pubData.avatar" :src="pubData.avatar" size="162">
-        <v-img :lazy-src="pubData.avatar" :src="pubData.avatar"></v-img
+      ><v-avatar size="162">
+        <v-img 
+          v-if="pubData.avatar"
+          :lazy-src="(pubData.avatar.url.includes('http') ? '' : 'http://localhost:1337') + pubData.avatar.url" 
+          :src="(pubData.avatar.url.includes('http') ? '' : 'http://localhost:1337') + pubData.avatar.url"
+        ></v-img
       ></v-avatar>
     </v-sheet>
     <v-container>
       <h1 class="text-center text-h1 primary--text text-uppercase">
-        {{ pubData.firstName }} {{ pubData.lastName }}
+        {{ pubData.username }}
       </h1>
       <h2 class="text-center text-h4 mb-4">
-        {{ pubData.info.profession }}
+        {{ pubData.profession }}
       </h2>
       <div
-        v-if="pubData.info.topicArea"
+        v-if="pubData.topicArea"
         class="d-flex flex-wrap justify-center mb-4"
       >
         <v-chip class="mx-1" color="primary">
-          {{ pubData.info.topicArea }}
+          {{ pubData.topicArea }}
         </v-chip>
       </div>
-      <div v-if="pubData.info.quote" class="text-center">
+      <div v-if="pubData.quote" class="text-center">
         <p>
-          <b>"{{ pubData.info.quote }}"</b>
+          <b>"{{ pubData.quote }}"</b>
         </p>
       </div>
-
-      <div v-if="pubData.info.since">
+      
+      <div v-if="pubData.since">
         <p class="font-weight-bold mb-0 mt-4 caption">
           Ich bin Coach/Berater*in seit dem Jahr:
         </p>
         <div class="d-flex flex-wrap">
-          {{ pubData.info.since }}
+          {{ pubData.since }}
         </div>
       </div>
 
-      <div v-if="pubData.info.history">
+      <div v-if="pubData.history">
         <p class="font-weight-bold mb-0 mt-4 caption">
           Mein beruflicher Hintergrund:
         </p>
         <div class="d-flex flex-wrap">
-          {{ pubData.info.history }}
+          {{ pubData.history }}
         </div>
       </div>
-      <div v-if="pubData.info.focus">
+      <div v-if="pubData.focus">
         <p class="font-weight-bold mb-0 mt-4 caption">
           Meine Schwerpunkte sind:
         </p>
         <div class="d-flex flex-wrap">
-          {{ pubData.info.focus }}
+          {{ pubData.focus }}
         </div>
       </div>
-      <div v-if="pubData.info.coachingTopics">
+      <div v-if="pubData.coachingTopics">
         <p class="font-weight-bold mb-0 mt-4 caption">
           Meine Beratungs-/Coaching-Themen sind:
         </p>
         <div class="d-flex flex-wrap">
-          {{ pubData.info.coachingTopics }}
+          {{ pubData.coachingTopics }}
         </div>
       </div>
-      <div v-if="pubData.info.description">
+      <div v-if="pubData.description">
         <p class="font-weight-bold mb-0 mt-4 caption">
           Etwas Persönliches über mich:
         </p>
         <div class="d-flex flex-wrap">
-          {{ pubData.info.description }}
+          {{ pubData.description }}
         </div>
       </div>
-      <div v-if="pubData.info.assistance">
+      <div v-if="pubData.assistance">
         <p class="font-weight-bold mb-0 mt-4 caption">
           Ich kann diese konkrete Hilfestellung anbieten:
         </p>
@@ -78,8 +82,9 @@
     </v-container>
     <div
       v-if="
-        $route.params.beratung !== $store.getters['modules/user/uid'] &&
-        $store.getters['modules/user/membership'] !== 'Coach'
+        $store.getters['getActiveUser'] 
+        && ($route.params.beratung !== $store.getters['getActiveUser'].id) 
+        && $store.getters['getActiveUser'].roleName !== 'Coach'
       "
     >
       <v-container>
@@ -92,7 +97,7 @@
           <v-card-title class="text-h2 secondary--text"
             >online-beratungstermin anfragen</v-card-title
           >
-          <v-card-text v-if="$store.getters['modules/user/isAuthenticated']">
+          <v-card-text v-if="$store.getters['getActiveUser']">
             <p>
               Fülle bitte die beiden Felder aus. Unser/e Berater*in sendet dir
               dann passende Terminvorschläge für euren Beratungstermin.
@@ -161,7 +166,7 @@
                       color="secondary"
                       :loading="loading"
                       :disabled="isDisabled"
-                      @click="sendRequest"
+                      @click="createMeeting"
                       >{{ buttonText }}
                     </v-btn>
                   </div></v-col
@@ -244,6 +249,7 @@
     </v-container>
   </div>
   <div v-else>
+    {{pubData}}
     <v-container class="mt-16">
       <h1 class="text-h1 secondary--text mb-4">Unbekannt</h1>
       <v-alert type="error" dark color="red">
@@ -288,29 +294,29 @@ export default {
   },
   async fetch() {
     if (
-      this.$route.params.beratung === this.$store.getters['modules/user/uid']
+      this.$route.params.beratung === this.$store.getters['getActiveUser'].id
     ) {
-      this.pubData = this.$store.getters['modules/user/public']
+      this.pubData = this.$store.getters['getActiveUser']
     } else {
-      this.pubData = (
-        await this.$fire.firestore
-          .collection('users')
-          .doc(this.$route.params.beratung)
-          .collection('public')
-          .doc('data')
-          .get()
-      ).data()
-      if (this.pubData === undefined) this.pubData = false
+      this.$strapi.$http
+        .$get(`users?populate=avatar,meetings&filters[id][$eq]=${this.$route.params.beratung}`)
+        .then((r)=>{
+          console.log('route user list',r)
+          this.pubData = r[0]
+          console.log('route user',this.pubData)
+          if (this.pubData === undefined) this.pubData = false
+        })
     }
+    
   },
   fetchOnServer: false,
   computed: {
     coachName() {
-      return this.pubData.firstName + ' ' + this.pubData.lastName
+      return this.pubData.username
     },
   },
   methods: {
-    sendRequest() {
+    /*sendRequest() {
       this.loading = true
       this.$fire.functions
         .httpsCallable('request-sendRequest')({
@@ -330,6 +336,30 @@ export default {
         .catch((err) => {
           this.error.status = true
           this.error.message = err.message
+        })
+    },*/
+    createMeeting(){
+      const woman = this.$store.getters['getActiveUser']
+      const coach = this.pubData
+      const mergeMeetings = [
+        woman,
+        coach
+      ]
+      console.log('mergeMeetings',mergeMeetings)
+      const data = {
+        message: this.msgTitle + ': ' + this.message,
+        coachAnswered: false,
+        coachID: this.$route.params.beratung,
+        womanID: this.$store.getters['getActiveUser'].id.toString(),
+        coachEmail: this.pubData.email,
+        users_permissions_users: mergeMeetings
+      }
+      console.log('data',data)
+      
+      this.$strapi.$meetings
+        .create({data})
+        .catch((error)=>{
+          this.$store.dispatch('errorhandling',error) //errorhandling(error)
         })
     },
     copy() {

@@ -111,7 +111,7 @@
                   label="Nachname"
                   type="name"
                 ></v-text-field>
-                <v-text-field
+                <!--<v-text-field
                   v-model="password"
                   class="secondary--text font-weight-bold"
                   label="Passwort"
@@ -133,7 +133,7 @@
                   :rules="rules.passwordRules2"
                   label="Passwort wiederholen"
                   type="password"
-                ></v-text-field>
+                ></v-text-field>-->
                 <v-btn
                   v-if="membership ? membership.id === 'Coach' : false"
                   color="secondary"
@@ -169,6 +169,7 @@
 <script>
 export default {
   name: 'UpdateProfile',
+  middleware: 'authNew',
   data() {
     return {
       validMem: false,
@@ -199,6 +200,7 @@ export default {
       password2: '',
       showError: false,
       loading: false,
+      roleTypes: [],
       memberships: [
         {
           description: "Ich suche Beratung",
@@ -217,24 +219,23 @@ export default {
       userdata: null,
     }
   },
-  async fetch() {
+  async mounted() {
+    console.log('user?', this.$strapi.user)
     this.membership = this.memberships[0]
     this.email = window.localStorage.getItem('emailForSignIn')
+
+    const res = (await this.$strapi.find('users-permissions/roles')).roles
+    res.forEach((role)=>{
+      if(role.type == 'coach') this.roleTypes.push(role)
+      if(role.type == 'woman') this.roleTypes.push(role)
+    })
+    if(this.$strapi.user.roleName != 'New') {
+      this.userdata = this.$store.getters['getActiveUser']
+      this.membership = this.memberships[1]
+      this.stepper = 3
+    }
   },
   methods: {
-    load(){
-      console.log(this.$strapi.user.id)
-      this.$strapi.$users.update(this.$strapi.user,{
-        blocked: true, //this.membership.id.toLowerCase() 
-      }).then(()=>{
-        console.log('done')
-      }).catch((e) => {
-          // eslint-disable-next-line no-console
-          console.error(e)
-          this.showError = true
-          this.loading = false
-        })
-    },
     updateProfile() {
       this.loading = true
       const d = new Date()
@@ -243,21 +244,42 @@ export default {
         ? this.firstName + ' ' + this.lastName 
         : d.getMilliseconds().toString().slice(0,1) + d.getSeconds().toString() + d.getDay().toString() +d.getMonth().toString() + d.getFullYear().toString().slice(2)
 
-      this.$strapi.register({ 
+      console.log('user?', this.$strapi.user)
+
+      const data = {
+          role: this.roleTypes.find(r => r.type == this.membership.id.toLowerCase()),
+          roleName: this.membership.id,
+          username: username
+        }
+        console.log('data', data)
+      this.$strapi.$http.$put(`users/${this.$strapi.user.id}`,data).then((newU)=>{
+        console.log('newU',newU)
+        this.$store.dispatch('checkAuth')
+        window.localStorage.removeItem('emailForSignIn')
+        this.loading = false
+        this.userdata = this.$store.getters['getActiveUser']
+        this.membership.id === 'Coach' ? this.stepper++ : this.$router.push('/frauen')
+      })
+      /*this.$strapi.register({ 
         username: username, 
         email: this.email, 
         password: this.password,
         roleName: this.membership.id,
-        blocked: true,
+        blocked: false,
         isVerifying: false,
-        //role: havetofixproblem,
+        //role: this.roleTypes.find(r => r.type == this.membership.id.toLowerCase()),
       }).then(()=>{
-          this.$store.dispatch('checkAuth')
-          window.localStorage.removeItem('emailForSignIn')
-          this.loading = false
-          this.userdata = this.$store.getters['getActiveUser']
-          this.membership.id === 'Coach' ? this.stepper++ : this.$router.push('/frauen')
-      })
+        console.log(this.membership.id.toLowerCase(), this.roleTypes[0].type, this.roleTypes[1].type)
+        const data = {
+          role: this.roleTypes.find(r => r.type == this.membership.id.toLowerCase()),
+        }
+        this.$strapi.$http.$put(`users/${this.$strapi.user.id}`,data)
+        this.$store.dispatch('checkAuth')
+        window.localStorage.removeItem('emailForSignIn')
+        this.loading = false
+        this.userdata = this.$store.getters['getActiveUser']
+        this.membership.id === 'Coach' ? this.stepper++ : this.$router.push('/frauen')
+      })*/
     },
   },
 }

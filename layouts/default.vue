@@ -100,7 +100,7 @@
                 :key="n"
                 :to="
                   sub.appendUser
-                    ? sub.to + (user.public ? user.public.uid : '')
+                    ? sub.to + user.id
                     : sub.to
                 "
                 nuxt
@@ -165,19 +165,12 @@
             class="d-flex justify-end"
             style="max-width: 300px"
           >
-            <!--<v-btn
+            <v-btn
               v-if="$vuetify.breakpoint.mdAndUp"
               to="/registration/signin"
               exact
               nuxt
               text
-              >Einloggen</v-btn
-            >-->
-            <v-btn
-              exact
-              nuxt
-              text
-              @click="testlogin"
               >Einloggen</v-btn
             >
             <v-btn to="/registration/signup" color="accent" exact nuxt
@@ -304,7 +297,7 @@ export default {
             {
               icon: 'mdi-information-variant',
               title: 'Informationen',
-              to: '/info-frauen',
+              to: '/info/frauen',
             },
             {
               icon: 'mdi-account-search',
@@ -320,24 +313,24 @@ export default {
             {
               icon: 'mdi-hand-heart',
               title: 'Als Berater*innen',
-              to: '/info-berater',
+              to: '/info/berater',
             },
             {
               icon: 'mdi-hand-heart',
               title: 'Mit einer Unterkunft',
-              to: '/info-unterkunft',
+              to: '/info/unterkunft',
             },
           ],
         },
         {
           icon: 'mdi-gift',
           title: 'Spenden',
-          to: '/spenden',
+          to: '/footer/spenden',
         },
         {
           icon: 'mdi-account-group',
           title: 'Über uns',
-          to: '/ueber-uns',
+          to: '/footer/ueber-uns',
         },
       ],
       nuid: '',
@@ -356,15 +349,6 @@ export default {
       this.$store.dispatch('logout')
       this.$router.push('/')
     },
-    testlogin(){
-      this.$store.dispatch('login', {
-        email: 'random@random.com',
-        password: 'password!',
-      })
-      .catch((error)=>{
-        this.$store.dispatch('errorhandling',error)
-      })
-    }
   },
 }
 </script>

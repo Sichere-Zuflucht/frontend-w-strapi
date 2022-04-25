@@ -1,7 +1,7 @@
 <template>
   <div class="pt-4">
-    <client-only v-if="userData && userData.private && userData.public">
-      <v-alert v-if="!userData.public.info" dark color="error">
+    <client-only v-if="userData">
+      <v-alert v-if="!userData.info" dark color="error">
         <v-row align="center">
           <v-col class="shrink">
             <v-icon>mdi-account-question</v-icon>
@@ -12,7 +12,7 @@
           </v-col>
         </v-row></v-alert
       >
-      <v-alert v-if="!userData.private.stripe.payoutsEnabled" dark color="error"
+      <v-alert v-if="!userData.stripe.payoutsEnabled" dark color="error"
         ><v-row align="center">
           <v-col class="shrink">
             <v-icon>mdi-credit-card-off-outline</v-icon>
@@ -21,13 +21,13 @@
             Es wurde noch kein Stripe Account eingerichtet.
           </v-col>
           <v-col cols="12" sm="auto" class="shrink">
-            <v-btn to="edit-profil" append>Stripe anlegen</v-btn>
+            <v-btn to="bezahlung" append>Stripe anlegen</v-btn>
           </v-col>
         </v-row></v-alert
       >
 
       <v-alert
-        v-if="!userData.private.verifySetting.verified"
+        v-if="!userData.isVerified"
         dark
         color="error"
       >
@@ -48,24 +48,24 @@
       <p
         v-if="
           !(
-            userData.public.info &&
-            userData.private.stripe.payoutsEnabled &&
-            userData.private.verifySetting.verified
+            userData.info &&
+            userData.stripe.payoutsEnabled &&
+            userData.isVerified
           )
         "
         class="caption"
       >
         Solange Sie nicht
         {{
-          !userData.private.verifySetting.verified
+          !userData.isVverified
             ? 'von uns verifiziert wurden, '
             : null
         }}{{
-          !userData.private.stripe.payoutsEnabled
+          !userData.stripe.payoutsEnabled
             ? 'Stripe eingerichtet haben, '
             : null
         }}
-        {{ !userData.public.info ? 'Profildaten eingerichtet haben, ' : null }}
+        {{ !userData.info ? 'Profildaten eingerichtet haben, ' : null }}
         ist Ihr Profil nicht öffentlich einsehbar und somit können auch keine
         Anfragen an Sie gestellt werden.
       </p>
@@ -77,12 +77,7 @@
 export default {
   computed: {
     userData() {
-      return this.$store.getters['modules/user/user']
-    },
-    steps() {
-      if (!this.$store.getters['modules/user/public'].info) return 1
-      if (!this.$store.getters['modules/user/stripeDone']) return 2
-      return 3
+      return this.$store.getters['getActiveUser']
     },
   },
 }

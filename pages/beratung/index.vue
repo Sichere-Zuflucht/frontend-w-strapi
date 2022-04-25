@@ -2,8 +2,8 @@
   <v-container v-if="user">
     <client-only>
       <p class="caption mb-0 font-weight-bold">Hallo</p>
-      <h1 v-if="user && user.public" class="text-h1 secondary--text">
-        {{ user.public.firstName }} {{ user.public.lastName }}
+      <h1 v-if="user" class="text-h1 secondary--text">
+        {{ user.username }}
       </h1>
     </client-only>
     <CoachFulfilRegistration />
@@ -386,16 +386,29 @@ export default {
       eraseLoading: false,
       showOld: false,
       newDate: new Date(new Date().setHours(new Date().getHours() - 1)),
+      roleTypes: [],
     }
   },
-  async fetch() {
-    const req = (
+  async mounted(){
+    /*const req = (
       await this.$fire.functions.httpsCallable('request-getRequests')()
     ).data
 
     this.requests = req.sort((a, b) => {
       return a.createdAt._seconds - b.createdAt._seconds
+    })*/
+    //console.log('this user id', this.$strapi.user.id)
+    const res = (await this.$strapi.find('users-permissions/roles')).roles
+    res.forEach((role)=>{
+      if(role.type == 'coach') this.roleTypes.push(role)
+      if(role.type == 'woman') this.roleTypes.push(role)
     })
+    //this.$strapi.$http
+    //  .$get(`users?filters[id][$eq]=${this.$strapi.user.id}`)
+    
+    
+    //const responses = (await this.$strapi.$http.$get(`users`)).data
+    
   },
   fetchOnServer: false,
   computed: {
@@ -405,11 +418,20 @@ export default {
     user() {
       return this.$store.getters['getActiveUser']
     },
-    private() {
+    /*private() {
       return this.$store.getters['modules/user/private']
-    },
+    },*/
   },
   methods: {
+    loadRole(){
+      console.log('user',this.user)
+    },
+    changeRole(roleName){
+      const data = {
+        role: this.roleTypes.find(r => r.type == roleName),
+      }
+      this.$strapi.$http.$put(`users/${this.$strapi.user.id}`,data)
+    },
     cancel(doc) {
       this.eraseLoading = true
       this.$fire.functions

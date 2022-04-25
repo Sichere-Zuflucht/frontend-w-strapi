@@ -10,6 +10,6 @@
     >
       Aktuelles auf unserem Newsboard. Schau einfach ab und zu mal rein.
     </p>
-    <UtilsBtn text="Newsboard ansehen" classname="py-2" link="aktuelles" />
+    <UtilsBtn text="Newsboard ansehen" classname="py-2" link="/footer/aktuelles" />
   </v-img>
 </template>

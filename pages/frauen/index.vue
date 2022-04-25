@@ -16,6 +16,7 @@
         <CoachingContactStatus
           :coach="responses[0].coach"
           :response="responses[0].attributes"
+          :id="responses[0].id"
           :clickable="false"
           @cancel="responses = []"
         />
@@ -41,6 +42,7 @@
             <CoachingContactStatus
               :coach="response.coach"
               :response="response.attributes"
+              :id="response.id"
               :clickable="false"
               :now="
                 response.acceptedDate
@@ -57,15 +59,15 @@
         </v-slide-item>
       </v-slide-group>
       <!--<v-container>
-        <nuxt-link to="info-berater" text color="primary" small
+        <nuxt-link to="info/berater" text color="primary" small
           >Wie läuft das Beratungsgespräch ab?
         </nuxt-link>
         <br />
-        <nuxt-link to="info-frauen" text color="primary" small
+        <nuxt-link to="info/frauen" text color="primary" small
           >Infos zur Termineinhaltung
         </nuxt-link>
         <br />
-        <nuxt-link to="info-frauen" text color="primary" small
+        <nuxt-link to="info/frauen" text color="primary" small
           >Infos zu Preisen</nuxt-link
         >
       </v-container>-->
@@ -141,7 +143,6 @@ export default {
         return { coach, ...response }
       })
     )
-    console.log(res)
     this.responses = res
     // get the data for each coach and add it to the response
     // then push it to the responses list
