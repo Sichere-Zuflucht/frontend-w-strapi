@@ -9,9 +9,10 @@
         ></v-img
       ></v-avatar>
     </v-sheet>
+    
     <v-container>
       <h1 class="text-center text-h1 primary--text text-uppercase">
-        {{ pubData.username }}
+        {{ pubData.username }} {{linkVal}}
       </h1>
       <h2 class="text-center text-h4 mb-4">
         {{ pubData.profession }}
@@ -287,7 +288,7 @@ export default {
       allCoaches: [],
       filteredCoaches: [],
       dialog: false,
-      linkVal: this.$config.baseUrl + '/berater/' + this.$route.params.beratung,
+      linkVal: this.$route.fullPath,
       copied: false,
       pubData: undefined,
     }
@@ -301,6 +302,8 @@ export default {
       this.$strapi.$http
         .$get(`users?populate=avatar&filters[id][$eq]=${this.$route.params.beratung}`)
         .then((r)=>{
+          console.log('route:', this.$route)
+          console.log('router:', this.$router)
           console.log('route user list',r)
           this.pubData = r[0]
           console.log('route user',this.pubData)
