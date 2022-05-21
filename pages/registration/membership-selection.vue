@@ -162,7 +162,13 @@
             <v-stepper-content step="3">
               <SharedVerificationPage editprofile :userdata="userdata"/> </v-stepper-content
           ></v-stepper-items>
-        </v-stepper> </v-container></v-col
+        </v-stepper>
+        <v-alert
+          v-if="alert.isActive"
+          type="alert"
+          color="error"
+          >{{alert.message}}</v-alert>
+        </v-container></v-col
   ></v-row>
 </template>
 
@@ -217,6 +223,10 @@ export default {
       ],
       membership: undefined,
       userdata: null,
+      alert: {
+        isActive: false,
+        message: '',
+      }
     }
   },
   async mounted() {
@@ -252,14 +262,23 @@ export default {
           username: username
         }
         console.log('data', data)
-      this.$strapi.$http.$put(`users/${this.$strapi.user.id}`,data).then((newU)=>{
-        console.log('newU',newU)
-        this.$store.dispatch('checkAuth')
-        window.localStorage.removeItem('emailForSignIn')
-        this.loading = false
-        this.userdata = this.$store.getters['getActiveUser']
-        this.membership.id === 'Coach' ? this.stepper++ : this.$router.push('/frauen')
-      })
+      this.$strapi.$http
+        .$put(`users/${this.$strapi.user.id}`,data)
+        .then((newU)=>{
+          console.log('newU',newU)
+          this.alert.isActive = false
+          this.$store.dispatch('checkAuth')
+          window.localStorage.removeItem('emailForSignIn')
+          this.loading = false
+          this.userdata = this.$store.getters['getActiveUser']
+          this.membership.id === 'Coach' ? this.stepper++ : this.$router.push('/frauen')
+        })
+        .catch((err)=>{
+          this.alert.isActive = true
+          this.alert.message = err.response.data.error.message
+          this.loading = false
+          this.$store.dispatch('errorhandling',err)
+        })
       /*this.$strapi.register({ 
         username: username, 
         email: this.email, 

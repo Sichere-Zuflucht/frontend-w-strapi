@@ -66,7 +66,7 @@ export default {
   }, */
 
   strapi: {
-    url: process.env.STRAPI_URL || 'http://localhost:1337/api', // erased + '/api'
+    url: process.env.STRAPI_URL+"/api" || 'http://localhost:1337/api', // erased + '/api'
     entities: ['meetings', 'users', 'magazines', 'tags'],
     expires: '30d',
     cookie: {

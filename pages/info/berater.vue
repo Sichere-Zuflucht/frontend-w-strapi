@@ -1,6 +1,6 @@
 <template>
   <div>
-    <UtilsBanner url="AdobeStock_342417877.jpeg" />
+    <UtilsBanner url="/AdobeStock_342417877.jpeg" />
     <v-sheet color="grey lighten-5">
       <v-container class="py-16">
         <div class="text-center">

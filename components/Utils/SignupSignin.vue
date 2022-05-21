@@ -56,7 +56,7 @@
                   <v-btn
                     color="primary"
                     :loading="loading"
-                    :disabled="!valid"
+                    :disabled="!valid.email"
                     @click="next"
                     >Weiter ></v-btn
                   >
@@ -205,13 +205,13 @@
                 Sollte nichts angekommen sein, kannst du dir die E-mail noch
                 einmal zusenden lassen.
               </p>
-              <v-btn
+              <!--<v-btn
                 color="primary"
                 :loading="loading"
                 class="mb-4"
-                @click="register"
+                @click="resend"
                 >Erneut senden</v-btn
-              >
+              >-->
             </v-stepper-content>
           </v-stepper-items>
         </v-stepper>
@@ -358,6 +358,9 @@ export default {
           console.log('error:', e)
         })
     },
+    resend(){
+      // somehow manage to be logged in to make a sendEmailConfirmation
+    }
   },
 };
 </script>

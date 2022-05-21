@@ -14,7 +14,7 @@
       >
         <h2 class="text-h1 white--text">in Arbeit</h2>
       </div>
-      <UtilsBanner url="kara-eads-L7EwHkq1B2s-unsplash.jpeg" />
+      <UtilsBanner url="/kara-eads-L7EwHkq1B2s-unsplash.jpeg" />
     </div>
     <v-sheet color="grey lighten-5"
       ><v-container class="text-center">

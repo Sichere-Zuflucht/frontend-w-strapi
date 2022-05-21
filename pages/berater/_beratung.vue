@@ -294,12 +294,12 @@ export default {
   },
   async fetch() {
     if (
-      this.$route.params.beratung === this.$store.getters['getActiveUser'].id
+      this.$store.getters['getActiveUser'] && this.$route.params.beratung === this.$store.getters['getActiveUser'].id
     ) {
       this.pubData = this.$store.getters['getActiveUser']
     } else {
       this.$strapi.$http
-        .$get(`users?populate=avatar,meetings&filters[id][$eq]=${this.$route.params.beratung}`)
+        .$get(`users?populate=avatar&filters[id][$eq]=${this.$route.params.beratung}`)
         .then((r)=>{
           console.log('route user list',r)
           this.pubData = r[0]

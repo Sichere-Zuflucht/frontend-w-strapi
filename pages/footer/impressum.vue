@@ -1,6 +1,6 @@
 <template>
   <div>
-    <UtilsBanner url="AdobeStock_342417877.jpeg" />
+    <UtilsBanner url="/AdobeStock_342417877.jpeg" />
     <v-container class="py-md-16">
       <div class="text-center">
         <h1 class="text-h1 primary--text">Impressum</h1>
