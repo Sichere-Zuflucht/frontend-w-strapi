@@ -32,7 +32,7 @@ export default {
       // this.$refs.register.validate()
       // this.$strapi.register({ username: this.email, email: this.email, password: '' })
       this.submitDisabled = true
-      await this.$axios
+      /*await this.$axios
         .$post('auth/local/register', {
           username: this.username,
           email: this.email,
@@ -69,7 +69,7 @@ export default {
             console.log("Error", error.message);
           }
           console.log(error.config);
-        });
+        });*/
     },
   },
 };

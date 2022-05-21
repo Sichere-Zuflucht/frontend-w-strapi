@@ -41,7 +41,7 @@ export default {
   methods: {
     async sendEmail() {
       this.submitDisabled = true
-      await this.$axios
+      /*await this.$axios
         .$post("email", {
           to: this.to,
           from: "Sichere Zuflucht <kontakt@sichere-zuflucht.de>",
@@ -70,7 +70,7 @@ export default {
             console.log("Error", error.message);
           }
           console.log(error.config);
-        });
+        });*/
     },
   },
 };

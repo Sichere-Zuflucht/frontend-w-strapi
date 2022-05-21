@@ -39,7 +39,7 @@ jobs:
         env:
           CI: true
           SITE_URL: ${{ steps.project.outputs.site-url }}
-          STRAPI_URL: https://sichere-zuflucht-backend.herokuapp.com/
+          STRAPI_URL: https://sichere-zuflucht-backend.herokuapp.com/api
         run: |
           npm install --global yarn
           yarn install --frozen-lockfile
