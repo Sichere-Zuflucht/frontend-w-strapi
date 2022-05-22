@@ -11,12 +11,13 @@
           >
           <h1 class="h2--text text-uppercase">Zeigen Sie sich</h1>
           <p>In Ihrem Profil präsentieren Sie sich und Ihre Leistung.</p>
+          {{!user.stripe.payoutsEnabled}}
         </v-container>
       </v-sheet>
     </v-col>
     <v-col cols="12" md="6">
       <v-container>
-        <v-stepper v-if="user.public" v-model="stepper" elevation="0">
+        <v-stepper v-if="user" v-model="stepper" elevation="0">
           <v-stepper-header style="box-shadow: none">
             <v-stepper-step
               step="1"
@@ -26,8 +27,8 @@
             >
               Profil
             </v-stepper-step>
-            <v-divider v-if="!stripe"></v-divider>
-            <v-stepper-step v-if="!stripe" step="2" editable>
+            <v-divider v-if="!user.stripe.payoutsEnabled"></v-divider>
+            <v-stepper-step v-if="!user.stripe.payoutsEnabled" step="2" editable>
               Zahlung aktivieren
             </v-stepper-step>
           </v-stepper-header>
@@ -42,16 +43,16 @@
                 abwägen, an wen Sie sich wenden wollen.
               </p>
               <CoachingSelection
-                :info="user.public.info || {}"
-                :avatar="user.public.avatar"
+                :info="user"
+                :avatar="user.avatar"
                 @selection="updateProfile"
               />
               <v-btn
                 text
-                :to="stripe ? '/berater/' + user.public.uid : null"
+                :to="user.stripe.payoutsEnabled ? '/berater/' + user.id : null"
                 color="grey"
-                @click="!stripe ? stepper++ : null"
-                >{{ !stripe ? 'Später' : 'Weiter ohne Speichern' }}</v-btn
+                @click="!user.stripe.payoutsEnabled ? stepper++ : null"
+                >{{ !user.stripe.payoutsEnabled ? 'Später' : 'Weiter ohne Speichern' }}</v-btn
               >
             </v-stepper-content>
             <v-stepper-content v-else step="1">
@@ -66,10 +67,10 @@
                   class="mt-4 mr-3"
                   outlined
                   target="_blank"
-                  :to="'/berater/' + user.public.uid"
+                  :to="'/berater/' + user.id"
                   >Profil ansehen</v-btn
                 ><v-btn
-                  v-if="!stripe"
+                  v-if="!user.stripe.payoutsEnabled"
                   color="secondary"
                   class="mt-4"
                   @click="stepper++"
@@ -144,27 +145,29 @@ export default {
   },
   computed: {
     user() {
-      return this.$store.state.modules.user
-    },
-    stripe() {
-      try {
-        return this.$store.getters['modules/user/stripe']
-      } catch (TypeError) {
-        return 'type error'
-      }
+      console.log('user',this.$strapi.user)
+      return this.$strapi.user
     },
   },
   methods: {
     updateProfile(data) {
-      console.log('edit: ', data)
-      this.$store.dispatch('modules/user/setInfo', {
+      /*this.$store.dispatch('modules/user/setInfo', {
         topicArea: data.topicArea, // topic
         description: data.description,
         quote: data.quote,
         history: data.history,
         profession: data.profession,
       })
-      this.$store.dispatch('modules/user/setAvatar', data.avatar)
+      this.$store.dispatch('modules/user/setAvatar', data.avatar)*/
+      console.log(this.user.id)
+      
+      this.$strapi.$http.$put(`users/${this.user.id}`, data)
+        .then((res)=>{
+          console.log('updated',res)
+        })
+        .catch((e)=>{
+          this.$store.dispatch('errorhandling',e)
+        })
       this.bioSaved = true
       // this.$router.push('/berater/' + this.user.public.uid)
     },

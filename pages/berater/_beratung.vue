@@ -12,7 +12,7 @@
     
     <v-container>
       <h1 class="text-center text-h1 primary--text text-uppercase">
-        {{ pubData.username }} {{linkVal}}
+        {{ pubData.firstName }} {{ pubData.lastName }}
       </h1>
       <h2 class="text-center text-h4 mb-4">
         {{ pubData.profession }}

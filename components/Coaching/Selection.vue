@@ -20,11 +20,11 @@
             <v-chip
               v-for="(t, i) in topics"
               :key="i"
-              :value="t.topicArea"
+              :value="t"
               active-class="primary primary--text"
               outlined
               filter
-              >{{ t.topicArea }}
+              >{{ t }}
             </v-chip>
           </v-chip-group>
           <v-btn color="primary" block :disabled="!selectedTopic" @click="e6++">
@@ -114,8 +114,8 @@
             <v-col class="d-flex align-center justify-center">
               <v-avatar size="80">
                 <v-img
-                  v-if="avatar"
-                  :src="$store.getters['modules/user/avatar']"
+                  v-if="changeAvatar"
+                  :src="'http://localhost:1337'+changeAvatar"
                 />
                 <SharedCoachIcon
                   v-else
@@ -174,8 +174,8 @@ export default {
       default: () => {},
     },
     avatar: {
-      type: String,
-      default: '',
+      type: Object,
+      default: null,
     },
   },
   data() {
@@ -189,7 +189,8 @@ export default {
         bioTitle: 'Kurzbeschreibung',
         bioSubtitle: 'Damit die Frauen Ihr Angebot besser einschätzen können.',
       },
-      topics: [],
+      topics: ["Beratung","Coaching", "Supervision",
+      ],
       selectedTopic: null,
       changeProfession: this.info.profession,
       changeQuote: this.info.quote,
@@ -213,33 +214,62 @@ export default {
     }
   },
   async fetch() {
-    this.topics = (
+    /*this.topics = (
       await this.$fire.firestore.collection('coachingTypes').get()
-    ).docs.map((doc) => doc.data())
+    ).docs.map((doc) => doc.data())*/
   },
   mounted() {
-    for (const v in this.info.topicArea) {
+    /*for (const v in this.info.topicArea) {
       this.selectedTopic = this.info.topicArea[v]
+    }*/
+    console.log('info',this.info)
+    this.changeAvatar = this.avatar ? this.avatar.url : null
+    this.selectedTopic = this.info.topicArea
+  },
+  computed: {
+    test() {
+      console.log('info2',this.info)
+      return "test"
     }
   },
   fetchOnServer: false,
+  /*watch: {
+    changeAvatar: function (newValue, oldValue) {
+      console.log("newValue: %s, previousValue: %s", newValue, oldValue);
+    },
+  },*/
   methods: {
     finish() {
       const data = {
+        ...this.$store.getters['getActiveUser'],
         topicArea: this.selectedTopic,
         description: this.changeDescription,
         quote: this.changeQuote,
         history: this.changeHistory,
-        avatar: this.changeAvatar ? this.changeAvatar : this.avatar,
         profession: this.changeProfession,
       }
-      this.$emit('selection', data)
+      console.log('data',data)
+      this.$store.dispatch('changeData',data)
+      this.$emit('selection',data)
     },
-    upload(file) {
+    upload(file){
+      console.log("file", file)
+      const form = new FormData()
+      form.append("files", file)
+      console.log(this.$strapi.user.roleName)
+      this.$strapi.$http.$post('upload', form).then((res)=>{
+        this.changeAvatar = res[0].url
+        this.$store.dispatch('changeAvatar',res[0])
+        this.imageFile = ''
+        this.isLoading = false
+        this.overlay = false
+      })
+    }
+    /*upload(file) {
       this.isLoading = true
       const uploadTask = this.$fire.storage
         .ref()
-        .child('profiles/' + this.$store.getters['modules/user/uid'])
+        .child('profiles/' + this.$store.getters['getActiveUser'].id)
         .put(file)
       uploadTask.on(
         'state_changed',
@@ -289,7 +319,7 @@ export default {
           this.overlay = false
         }
       )
-    },
+    },*/
   },
 }
 </script>

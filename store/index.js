@@ -17,6 +17,13 @@ export const actions = {
     if (this.$strapi.user) commit('setUserData', this.$strapi.user)
     else commit('setUserData', null)
   },
+  changeData({ commit }, newData){
+    this.$strapi.user = newData
+    commit('setUserData', newData)
+  },
+  changeAvatar({ commit }, newAvatarFile){
+    commit('setUserAvatar', newAvatarFile)
+  },
   async login({ commit }, form) {
     const data = await this.$strapi.login({ identifier: form.email, password: form.password })
     commit('setUserData', data.user)
@@ -50,6 +57,10 @@ export const actions = {
 export const mutations = {
   setUserData(state, user) {
     state.user = user
+  },
+  setUserAvatar(state, newAvatar) {
+    this.$strapi.user.avatar = newAvatar
+    state.user = this.$strapi.user
   },
   setJWT(state, jwt) {
     state.jwt = jwt

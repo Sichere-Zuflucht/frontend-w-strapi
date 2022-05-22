@@ -1,7 +1,7 @@
 <template>
   <div class="pt-4">
     <client-only v-if="userData">
-      <v-alert v-if="!userData.info" dark color="error">
+      <v-alert v-if="!userData.topicArea" dark color="error">
         <v-row align="center">
           <v-col class="shrink">
             <v-icon>mdi-account-question</v-icon>
@@ -48,7 +48,7 @@
       <p
         v-if="
           !(
-            userData.info &&
+            userData.topicArea &&
             userData.stripe.payoutsEnabled &&
             userData.isVerified
           )
@@ -57,7 +57,7 @@
       >
         Solange Sie nicht
         {{
-          !userData.isVverified
+          !userData.isVerified
             ? 'von uns verifiziert wurden, '
             : null
         }}{{

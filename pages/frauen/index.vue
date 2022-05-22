@@ -131,7 +131,7 @@ export default {
   async mounted(){
   //async fetch() {
     // these responses contain only communication where this user was involved
-    const responses = (await this.$strapi.$http.$get(`meetings?populate=suggestion&filters[${this.$strapi.user.roleName.toLowerCase()}ID][$eq]=${this.$strapi.user.id}`)).data
+    const responses = (await this.$strapi.$http.$get(`meetings?populate=suggestion&filters[${this.$store.getters["getActiveUser"].roleName.toLowerCase()}ID][$eq]=${this.$strapi.user.id}`)).data
 
     const res = await Promise.all(
       responses.map(async (response) => {

@@ -93,6 +93,7 @@
                   <b>{{ email }}</b> bei Sichere Zuflucht registrieren?
                 </v-alert>
                 <h2 v-if="!emailExisting" class="text-h3 secondary--text">Account erstellen</h2>
+                <p class="grey--text">für {{email}}</p>
                 <v-text-field
                   v-model="password"
                   label="Passwort"
@@ -108,51 +109,25 @@
                   @click:append="() => (hidePassword = !hidePassword)"
                 ></v-text-field>
                 <div v-if="!emailExisting">
-                  <v-chip
+                  <v-chip 
+                    v-for="(n,i) in chips" 
+                    :key="i"
                     :color="
-                      /^(?=.*?[A-Z]).{1,}$/.test(password) ? 'success' : 'grey'
+                      n.rule(password) ? 'success' : 'grey'
                     "
                     dark
-                    class="mt-2"
-                    >Großbuchstaben</v-chip
+                    class="mt-1 mr-1"
+                    small
+                    filter
                   >
-                  <v-chip
-                    :color="
-                      /^(?=.*?[a-z]).{1,}$/.test(password) ? 'success' : 'grey'
-                    "
-                    dark
-                    class="mt-2"
-                    >Kleinbuchstaben</v-chip
-                  >
-                  <v-chip
-                    :color="
-                      /^(?=.*?[0-9]).{1,}$/.test(password) ? 'success' : 'grey'
-                    "
-                    dark
-                    class="mt-2"
-                    >Zahlen</v-chip
-                  >
-                  <v-chip
-                    :color="
-                      /^(?=.*?[#?!@$ %^&*-]).{1,}$/.test(password)
-                        ? 'success'
-                        : 'grey'
-                    "
-                    dark
-                    class="mt-2"
-                    >Sonderzeichen (#?!@$ %^&*-)</v-chip
-                  >
-                  <v-chip
-                    :color="/^.{8,}$/.test(password) ? 'success' : 'grey'"
-                    dark
-                    class="mt-2"
-                    >mind. 8 Zeichen</v-chip
-                  >
+                    {{n.title}}
+                  </v-chip>
                   <v-text-field
                     v-model="password2"
                     :rules="rules.passwordRules2"
                     label="Passwort wiederholen"
                     type="password"
+                    class="mt-6"
                   ></v-text-field>
                 </div>
                 <div class="d-flex justify-end">
@@ -265,7 +240,29 @@ export default {
             "E-Mail muss gültig sein",
         ],
       },
-
+      chips: [
+        {
+          title: "Großbuchstaben",
+          rule: (v) => /^(?=.*?[A-Z]).{1,}$/.test(v),
+        },
+        {
+          title: "Kleinbuchstaben",
+          rule: (v) => /^(?=.*?[a-z]).{1,}$/.test(v),
+        },
+        {
+          title: "Zahlen",
+          rule: (v) => /^(?=.*?[0-9]).{1,}$/.test(v),
+        },
+        {
+          title: "Sonderzeichen (#?!@$ %^&*-)",
+          rule: (v) => /^(?=.*?[#?!@$ %^&*-]).{1,}$/.test(v),
+        },
+        {
+          title: "mind. 8 Zeichen",
+          rule: (v) => /^.{8,}$/.test(v),
+        },
+        
+      ],
       loading: false,
       //showConfirmation: false,
       emailExisting: false,
@@ -280,7 +277,9 @@ export default {
   mounted() {
     const email = window.localStorage.getItem("emailForSignIn");
     if (email) {
-      this.email = email;
+      this.email = email
+      this.next()
+      //this.step++
       //this.showConfirmation = true;
     }
   },

@@ -124,11 +124,11 @@ export default {
   },
   computed: {
     user() {
-      return this.$store.state.modules.user
+      return this.$store.user
     },
     stripe() {
       try {
-        return this.$store.getters['modules/user/stripe']
+        return this.$store.getters['getActiveUser'].stripe
       } catch (TypeError) {
         return 'type error'
       }
