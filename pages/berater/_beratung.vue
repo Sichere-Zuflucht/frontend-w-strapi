@@ -300,7 +300,7 @@ export default {
       this.pubData = this.$store.getters['getActiveUser']
     } else {
       this.$strapi.$http
-        .$get(`users?populate=avatar&filters[id][$eq]=${this.$route.params.beratung}`)
+        .$get(`users?populate=avatar&filters[id]=${this.$route.params.beratung}`)
         .then((r)=>{
           console.log('route:', this.$route)
           console.log('router:', this.$router)

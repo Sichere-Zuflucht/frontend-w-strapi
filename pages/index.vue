@@ -12,6 +12,15 @@
         in Form einer persönlichen Online-Beratung an.
       </p>
     </v-container>
+    Cropper
+    <vue-cropper
+      ref="cropper"
+      :aspect-ratio="1 / 1"
+      alt="Source Image"
+      :src="imgSrc"
+      
+    ></vue-cropper>
+    <v-btn @click="cropImage">Crop</v-btn>
     <v-img
       src="/paige-cody-bOVZ_f3fbQM-unsplash.jpg"
       min-height="50vh"
@@ -70,7 +79,7 @@
         Sichere Zuflucht-Magazin
       </h3>
     </v-container>
-    <MagazineSlider :list="magazineList" :change="true" />
+    <!--<MagazineSlider :list="magazineList" :change="true" />-->
     <v-divider class="mt-md-8" />
     <v-container class="pt-16">
       <v-row style="max-width: 700px" class="mx-auto">
@@ -150,10 +159,20 @@ export default {
     return {
       magazineList: null,
       test: null,
+      imgSrc: '/paige-cody-bOVZ_f3fbQM-unsplash.jpg',
+      cropImg: '',
+      data: null,
     }
   },
   async mounted() {
-    this.magazineList = (await this.$strapi.$magazines.find({'populate': '*'})).data
+    //this.magazineList = (await this.$strapi.$magazines.find({'populate': '*'})).data
   },
+  methods: {
+    cropImage() {
+      // get image data for post processing, e.g. upload or setting image src
+      this.cropImg = this.$refs.cropper.getCroppedCanvas().toDataURL();
+      console.log('cropImg', this.cropImg)
+    },
+  }
 }
 </script>

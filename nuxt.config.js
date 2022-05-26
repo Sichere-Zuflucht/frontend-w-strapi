@@ -38,6 +38,8 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
+    "~/plugins/cropper",
+    "~/plugins/filepond",
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -66,11 +68,17 @@ export default {
   }, */
 
   strapi: {
-    url: process.env.STRAPI_URL, //process.env.STRAPI_URL, //|| 'http://localhost:1337/api', // erased + '/api'
+    url: 'http://localhost:1337/api', // process.env.STRAPI_URL, //process.env.STRAPI_URL, //|| 'http://localhost:1337/api', // erased + '/api'
     entities: ['meetings', 'users', 'magazines', 'tags'],
     expires: '30d',
     cookie: {
       path: '/'
+    }
+  },
+
+  publicRuntimeConfig: {
+    strapi: {
+      url: process.env.STRAPI_URL,
     }
   },
 

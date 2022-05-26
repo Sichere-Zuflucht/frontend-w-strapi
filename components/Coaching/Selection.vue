@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-expand-transition>
-      <v-stepper v-model="e6" vertical class="mx-auto">
+      <v-stepper v-model="e6" vertical class="mx-auto" elevation="0">
         <v-stepper-step
           :complete="e6 > 1"
           :editable="e6 > 1"
@@ -110,52 +110,79 @@
           <small>{{ coach.picSubtitle }}</small>
         </v-stepper-step>
         <v-stepper-content step="3">
-          <v-row class="mb-4">
-            <v-col class="d-flex align-center justify-center">
-              <v-avatar size="80">
-                <v-img
-                  v-if="changeAvatar"
-                  :src="'http://localhost:1337'+changeAvatar"
-                />
-                <SharedCoachIcon
-                  v-else
-                  color="#b3b3b3"
-                  style="border: 1px solid #b3b3b3"
-                  class="pa-2"
-                />
-              </v-avatar>
-            </v-col>
-            <v-col class="d-flex align-center justify-center">
-              <v-btn color="secondary" @click="overlay = !overlay"
-                >Foto auswählen
-              </v-btn>
-              <v-overlay :absolute="true" :opacity="1" :value="overlay">
-                <v-form ref="uploadForm" v-model="uploadRef">
-                  <v-file-input
-                    v-model="imageFile"
-                    :rules="rules"
-                    accept="image/png, image/jpeg, image/png"
-                    placeholder="Foto hochladen"
-                    prepend-icon="mdi-camera"
-                    label="Foto auswählen"
-                    :show-size="1000"
-                    style="width: 220px"
-                    required
-                  ></v-file-input>
-                  <v-btn text @click="overlay = !overlay"> Abbrechen</v-btn>
+          <div class="mb-4 d-flex flex-column align-center">
+            <v-avatar v-if="avatar && !changeImg" size="200">
+              <v-img :src="'http://localhost:1337' + avatar.url"
+                ><div
+                  class="d-flex justify-center align-end pb-2"
+                  style="width: 100%"
+                >
                   <v-btn
-                    :loading="isLoading"
-                    color="success"
-                    :disabled="!uploadRef"
-                    @click="upload(imageFile)"
+                    fab
+                    x-small
+                    class="mx-1"
+                    @click="changeImg = !changeImg"
+                    ><v-icon>mdi-cached</v-icon></v-btn
                   >
-                    Foto hochladen
-                  </v-btn>
-                </v-form>
-              </v-overlay>
-            </v-col>
-          </v-row>
-
+                  <v-btn fab x-small class="mx-1" @click="removeImage"
+                    ><v-icon>mdi-delete</v-icon></v-btn
+                  >
+                </div></v-img
+              >
+            </v-avatar>
+            <file-pond
+              v-else-if="!avatar || changeImg"
+              v-model="imageFile"
+              labelIdle='Ziehe eine Datei per Drag & Drop hierher oder <span class="filepond--label-action"> durchsuche den Computer </span>'
+              server="/api"
+              :src="avatar ? 'http://localhost:1337' + avatar.url : null"
+              imagePreviewHeight="200"
+              imageCropAspectRatio="1:1"
+              imageResizeTargetWidth="200"
+              imageResizeTargetHeight="200"
+              stylePanelLayout="compact circle"
+              styleButtonRemoveItemPosition="left bottom"
+              styleProgressIndicatorPosition="center"
+              styleButtonProcessItemPosition="center"
+              styleLoadIndicatorPosition="center bottom"
+              style="width: 200px; height: 200px"
+              @processfile="upload(imageFile[0].file)"
+            ></file-pond>
+          </div>
+          <v-overlay
+            v-if="avatar"
+            :absolute="true"
+            :value="overlay"
+            color="white"
+          >
+            <v-card width="300" light>
+              <vue-cropper
+                ref="cropper"
+                :aspect-ratio="1 / 1"
+                alt="Source Image"
+                :src="'http://localhost:1337' + avatar.url"
+                :zoomable="false"
+              ></vue-cropper>
+              <div class="d-flex align-center">
+                <v-btn
+                  color="grey"
+                  small
+                  icon
+                  class="my-2 mx-1"
+                  @click="overlay = !overlay"
+                  ><v-icon small>mdi-close</v-icon></v-btn
+                >
+                <v-btn
+                  color="success"
+                  small
+                  class="my-2 mx-1 ml-auto"
+                  @click="cropImage"
+                  ><v-icon small class="mr-1">mdi-crop</v-icon
+                  >Beschneiden</v-btn
+                >
+              </div>
+            </v-card>
+          </v-overlay>
           <v-btn color="primary" block @click="finish">
             <v-icon class="pr-1">mdi-content-save</v-icon> Profil speichern
           </v-btn>
@@ -167,7 +194,7 @@
 
 <script>
 export default {
-  name: 'CoachingSelection',
+  name: "CoachingSelection",
   props: {
     info: {
       type: Object,
@@ -181,16 +208,15 @@ export default {
   data() {
     return {
       coach: {
-        helpTitle: 'Ihre Fachgebiete',
+        helpTitle: "Ihre Fachgebiete",
         helpSubtitle:
-          'Bitte wählen Sie die Fachgebiete aus, zu denen Sie Beratung anbieten möchten.',
-        picTitle: 'Foto',
-        picSubtitle: 'Sammeln Sie Sympathiepunkte',
-        bioTitle: 'Kurzbeschreibung',
-        bioSubtitle: 'Damit die Frauen Ihr Angebot besser einschätzen können.',
+          "Bitte wählen Sie die Fachgebiete aus, zu denen Sie Beratung anbieten möchten.",
+        picTitle: "Foto",
+        picSubtitle: "Sammeln Sie Sympathiepunkte",
+        bioTitle: "Kurzbeschreibung",
+        bioSubtitle: "Damit die Frauen Ihr Angebot besser einschätzen können.",
       },
-      topics: ["Beratung","Coaching", "Supervision",
-      ],
+      topics: ["Beratung", "Coaching", "Supervision"],
       selectedTopic: null,
       changeProfession: this.info.profession,
       changeQuote: this.info.quote,
@@ -198,130 +224,83 @@ export default {
       changeHistory: this.info.history,
       e6: 1,
       panel: [0],
-      uploadRef: true,
-      changeAvatar: null,
-      imageFile: [],
+      imageFile: null,
+      changeImg: false,
+      cropImg: "",
+      cropData: null,
       isLoading: false,
       overlay: false,
       rules: [
         (value) =>
           !value ||
           value.size < 2000000 ||
-          'Fotogröße sollte kleiner als 2 MB sein.',
-        (value) => !!value || 'Lade ein Foto hoch.',
+          "Fotogröße sollte kleiner als 2 MB sein.",
+        (value) => !!value || "Lade ein Foto hoch.",
       ],
       yearsAgo: new Date().getFullYear() - 100,
-    }
-  },
-  async fetch() {
-    /*this.topics = (
-      await this.$fire.firestore.collection('coachingTypes').get()
-    ).docs.map((doc) => doc.data())*/
+    };
   },
   mounted() {
-    /*for (const v in this.info.topicArea) {
-      this.selectedTopic = this.info.topicArea[v]
-    }*/
-    console.log('info',this.info)
-    this.changeAvatar = this.avatar ? this.avatar.url : null
-    this.selectedTopic = this.info.topicArea
-  },
-  computed: {
-    test() {
-      console.log('info2',this.info)
-      return "test"
-    }
+    this.selectedTopic = this.info.topicArea;
   },
   fetchOnServer: false,
-  /*watch: {
-    changeAvatar: function (newValue, oldValue) {
-      console.log("newValue: %s, previousValue: %s", newValue, oldValue);
-    },
-  },*/
   methods: {
+    removeImage() {
+      console.log("avatar id", this.avatar.id);
+      this.$strapi.$http.$delete("upload/files/" + this.avatar.id).then(() => {
+        this.$store.dispatch("changeAvatar", null);
+        this.$emit("changeAvatarPreview", null);
+      });
+    },
+    cropImage() {
+      this.removeImage();
+      this.cropData = JSON.stringify(
+        this.$refs.cropper.getCropBoxData(),
+        null,
+        4
+      );
+      this.$refs.cropper.getCroppedCanvas(this.cropData).toBlob((blob) => {
+        console.log("blob", blob);
+        this.upload(blob, true);
+      });
+    },
     finish() {
       const data = {
-        ...this.$store.getters['getActiveUser'],
+        ...this.$store.getters["getActiveUser"],
         topicArea: this.selectedTopic,
         description: this.changeDescription,
         quote: this.changeQuote,
         history: this.changeHistory,
         profession: this.changeProfession,
-      }
-      console.log('data',data)
-      this.$store.dispatch('changeData',data)
-      this.$emit('selection',data)
+      };
+      console.log("data", data);
+      this.$store.dispatch("changeData", data);
+      this.$emit("selection", data);
     },
-    upload(file){
-      console.log("file", file)
-      const form = new FormData()
-      form.append("files", file)
-      console.log(this.$strapi.user.roleName)
-      this.$strapi.$http.$post('upload', form).then((res)=>{
-        this.changeAvatar = res[0].url
-        this.$store.dispatch('changeAvatar',res[0])
-        this.imageFile = ''
-        this.isLoading = false
-        this.overlay = false
-      })
-    }
-    /*upload(file) {
-      this.isLoading = true
-      const uploadTask = this.$fire.storage
-        .ref()
-        .child('profiles/' + this.$store.getters['getActiveUser'].id)
-        .put(file)
-      uploadTask.on(
-        'state_changed',
-        (snapshot) => {
-          // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-          const progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-          // eslint-disable-next-line no-console
-          console.log('Upload is ' + progress + '% done')
-
-          switch (snapshot.state) {
-            case 'paused':
-              // eslint-disable-next-line no-console
-              console.log('Upload is paused')
-              break
-            case 'running':
-              // eslint-disable-next-line no-console
-              console.log('Upload is running')
-              break
-          }
-          // return (this.progress[i] = { loaded: progress })
-        },
-        (error) => {
-          // A full list of error codes is available at
-          // https://firebase.google.com/docs/storage/web/handle-errors
-          switch (error.code) {
-            case 'storage/unauthorized':
-              // User doesn't have permission to access the object
-              break
-
-            case 'storage/canceled':
-              // User canceled the upload
-              break
-
-            case 'storage/unknown':
-              // Unknown error occurred, inspect error.serverResponse
-              break
-          }
-        },
-        () => {
-          uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-            this.changeAvatar = downloadURL
-            this.$store.dispatch('modules/user/setAvatar', downloadURL)
+    upload(file, close = false) {
+      console.log("file", file);
+      const form = new FormData();
+      form.append("files", file);
+      this.$strapi.$http.$post("upload", form).then((res) => {
+        this.$strapi.$users
+          .update(this.info.id, {
+            avatar: res[0],
           })
-          this.imageFile = ''
-          this.isLoading = false
-          this.overlay = false
-        }
-      )
-    },*/
+          .then((r) => {
+            console.log("updated", r);
+          })
+          .catch((e) => {
+            this.$store.dispatch("errorhandling", e);
+          });
+        this.$store.dispatch("changeAvatar", res[0]);
+        this.$emit("changeAvatarPreview", res[0]);
+        this.isLoading = false;
+        this.changeImg = false;
+        this.overlay = !close;
+      });
+    },
   },
-}
+};
 </script>
 <style scoped>
 .v-expansion-panel-content__wrap {

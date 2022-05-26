@@ -43,7 +43,7 @@ export default {
   },
   mounted() {
     this.$strapi.$http.$get(
-      `users?populate=avatar&filters[roleName]=Coach`) //this is controlled via strapi in file strapi-server.js
+      `users?populate=avatar&filters[roleName]=Coach&filters[isVerifyed]=true`) //this is controlled via strapi in file strapi-server.js
     .then((d) => {
       console.log('list of alternative coaches:',d)
       d.forEach((single)=>{

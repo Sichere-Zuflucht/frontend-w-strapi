@@ -11,7 +11,7 @@
           >
           <h1 class="h2--text text-uppercase">Zeigen Sie sich</h1>
           <p>In Ihrem Profil präsentieren Sie sich und Ihre Leistung.</p>
-          {{!user.stripe.payoutsEnabled}}
+          {{ !user.stripe.payoutsEnabled }}
         </v-container>
       </v-sheet>
     </v-col>
@@ -28,7 +28,11 @@
               Profil
             </v-stepper-step>
             <v-divider v-if="!user.stripe.payoutsEnabled"></v-divider>
-            <v-stepper-step v-if="!user.stripe.payoutsEnabled" step="2" editable>
+            <v-stepper-step
+              v-if="!user.stripe.payoutsEnabled"
+              step="2"
+              editable
+            >
               Zahlung aktivieren
             </v-stepper-step>
           </v-stepper-header>
@@ -44,15 +48,20 @@
               </p>
               <CoachingSelection
                 :info="user"
-                :avatar="user.avatar"
+                :avatar="avatarPreview ? avatarPreview : user.avatar"
                 @selection="updateProfile"
+                @changeAvatarPreview="updateAvatarPreview"
               />
               <v-btn
                 text
                 :to="user.stripe.payoutsEnabled ? '/berater/' + user.id : null"
                 color="grey"
                 @click="!user.stripe.payoutsEnabled ? stepper++ : null"
-                >{{ !user.stripe.payoutsEnabled ? 'Später' : 'Weiter ohne Speichern' }}</v-btn
+                >{{
+                  !user.stripe.payoutsEnabled
+                    ? "Später"
+                    : "Weiter ohne Speichern"
+                }}</v-btn
               >
             </v-stepper-content>
             <v-stepper-content v-else step="1">
@@ -74,12 +83,12 @@
                   color="secondary"
                   class="mt-4"
                   @click="stepper++"
-                  >Weiter zur Zahlung</v-btn
+                  >Bezahlungssystem einrichten</v-btn
                 >
               </div>
             </v-stepper-content>
             <v-stepper-content step="2">
-              <h2 class="text-h2 secondary--text pb-4">ZAHLUNG</h2>
+              <h2 class="text-h2 secondary--text pb-4">Bezahlungssystem</h2>
               <p>
                 Sie erhalten pro Beratungseinheit (50 Min.) über unser Portal
                 <b>50€</b>. Damit das Geld Sie auch umgehend erreicht, arbeiten
@@ -130,7 +139,7 @@
 
 <script>
 export default {
-  middleware: 'authCoach',
+  middleware: "authCoach",
   data() {
     return {
       select: true,
@@ -141,15 +150,20 @@ export default {
       disabled: false,
       stripeData: null,
       error: null,
-    }
+      avatarPreview: null,
+    };
   },
   computed: {
     user() {
-      console.log('user',this.$strapi.user)
-      return this.$strapi.user
+      console.log("user", this.$strapi.user);
+      return this.$strapi.user;
     },
   },
   methods: {
+    updateAvatarPreview(img) {
+      console.log("new preview:", img);
+      this.avatarPreview = img
+    },
     updateProfile(data) {
       /*this.$store.dispatch('modules/user/setInfo', {
         topicArea: data.topicArea, // topic
@@ -159,40 +173,41 @@ export default {
         profession: data.profession,
       })
       this.$store.dispatch('modules/user/setAvatar', data.avatar)*/
-      console.log(this.user.id)
-      
-      this.$strapi.$http.$put(`users/${this.user.id}`, data)
-        .then((res)=>{
-          console.log('updated',res)
+      console.log(this.user.id);
+
+      this.$strapi.$http
+        .$put(`users/${this.user.id}`, data)
+        .then((res) => {
+          console.log("updated", res);
         })
-        .catch((e)=>{
-          this.$store.dispatch('errorhandling',e)
-        })
-      this.bioSaved = true
+        .catch((e) => {
+          this.$store.dispatch("errorhandling", e);
+        });
+      this.bioSaved = true;
       // this.$router.push('/berater/' + this.user.public.uid)
     },
     addStripe() {
-      this.loading = true
+      this.loading = true;
       this.$fire.functions
-        .httpsCallable('stripe-getStripeLink')({
+        .httpsCallable("stripe-getStripeLink")({
           email: this.user.private.email,
           isDev: this.$config.isDev,
         })
         .then((stripeData) => {
-          this.stripeRegisterURL = stripeData.data.url
-          this.loading = false
-          this.disabled = true
+          this.stripeRegisterURL = stripeData.data.url;
+          this.loading = false;
+          this.disabled = true;
           if (
             confirm(
-              'Sichere Zuflucht möchte Sie weiterleiten zu: ' +
+              "Sichere Zuflucht möchte Sie weiterleiten zu: " +
                 stripeData.data.url
             )
           ) {
-            location.replace(this.stripeRegisterURL)
+            location.replace(this.stripeRegisterURL);
           }
         })
-        .catch((err) => (this.error = err))
+        .catch((err) => (this.error = err));
     },
   },
-}
+};
 </script>
