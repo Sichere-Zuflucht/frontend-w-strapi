@@ -1,6 +1,6 @@
 <template>
   <div v-if="userdata" class="pa-3">
-    <div v-if="!success && !userdata.isVerifyed && !userdata.isVerifying">
+    <div v-if="!success && userdata.verification == 'false'" >
       <h2 class="text-h2 secondary--text pb-4">Verifizierung</h2>
       <p>
         Wir nehmen innerhalb der nächsten Tage mit Ihnen Kontakt auf, um Sie
@@ -64,7 +64,7 @@
         >
       </v-form>
     </div>
-    <div v-else-if="(!userdata.isVerifyed && !userdata.isVerifying) || success">
+    <div v-else-if="userdata.verification == 'inprogress' || success">
       <h2 class="text-h2 secondary--text pb-4">VERIFIZIERUNG GESTARTET</h2>
       <div v-if="editprofil">
         <p>
@@ -80,7 +80,7 @@
         Ihr Profil online und Sie können mit der Beratung beginnen.
       </p>
     </div>
-    <div v-else-if="userdata.isVerifyed">
+    <div v-else-if="userdata.verification == 'done'">
       <h2 class="text-h2 secondary--text pb-4">VERIFIZIERUNG GESCHAFFT</h2>
     </div>
     <v-alert v-if="error">{{ error ? error : '' }}</v-alert>
@@ -128,7 +128,7 @@ export default {
     verifyProfil() {
       this.loading = true
       const data = {
-        isVerifying: true,
+        verification: 'inprogress',
         tel: this.verPhone,
         www: this.verWeb,
         altEmail: this.verEmail,

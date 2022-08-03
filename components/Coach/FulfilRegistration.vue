@@ -27,7 +27,7 @@
       >
 
       <v-alert
-        v-if="!userData.isVerified"
+        v-if="userData.verification != 'done'"
         dark
         color="error"
       >
@@ -47,17 +47,13 @@
       >
       <p
         v-if="
-          !(
-            userData.topicArea &&
-            userData.stripe.payoutsEnabled &&
-            userData.isVerified
-          )
+          !userData.topicArea && !userData.stripe.payoutsEnabled && userData.verification != 'done'
         "
         class="caption"
       >
         Solange Sie nicht
         {{
-          !userData.isVerified
+          userData.verification != 'done'
             ? 'von uns verifiziert wurden, '
             : null
         }}{{

@@ -3,7 +3,7 @@ export default function ({ redirect, $strapi, route }) {
         window.localStorage.setItem('redirectBackTo', route.fullPath)
         redirect('/registration/signin')
     } else {
-        if($strapi.user.roleName != 'New' && $strapi.user.isVerifying == true) {
+        if($strapi.user.roleName != 'authenticated' && $strapi.user.verification == 'done') {
             redirect('/')
         }
     }

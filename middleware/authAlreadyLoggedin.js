@@ -1,8 +1,8 @@
 export default function ({ redirect, $strapi }) {
     if ($strapi.user) {
-        if($strapi.user.roleName == 'Woman') {
+        if($strapi.user.roleName == 'woman') {
             redirect('/frauen')
-        } else if($strapi.user.roleName == 'Coach') {
+        } else if($strapi.user.roleName == 'coach') {
             redirect('/beratung')
         }
     }

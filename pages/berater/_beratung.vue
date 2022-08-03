@@ -81,11 +81,18 @@
         </div>
       </div>
     </v-container>
-    <div
+   <!-- <div
       v-if="
         $store.getters['getActiveUser'] 
         && ($route.params.beratung !== $store.getters['getActiveUser'].id) 
         && $store.getters['getActiveUser'].roleName !== 'Coach'
+      "
+    >-->
+    <div
+      v-if="
+        $strapi.user 
+        && ($route.params.beratung !== $strapi.user.id) 
+        && $strapi.user.roleName !== 'coach'
       "
     >
       <v-container>
@@ -294,12 +301,12 @@ export default {
     }
   },
   async fetch() {
-    if (
+    /*if (
       this.$store.getters['getActiveUser'] && this.$route.params.beratung === this.$store.getters['getActiveUser'].id
     ) {
       this.pubData = this.$store.getters['getActiveUser']
     } else {
-      this.$strapi.$http
+      */this.$strapi.$http
         .$get(`users?populate=avatar&filters[id]=${this.$route.params.beratung}`)
         .then((r)=>{
           console.log('route:', this.$route)
@@ -309,7 +316,7 @@ export default {
           console.log('route user',this.pubData)
           if (this.pubData === undefined) this.pubData = false
         })
-    }
+    //}
     
   },
   fetchOnServer: false,

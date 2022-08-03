@@ -339,19 +339,18 @@ export default {
           username: username, 
           email: this.email, 
           password: this.password,
-          roleName: 'New',
-          isVerifying: false,
           stripe: {
             payoutsEnabled: false,
           }
         })
         .then(() => {
           this.buttonText = 'Gesendet'
-          this.valid = false
-          this.loading = false
-          this.showConfirmation = true
-          this.step++
-          window.localStorage.setItem('emailForSignIn', this.email)
+            this.valid = false
+            this.loading = false
+            this.showConfirmation = true
+            this.step++
+            window.localStorage.setItem('emailForSignIn', this.email)
+          
         })
         .catch((e)=>{
           console.log('error:', e)

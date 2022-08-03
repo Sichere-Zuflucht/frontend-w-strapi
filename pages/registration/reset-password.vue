@@ -43,7 +43,6 @@
         </v-alert>
       </v-card-text>
     </v-card>
-{{email}}
     <p class="text--secondary text-center mt-4 mb-0">
       Du kennst dein Passwort?
     </p>

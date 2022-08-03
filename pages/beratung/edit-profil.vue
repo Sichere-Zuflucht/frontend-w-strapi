@@ -165,24 +165,23 @@ export default {
       this.avatarPreview = img
     },
     updateProfile(data) {
-      /*this.$store.dispatch('modules/user/setInfo', {
-        topicArea: data.topicArea, // topic
-        description: data.description,
-        quote: data.quote,
-        history: data.history,
-        profession: data.profession,
-      })
-      this.$store.dispatch('modules/user/setAvatar', data.avatar)*/
-      console.log(this.user.id);
-
-      this.$strapi.$http
-        .$put(`users/${this.user.id}`, data)
-        .then((res) => {
-          console.log("updated", res);
+      this.$strapi.$users
+        .update(this.$strapi.user.id, {
+          topicArea: data.topicArea, // topic
+          description: data.description,
+          quote: data.quote,
+          history: data.history,
+          profession: data.profession,
+        })
+        .then((r) => {
+          console.log('updated',r)
+          this.loading = false
+          this.success = true
         })
         .catch((e) => {
           this.$store.dispatch("errorhandling", e);
         });
+      console.log(this.user.id);
       this.bioSaved = true;
       // this.$router.push('/berater/' + this.user.public.uid)
     },

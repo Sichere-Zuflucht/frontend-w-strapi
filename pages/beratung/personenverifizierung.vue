@@ -2,7 +2,7 @@
   <div>
     <UtilsBanner icon="mdi-account-question-outline" />
     <v-container>
-      <SharedVerificationPage :editprofil="false" />
+      <SharedVerificationPage :editprofil="false" :userdata="$strapi.user"/>
     </v-container>
   </div>
 </template>

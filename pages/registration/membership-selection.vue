@@ -215,8 +215,9 @@ export default {
       if (role.type == "coach") this.roleTypes.push(role);
       if (role.type == "woman") this.roleTypes.push(role);
     });
-    if (this.$strapi.user.roleName != "New") {
-      if (this.$strapi.user.roleName == "Woman") this.$router.push("/frauen");
+    // on the register function its not possible (any more?!) to add the variable roleName -> maybe change to role: authenticated
+    if (this.$strapi.user.roleName != "authenticated") {
+      if (this.$strapi.user.roleName == "woman") this.$router.push("/frauen");
       this.userdata = this.$store.getters["getActiveUser"];
       this.membership = this.memberships[1];
       this.stepper = 3;
@@ -250,14 +251,13 @@ export default {
             role: this.roleTypes.find(
               (r) => r.type == this.membership.id.toLowerCase()
             ),
-            roleName: this.membership.id,
+            roleName: this.membership.id.toLowerCase(),
             firstName: this.firstName,
             lastName: this.lastName,
             username: username,
           };
           console.log("data", data);
-          this.$strapi.$http
-            .$put(`users/${this.$strapi.user.id}`, data)
+          this.$strapi.$users.update(this.$strapi.user.id, data)
             .then((newU) => {
               console.log("newU", newU);
               this.alert.isActive = false;
@@ -278,27 +278,6 @@ export default {
               this.$store.dispatch("errorhandling", err);
             });
         });
-
-      /*this.$strapi.register({ 
-        username: username, 
-        email: this.email, 
-        password: this.password,
-        roleName: this.membership.id,
-        blocked: false,
-        isVerifying: false,
-        //role: this.roleTypes.find(r => r.type == this.membership.id.toLowerCase()),
-      }).then(()=>{
-        console.log(this.membership.id.toLowerCase(), this.roleTypes[0].type, this.roleTypes[1].type)
-        const data = {
-          role: this.roleTypes.find(r => r.type == this.membership.id.toLowerCase()),
-        }
-        this.$strapi.$http.$put(`users/${this.$strapi.user.id}`,data)
-        this.$store.dispatch('checkAuth')
-        window.localStorage.removeItem('emailForSignIn')
-        this.loading = false
-        this.userdata = this.$store.getters['getActiveUser']
-        this.membership.id === 'Coach' ? this.stepper++ : this.$router.push('/frauen')
-      })*/
     },
   },
 };
