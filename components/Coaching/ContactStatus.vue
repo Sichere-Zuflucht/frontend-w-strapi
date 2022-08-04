@@ -31,14 +31,13 @@
       </v-avatar>
       <div class="ma-5 ml-2 d-flex flex-column justify-center">
         <h2 class="secondary--text text-h2">
-          {{ coach.username }}
+          {{ coach.displayName }}
         </h2>
         <h3 class="mt-2 text-h5">
           {{ coach.profession }}
         </h3>
       </div>
     </v-sheet>
-
     <v-card-text v-if="response">
       <p class="text-uppercase font-weight-bold mb-1 mt-2 caption">
         Vorschläge für einen Online-Beratungstermin
@@ -51,7 +50,7 @@
           <v-col cols="12">
             <v-select
               v-model="selectedDate"
-              :items="response.suggestion"
+              :items="response.suggestions"
               outlined
               dense
               hide-details

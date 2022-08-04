@@ -252,8 +252,7 @@ export default {
               (r) => r.type == this.membership.id.toLowerCase()
             ),
             roleName: this.membership.id.toLowerCase(),
-            firstName: this.firstName,
-            lastName: this.lastName,
+            displayName: this.firstName+' '+this.lastName,
             username: username,
           };
           console.log("data", data);

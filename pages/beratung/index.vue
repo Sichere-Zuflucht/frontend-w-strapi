@@ -3,7 +3,7 @@
     <client-only>
       <p class="caption mb-0 font-weight-bold">Hallo</p>
       <h1 v-if="user" class="text-h1 secondary--text">
-        {{ user.username }}
+        {{ user.displayName }}
       </h1>
     </client-only>
     <CoachFulfilRegistration />
@@ -13,16 +13,16 @@
       user.verification == 'done'"
     >
       <h2 class="primary--text mb-2">Anfragen</h2>
-
+      
       <div v-if="requests != null">
-        <div v-if="requests.length !== 0">
+        <div v-if="requests.length != 0">
           <v-expansion-panels>
             <v-expansion-panel v-for="(item, i) in requests" :key="i">
               <div
                 v-if="
-                  item.acceptedDate
+                  item.attributes.acceptedDate
                     ? new Date(
-                        item.acceptedDate.date + ' ' + item.acceptedDate.time
+                        item.attributes.acceptedDate
                       ) >= newDate
                     : true
                 "
@@ -33,7 +33,7 @@
                 >
                   <v-avatar
                     class="mr-2 flex-shrink-1 flex-grow-0"
-                    :style="'border: 1px solid ' + item.womanColor"
+                    :style="'border: 1px solid ' + item.attributes.womanColor"
                   >
                     <!-- <v-img
                     lazy-src="woman-icon-sichere-zuflucht.svg"
@@ -43,7 +43,7 @@
                     max-height="40"
                     max-width="40"
                   ></v-img> -->
-                    <SharedWomanIcon :color="item.womanColor" class="pa-2" />
+                    <SharedWomanIcon :color="item.attributes.womanColor" class="pa-2" />
                   </v-avatar>
                   <div
                     class="d-flex flex-column flex-grow-0 flex-shrink-0"
@@ -61,17 +61,17 @@
                     </p>
                     <p
                       class="font-weight-bold mb-0"
-                      :style="'color: ' + item.womanColor"
+                      :style="'color: ' + item.attributes.womanColor"
                     >
-                      {{ item.womanUserName }}
+                      {{ item.attributes.womanUserName }}
                     </p>
                   </div>
-
-                  <div v-if="item.acceptedDate">
+                  
+                  <div v-if="item.attributes.acceptedDate">
                     <v-chip
                       v-if="
                         new Date(
-                          item.acceptedDate.date + ' ' + item.acceptedDate.time
+                          item.attributes.acceptedDate
                         ) <= new Date()
                       "
                       class="ma-2 flex-shrink-0 flex-grow-1"
@@ -90,7 +90,7 @@
                     </v-chip>
                   </div>
 
-                  <div v-else-if="item.coachAnswered">
+                  <div v-else-if="item.attributes.coachAnswered">
                     <v-chip
                       class="ma-2 flex-shrink-0 flex-grow-1"
                       color="orange"
@@ -113,7 +113,7 @@
                   <v-card elevation="0">
                     <v-card-text
                       ><v-sheet
-                        v-if="item.message"
+                        v-if="item.attributes.message"
                         color="grey lighten-5 pa-3 my-4"
                       >
                         <p
@@ -125,9 +125,9 @@
                         >
                           Nachricht
                         </p>
-                        <p class="mb-0">{{ item.message }}</p></v-sheet
+                        <p class="mb-0">{{ item.attributes.message }}</p></v-sheet
                       >
-                      <div v-if="!item.coachAnswered" class="pt-4">
+                      <div v-if="!item.attributes.coachAnswered" class="pt-4">
                         <v-select
                           v-model="selectedVideoType"
                           :items="videoTypes"
@@ -139,7 +139,7 @@
                         <v-list>
                           <v-list-item-group>
                             <v-list-item
-                              v-for="(d, di) in item.suggestions"
+                              v-for="(d, di) in item.attributes.suggestions"
                               :key="di"
                             >
                               <v-list-item-content>
@@ -148,10 +148,10 @@
                                   style="font-size: 1em"
                                   >{{ formatDate(d.date) }}
                                 </v-list-item-title>
-                                <p class="caption">{{ d.time }} Uhr</p>
+                                <p class="caption">{{ formatTime(d.date) }} Uhr</p>
                               </v-list-item-content>
                               <v-list-item-icon>
-                                <v-icon @click="eraseDate(di, item.suggestions)"
+                                <v-icon @click="eraseDate(di, item.attributes.suggestions)"
                                   >mdi-close
                                 </v-icon>
                               </v-list-item-icon>
@@ -164,11 +164,11 @@
                         </p>
                       </div>
 
-                      <div v-else-if="item.acceptedDate">
+                      <div v-else-if="item.attributes.acceptedDate">
                         <p class="caption">Bestätigter Termin</p>
                         <b
-                          >{{ formatDate(item.acceptedDate.date) }} |
-                          {{ item.acceptedDate.time }}
+                          >{{ formatDate(item.attributes.acceptedDate) }} |
+                          {{ formatTime(item.attributes.acceptedDate) }}
                           <span class="caption">(50min)</span>
                         </b>
                         <v-divider></v-divider>
@@ -177,11 +177,11 @@
                           color="success"
                           target="_blank"
                           :href="
-                            item.videoType === 'sicherer Anbieter'
-                              ? item.video
-                              : item.video.codeArzt
+                            item.attributes.videoType.value === 'normal'
+                              ? item.attributes.video
+                              : item.attributes.video.codeArzt
                           "
-                          >zum Videocall ({{ item.videoType }})
+                          >zum Videocall ({{ item.attributes.videoType }})
                         </v-btn>
                       </div>
 
@@ -189,19 +189,19 @@
                         Es wurde noch kein Termin bestätigt. Ihre
                         vorgeschlagenen Termine sind:<br /><br />
                         <span
-                          v-for="(d, di) in item.suggestions"
+                          v-for="(d, di) in item.attributes.suggestions"
                           :key="di"
                           class="pt-4"
                           ><b>{{ formatDate(d.date) }}</b
                           ><br />
-                          {{ d.time }} Uhr<br /><br
+                          {{ formatTime(d.date) }} Uhr<br /><br
                         /></span> </v-banner
                     ></v-card-text>
                     <v-card-actions class="d-flex justify-end">
                       <v-btn
-                        v-if="!item.coachAnswered"
+                        v-if="!item.attributes.coachAnswered"
                         :loading="loading"
-                        :disabled="item.suggestions.length < 3"
+                        :disabled="item.attributes.suggestions.length < 3"
                         color="success"
                         @click="addSuggestions(item)"
                         >Termine vorschlagen
@@ -246,9 +246,9 @@
             <v-expansion-panel v-for="(item, i) in requests" :key="i">
               <div
                 v-if="
-                  item.acceptedDate
+                  item.attributes.acceptedDate
                     ? new Date(
-                        item.acceptedDate.date + ' ' + item.acceptedDate.time
+                        item.attributes.acceptedDate
                       ) < newDate
                     : false
                 "
@@ -259,9 +259,9 @@
                 >
                   <v-avatar
                     class="mr-2 flex-shrink-1 flex-grow-0"
-                    :style="'border: 1px solid ' + item.womanColor"
+                    :style="'border: 1px solid ' + item.attributes.womanColor"
                   >
-                    <SharedWomanIcon :color="item.womanColor" class="pa-2" />
+                    <SharedWomanIcon :color="item.attributes.womanColor" class="pa-2" />
                   </v-avatar>
                   <div
                     class="d-flex flex-column flex-grow-0 flex-shrink-0"
@@ -279,9 +279,9 @@
                     </p>
                     <p
                       class="font-weight-bold mb-0"
-                      :style="'color: ' + item.womanColor"
+                      :style="'color: ' + item.attributes.womanColor"
                     >
-                      {{ item.womanUserName }}
+                      {{ item.attributes.womanUserName }}
                     </p>
                   </div>
 
@@ -299,7 +299,7 @@
                   <v-card elevation="0">
                     <v-card-text
                       ><v-sheet
-                        v-if="item.message"
+                        v-if="item.attributes.message"
                         color="grey lighten-5 pa-3 my-4"
                       >
                         <p
@@ -311,13 +311,13 @@
                         >
                           Nachricht
                         </p>
-                        <p class="mb-0">{{ item.message }}</p></v-sheet
+                        <p class="mb-0">{{ item.attributes.message }}</p></v-sheet
                       >
-                      <div v-if="item.acceptedDate">
+                      <div v-if="item.attributes.acceptedDate">
                         <p class="caption">Stattgefunden am</p>
                         <b
-                          >{{ formatDate(item.acceptedDate.date) }} |
-                          {{ item.acceptedDate.time }}
+                          >{{ formatDate(item.attributes.acceptedDate) }} |
+                          {{ formatTime(item.attributes.acceptedDate) }}
                           <span class="caption">(50min)</span>
                         </b>
                       </div>
@@ -377,8 +377,14 @@ export default {
   data() {
     return {
       requests: null,
-      videoTypes: ['sicherer Anbieter', 'zertifizierter Anbieter'],
-      selectedVideoType: 'sicherer Anbieter',
+      videoTypes: [{
+        text: 'sicherer Anbieter',
+        value: 'normal'
+      },{
+         text:'zertifizierter Anbieter',
+         value: 'secure'
+      }],
+      selectedVideoType: 'normal',
       loading: false,
       isDelete: false,
       eraseLoading: false,
@@ -401,6 +407,14 @@ export default {
       if(role.type == 'coach') this.roleTypes.push(role)
       if(role.type == 'woman') this.roleTypes.push(role)
     })
+
+    this.$strapi.$meetings.find({
+      populate: 'suggestions',
+      "filters[users_permissions_users]": this.$strapi.user.id
+    }).then((meetings)=>{
+      this.requests = meetings.data
+      console.log(this.requests)
+    })
     //this.$strapi.$http
     //  .$get(`users?filters[id][$eq]=${this.$strapi.user.id}`)
     
@@ -410,9 +424,6 @@ export default {
   },
   fetchOnServer: false,
   computed: {
-    coachName() {
-      return this.user.public.firstName + ' ' + this.user.public.lastName
-    },
     user() {
       return this.$store.getters['getActiveUser']
     },
@@ -433,13 +444,24 @@ export default {
     },
     addSuggestions(request) {
       this.loading = true
-      this.$fire.functions
+      console.log('request',request)
+      const data = {
+        coachAnswered: true,
+        suggestions: request.attributes.suggestions,
+        updatedAt: (new Date()).toISOString(),
+        videoType: this.selectedVideoType
+      }
+      console.log('data',data)
+      this.$strapi.$meetings.update(request.id, {
+        data
+      })
+      /*this.$fire.functions
         .httpsCallable('request-addSuggestions')({
           coachName: this.coachName,
           suggestions: request.suggestions,
           requestId: request.id,
           videoType: this.selectedVideoType,
-        })
+        })*/
         .then(() => {
           request.coachAnswered = true
           request.updatedAt = new Date()
@@ -457,6 +479,13 @@ export default {
         year: 'numeric',
         month: 'long',
         day: 'numeric',
+      })
+    },
+    formatTime(date) {
+      const d = new Date(date)
+      return d.toLocaleTimeString('de-DE', {
+        hour: 'numeric',
+        minute: 'numeric'
       })
     },
   },

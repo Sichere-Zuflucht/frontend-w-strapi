@@ -9,7 +9,7 @@
     <template #activator="{ on, attrs }">
       <v-btn
         v-bind="attrs"
-        :color="item.suggestions.length < 3 ? 'success' : null"
+        :color="item.attributes.suggestions.length < 3 ? 'success' : null"
         prepend-icon="mdi-calendar"
         v-on="on"
         >Datum/Uhrzeit auswählen</v-btn
@@ -71,7 +71,7 @@
       <v-btn
         :disabled="!time"
         color="primary"
-        @click="addDates(item.suggestions)"
+        @click="addDates(item.attributes.suggestions)"
       >
         Fertig
       </v-btn>
@@ -93,14 +93,14 @@ export default {
       isSelectDate: true,
       allowed: {
         dates: (d) => {
-          return new Date(d).getDay() > 0 && new Date(d).getDay() < 6
+          return new Date(d).getUTCDay() > 0 && new Date(d).getUTCDay() < 6
         },
         hours: (h) => {
           return (
             h >= 7 &&
             h <= 19 &&
-            (this.date === this.today.toISOString().substr(0, 10)
-              ? h >= this.today.getHours()
+            (this.date === this.today.toString().substr(0, 10)
+              ? h >= this.today.getUTCHours()
               : true)
           )
         },
@@ -122,27 +122,19 @@ export default {
   methods: {
     addDates(d) {
       // $refs.dialog.save(date)
+      //const date = new Date(this.date +' '+this.time)
+      const date = (new Date(this.date +' '+this.time)).toISOString()
       d.push({
-        date: this.date,
-        time: this.time,
+        date: date//this.date+'T'+this.time+':00.000Z'
       })
+      console.log('d', d)
       this.date = ''
       this.time = ''
       this.isSelectDate = true
       // this.menu = false
       this.$refs.dialog.save()
-    },
-    formatDate(date) {
-      const d = new Date(date)
-      let month = '' + (d.getMonth() + 1)
-      let day = '' + d.getDate()
-      const year = d.getFullYear()
-
-      if (month.length < 2) month = '0' + month
-      if (day.length < 2) day = '0' + day
-
-      return [year, month, day].join('-')
-    },
+    }
   },
+  
 }
 </script>

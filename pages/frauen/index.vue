@@ -12,7 +12,6 @@
         </h2>
       </v-container>
       <v-container v-if="responses.length === 1">
-        
         <CoachingContactStatus
           :coach="responses[0].coach"
           :response="responses[0].attributes"
@@ -105,37 +104,62 @@
 
 <script>
 export default {
-  middleware: 'authWoman',
+  middleware: "authWoman",
   data() {
     return {
       userData: null,
-      responses: null,
+      responses: [],
       offers: [
         {
-          title: 'Sichere Zuflucht-Magazin',
-          img: 'le-buzz-tVnm9I9jb8I-unsplash.jpg',
-          link: '/magazine',
-          btntext: 'Zum Magazin',
+          title: "Sichere Zuflucht-Magazin",
+          img: "le-buzz-tVnm9I9jb8I-unsplash.jpg",
+          link: "/magazine",
+          btntext: "Zum Magazin",
         },
         {
-          title: 'Berater*innen und Coaches',
-          img: 'le-buzz-tVnm9I9jb8I-unsplash.jpg',
-          link: '/berater/suche',
-          btntext: 'Berater*innen Übersicht',
+          title: "Berater*innen und Coaches",
+          img: "le-buzz-tVnm9I9jb8I-unsplash.jpg",
+          link: "/berater/suche",
+          btntext: "Berater*innen Übersicht",
         },
       ],
       newWoman: false,
       newDate: new Date(new Date().setHours(new Date().getHours() - 2)),
-    }
+    };
   },
-  async mounted(){
-  //async fetch() {
-    // these responses contain only communication where this user was involved
-    const responses = (await this.$strapi.$http.$get(`meetings?populate=suggestion&filters[${this.$store.getters["getActiveUser"].roleName.toLowerCase()}ID][$eq]=${this.$strapi.user.id}`)).data
-
-    const res = await Promise.all(
+  async mounted() {
+    this.$strapi.$meetings
+      .find({
+        populate: "users_permissions_users, suggestions",
+        "filters[users_permissions_users]": this.$strapi.user.id,
+      })
+      .then((res) => {
+        //const responses = res.data.map((response) => {
+          console.log(res)
+        res.data
+          .forEach((response) => {
+            this.$strapi.$users
+              .find({
+                populate: "avatar",
+                "filters[id]":
+                  response.attributes.users_permissions_users.data[1].id,
+              })
+              .then((thisCoach) => {
+                const coach = thisCoach[0];
+                this.responses.push({
+                  coach,
+                  ...response,
+                });
+              });
+          })
+        const oldRes = this.responses;
+        this.responses = oldRes.sort((a, b) => {
+          return a.createdAt._seconds - b.createdAt._seconds;
+        });
+      });
+    /*const res = await Promise.all(
       responses.map(async (response) => {
-        //console.log('response',response)
+        console.log('response',response)
         const coach = (
           await this.$strapi.$http
             .$get(`users?filters[id][$eq]=${response.attributes.coachID}`)
@@ -143,7 +167,8 @@ export default {
         return { coach, ...response }
       })
     )
-    this.responses = res
+    this.responses = res*/
+
     // get the data for each coach and add it to the response
     // then push it to the responses list
     /*const res = await Promise.all(
@@ -164,14 +189,14 @@ export default {
       return a.createdAt._seconds - b.createdAt._seconds
     })*/
 
-    this.newWoman = window.localStorage.getItem('newWoman')
-    window.localStorage.removeItem('newWoman')
+    this.newWoman = window.localStorage.getItem("newWoman");
+    window.localStorage.removeItem("newWoman");
   },
   fetchOnServer: false,
   methods: {
     cancel(response) {
-      this.responses = this.responses.filter((r) => r !== response)
+      this.responses = this.responses.filter((r) => r !== response);
     },
   },
-}
+};
 </script>

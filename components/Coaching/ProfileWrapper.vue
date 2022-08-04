@@ -20,7 +20,7 @@
           :to="'/berater/' + pubCoachData.id"
           style="text-decoration: none"
           ><h2 class="secondary--text text-h2">
-            {{ pubCoachData.username }}
+            {{ pubCoachData.displayName }}
           </h2>
           <h3 class="text-h5">
             {{ pubCoachData.profession }}

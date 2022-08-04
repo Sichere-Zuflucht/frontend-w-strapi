@@ -2,14 +2,22 @@
   <div v-if="pubData">
     <v-sheet class="d-flex justify-center pt-8" style="position: relative"
       ><v-avatar size="162">
-        <v-img 
+        <v-img
           v-if="pubData.avatar"
-          :lazy-src="(pubData.avatar.url.includes('http') ? '' : 'http://localhost:1337') + pubData.avatar.url" 
-          :src="(pubData.avatar.url.includes('http') ? '' : 'http://localhost:1337') + pubData.avatar.url"
+          :lazy-src="
+            (pubData.avatar.url.includes('http')
+              ? ''
+              : 'http://localhost:1337') + pubData.avatar.url
+          "
+          :src="
+            (pubData.avatar.url.includes('http')
+              ? ''
+              : 'http://localhost:1337') + pubData.avatar.url
+          "
         ></v-img
       ></v-avatar>
     </v-sheet>
-    
+
     <v-container>
       <h1 class="text-center text-h1 primary--text text-uppercase">
         {{ pubData.firstName }} {{ pubData.lastName }}
@@ -30,7 +38,7 @@
           <b>"{{ pubData.quote }}"</b>
         </p>
       </div>
-      
+
       <div v-if="pubData.since">
         <p class="font-weight-bold mb-0 mt-4 caption">
           Ich bin Coach/Berater*in seit dem Jahr:
@@ -81,7 +89,7 @@
         </div>
       </div>
     </v-container>
-   <!-- <div
+    <!-- <div
       v-if="
         $store.getters['getActiveUser'] 
         && ($route.params.beratung !== $store.getters['getActiveUser'].id) 
@@ -90,9 +98,9 @@
     >-->
     <div
       v-if="
-        $strapi.user 
-        && ($route.params.beratung !== $strapi.user.id) 
-        && $strapi.user.roleName !== 'coach'
+        $strapi.user &&
+        $route.params.beratung !== $strapi.user.id &&
+        $strapi.user.roleName !== 'coach'
       "
     >
       <v-container>
@@ -118,7 +126,7 @@
               class="pb-8 pt-4"
               @submit="
                 (e) => {
-                  e.preventDefault()
+                  e.preventDefault();
                 }
               "
             >
@@ -246,6 +254,7 @@
         @click="copy"
       ></v-text-field>
     </v-container>
+    <v-btn @click="createMeeting">create</v-btn>
   </div>
   <div v-else-if="pubData !== false">
     <v-container>
@@ -257,7 +266,7 @@
     </v-container>
   </div>
   <div v-else>
-    {{pubData}}
+    {{ pubData }}
     <v-container class="mt-16">
       <h1 class="text-h1 secondary--text mb-4">Unbekannt</h1>
       <v-alert type="error" dark color="red">
@@ -273,6 +282,7 @@
       </p>
       <SharedServiceOverview class="pb-16" />
     </v-container>
+    
   </div>
 </template>
 
@@ -281,16 +291,16 @@ export default {
   data() {
     return {
       requestForm: false,
-      message: '',
-      msgTitle: '',
+      message: "",
+      msgTitle: "",
       showAddInfo: false,
       loading: false,
       isDisabled: false,
-      buttonText: 'Anfrage senden',
+      buttonText: "Anfrage senden",
       showConfirmation: false,
       error: {
         status: false,
-        message: '',
+        message: "",
       },
       allCoaches: [],
       filteredCoaches: [],
@@ -298,7 +308,7 @@ export default {
       linkVal: this.$route.fullPath,
       copied: false,
       pubData: undefined,
-    }
+    };
   },
   async fetch() {
     /*if (
@@ -306,23 +316,33 @@ export default {
     ) {
       this.pubData = this.$store.getters['getActiveUser']
     } else {
-      */this.$strapi.$http
-        .$get(`users?populate=avatar&filters[id]=${this.$route.params.beratung}`)
-        .then((r)=>{
-          console.log('route:', this.$route)
-          console.log('router:', this.$router)
-          console.log('route user list',r)
-          this.pubData = r[0]
-          console.log('route user',this.pubData)
-          if (this.pubData === undefined) this.pubData = false
-        })
+      */
+
+    this.$strapi.$users
+      .find({
+        populate: "avatar",
+        "filters[id]": this.$route.params.beratung,
+      })
+      .then((r) => {
+        console.log("route:", this.$route);
+        console.log("router:", this.$router);
+        console.log("route user list", r);
+        this.pubData = r[0];
+        console.log("route user", this.pubData);
+        if (this.pubData === undefined) this.pubData = false;
+      });
+    console.log(
+      "meetings find",
+      (await this.$strapi.$meetings.find({
+        populate: "users_permissions_users",
+      })).data[0].attributes
+    );
     //}
-    
   },
   fetchOnServer: false,
   computed: {
     coachName() {
-      return this.pubData.username
+      return this.pubData.displayName;
     },
   },
   methods: {
@@ -348,36 +368,30 @@ export default {
           this.error.message = err.message
         })
     },*/
-    createMeeting(){
-      const woman = this.$store.getters['getActiveUser']
-      const coach = this.pubData
-      const mergeMeetings = [
-        woman,
-        coach
-      ]
-      console.log('mergeMeetings',mergeMeetings)
+    createMeeting() {
+      const woman = this.$store.getters["getActiveUser"];
+      const coach = this.pubData;
+      console.log("mergeMeetings", mergeMeetings);
       const data = {
-        message: this.msgTitle + ': ' + this.message,
-        coachAnswered: false,
-        coachID: this.$route.params.beratung,
-        womanID: this.$store.getters['getActiveUser'].id.toString(),
-        coachEmail: this.pubData.email,
-        users_permissions_users: mergeMeetings
-      }
-      console.log('data',data)
-      
-      this.$strapi.$meetings
-        .create({data})
-        .catch((error)=>{
-          this.$store.dispatch('errorhandling',error) //errorhandling(error)
-        })
+        message: this.msgTitle + ": " + this.message,
+        //coachID: this.$route.params.beratung,
+        //womanID: this.$store.getters["getActiveUser"].id.toString(),
+        //coachEmail: this.pubData.email,
+        users_permissions_users: [woman, coach],
+        meetingId: `w${woman.id.toString()}-c${this.$route.params.beratung}-${(new Date).getTime()}`
+      };
+      console.log("data", data);
+
+      this.$strapi.$meetings.create({ data }).catch((error) => {
+        this.$store.dispatch("errorhandling", error); //errorhandling(error)
+      });
     },
     copy() {
-      const markup = this.$refs.link
-      markup.focus()
-      document.execCommand('selectAll', false, null)
-      this.copied = document.execCommand('copy')
+      const markup = this.$refs.link;
+      markup.focus();
+      document.execCommand("selectAll", false, null);
+      this.copied = document.execCommand("copy");
     },
   },
-}
+};
 </script>

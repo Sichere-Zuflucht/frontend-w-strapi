@@ -42,9 +42,11 @@ export default {
     }
   },
   mounted() {
-    this.$strapi.$http.$get(
-      `users?populate=avatar&filters[roleName]=Coach&filters[verification]=done`) //this is controlled via strapi in file strapi-server.js
-    .then((d) => {
+    this.$strapi.$users.find({
+      populate: 'avatar',
+      'filters[roleName]': 'coach',
+      'filters[verification]': 'done',
+    }).then((d) => {
       console.log('list of alternative coaches:',d)
       d.forEach((single)=>{
         if (this.withoutid != single.id) this.allCoaches.push(single)
@@ -54,25 +56,6 @@ export default {
     .catch((err)=>{
       this.$store.dispatch('errorhandling',err)
     })
-
-    /*try {
-      await this.$fire.functions
-        .httpsCallable('user-getCoaches')()
-        .then((d) => {
-          d.data.forEach((a) => {
-            const b = JSON.parse(a)
-            if (this.withoutid) {
-              if (this.withoutid !== b.uid) this.allCoaches.push(b)
-            } else {
-              this.allCoaches.push(b)
-            }
-          })
-          this.loading = false
-        })
-    } catch (error) {
-      error.status = true
-      error.text = error
-    }*/
   },
 }
 </script>
