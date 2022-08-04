@@ -254,7 +254,6 @@
         @click="copy"
       ></v-text-field>
     </v-container>
-    <v-btn @click="createMeeting">create</v-btn>
   </div>
   <div v-else-if="pubData !== false">
     <v-container>
