@@ -463,8 +463,8 @@ export default {
           videoType: this.selectedVideoType,
         })*/
         .then(() => {
-          request.coachAnswered = true
-          request.updatedAt = new Date()
+          request.attributes.coachAnswered = true
+          request.attributes.updatedAt = new Date()
           this.loading = false
         })
     },

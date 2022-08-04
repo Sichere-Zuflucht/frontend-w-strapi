@@ -369,9 +369,9 @@ export default {
         })
     },*/
     createMeeting() {
+      this.loading = true
       const woman = this.$store.getters["getActiveUser"];
       const coach = this.pubData;
-      console.log("mergeMeetings", mergeMeetings);
       const data = {
         message: this.msgTitle + ": " + this.message,
         //coachID: this.$route.params.beratung,
@@ -382,7 +382,14 @@ export default {
       };
       console.log("data", data);
 
-      this.$strapi.$meetings.create({ data }).catch((error) => {
+      this.$strapi.$meetings.create({ data })
+      .then(()=>{
+        this.buttonText = 'versendet'
+        this.loading = false
+        this.showConfirmation = true
+        this.isDisabled = true
+      })
+      .catch((error) => {
         this.$store.dispatch("errorhandling", error); //errorhandling(error)
       });
     },
