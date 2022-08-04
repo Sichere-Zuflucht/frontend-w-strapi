@@ -7,12 +7,10 @@
       </h1>
     </client-only>
     <CoachFulfilRegistration />
-    <div
-      v-if="
-        !!this.private &&
-        this.private.stripe &&
-        this.private.verifySetting.verified
-      "
+    <div v-if="
+      user.topicArea && 
+      user.stripe.payoutsEnabled && 
+      user.verification == 'done'"
     >
       <h2 class="primary--text mb-2">Anfragen</h2>
 
@@ -418,20 +416,8 @@ export default {
     user() {
       return this.$store.getters['getActiveUser']
     },
-    /*private() {
-      return this.$store.getters['modules/user/private']
-    },*/
   },
   methods: {
-    loadRole(){
-      console.log('user',this.user)
-    },
-    changeRole(roleName){
-      const data = {
-        role: this.roleTypes.find(r => r.type == roleName),
-      }
-      this.$strapi.$http.$put(`users/${this.$strapi.user.id}`,data)
-    },
     cancel(doc) {
       this.eraseLoading = true
       this.$fire.functions
