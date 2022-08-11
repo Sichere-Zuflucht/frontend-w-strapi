@@ -112,7 +112,7 @@
         <v-stepper-content step="3">
           <div class="mb-4 d-flex flex-column align-center">
             <v-avatar v-if="avatar && !changeImg" size="200">
-              <v-img :src="$config.strapi.url + avatar.url"
+              <v-img :src="imgUrl + avatar.url"
                 ><div
                   class="d-flex justify-center align-end pb-2"
                   style="width: 100%"
@@ -135,7 +135,7 @@
               v-model="imageFile"
               labelIdle='Ziehe eine Datei per Drag & Drop hierher oder <span class="filepond--label-action"> durchsuche den Computer </span>'
               server="/api"
-              :src="avatar ? this.$config.strapi.url + avatar.url : null"
+              :src="avatar ? imgUrl + avatar.url : null"
               imagePreviewHeight="200"
               imageCropAspectRatio="1:1"
               imageResizeTargetWidth="200"
@@ -160,7 +160,7 @@
                 ref="cropper"
                 :aspect-ratio="1 / 1"
                 alt="Source Image"
-                :src="this.$config.strapi.url + avatar.url"
+                :src="imgUrl + avatar.url"
                 :zoomable="false"
               ></vue-cropper>
               <div class="d-flex align-center">
@@ -239,6 +239,17 @@ export default {
       ],
       yearsAgo: new Date().getFullYear() - 100,
     };
+  },
+  computed: {
+    imgUrl() {
+      return (
+        (this.$config.strapi.url.includes(
+          "https"
+        )
+          ? ""
+          : "http://localhost:1337")
+      );
+    },
   },
   mounted() {
     this.selectedTopic = this.info.topicArea;
