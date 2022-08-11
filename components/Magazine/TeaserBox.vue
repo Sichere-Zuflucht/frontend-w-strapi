@@ -8,17 +8,27 @@
     <v-img
       v-if="this.magazineData.attributes.cover.data"
       height="200"
-      :lazy-src="(this.magazineData.attributes.cover.data.attributes.url.includes('http') ? '' : 'http://localhost:1337') + this.magazineData.attributes.cover.data.attributes.formats.thumbnail.url"
-      :src="(this.magazineData.attributes.cover.data.attributes.url.includes('http') ? '' : 'http://localhost:1337') + this.magazineData.attributes.cover.data.attributes.url"
+      :lazy-src="
+        imgUrl +
+        this.magazineData.attributes.cover.data.attributes.formats.thumbnail.url
+      "
+      :src="
+        imgUrl +
+        this.magazineData.attributes.cover.data.attributes.url
+      "
       class="flex-grow-0 flex-shrink-1"
     />
     <v-card-actions v-if="magazineData.attributes.tags.data != 0">
       <v-avatar style="margin-top: -30px" color="white"
-        ><v-icon>{{ magazineData.attributes.tags.data[0].attributes.icon }}</v-icon></v-avatar
+        ><v-icon>{{
+          magazineData.attributes.tags.data[0].attributes.icon
+        }}</v-icon></v-avatar
       ></v-card-actions
     >
     <v-card-text class="flex-column align-start pt-0 flex-grow-1 flex-shrink-0">
-      <h2 class="text-h2 secondary--text pt-0">{{ magazineData.attributes.title }}</h2>
+      <h2 class="text-h2 secondary--text pt-0">
+        {{ magazineData.attributes.title }}
+      </h2>
       <p class="font-weight-bold">
         {{ magazineData.attributes.subtitle }}
       </p>
@@ -54,11 +64,17 @@ export default {
       default: false,
     },
   },
-  computed:{
-    imgUrl(){ 
-      (this.magazineData.attributes.cover.data.attributes.url.includes("http") ? '' : 'http://localhost:1337') 
-      + this.magazineData.attributes.cover.data.attributes.url
-    }
-  }
-}
+  computed: {
+    imgUrl() {
+      return (
+        (this.magazineData.attributes.cover.data.attributes.url.includes(
+          "https"
+        )
+          ? ""
+          : "http://localhost:1337") +
+        this.magazineData.attributes.cover.data.attributes.url
+      );
+    },
+  },
+};
 </script>

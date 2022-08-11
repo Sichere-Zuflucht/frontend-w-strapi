@@ -26,11 +26,11 @@
       <v-avatar v-if="coach.avatar" color="primary ma-5" size="35%">
         <v-img
           :lazy-src="
-            (coach.avatar.url.includes('http') ? '' : 'http://localhost:1337') +
+            (coach.avatar.url.includes('https') ? '' : 'http://localhost:1337') +
             coach.avatar.url
           "
           :src="
-            (coach.avatar.url.includes('http') ? '' : 'http://localhost:1337') +
+            (coach.avatar.url.includes('https') ? '' : 'http://localhost:1337') +
             coach.avatar.url
           "
         />

@@ -5,12 +5,12 @@
         <v-img
           v-if="pubData.avatar"
           :lazy-src="
-            (pubData.avatar.url.includes('http')
+            (pubData.avatar.url.includes('https')
               ? ''
               : 'http://localhost:1337') + pubData.avatar.url
           "
           :src="
-            (pubData.avatar.url.includes('http')
+            (pubData.avatar.url.includes('https')
               ? ''
               : 'http://localhost:1337') + pubData.avatar.url
           "
