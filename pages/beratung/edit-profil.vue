@@ -1,5 +1,5 @@
 <template>
-  <v-row>
+  <v-row v-if="user">
     <v-col cols="12" md="6" height="100%" class="pa-0">
       <v-sheet color="secondary" height="100%" dark>
         <v-container
@@ -11,7 +11,6 @@
           >
           <h1 class="h2--text text-uppercase">Zeigen Sie sich</h1>
           <p>In Ihrem Profil präsentieren Sie sich und Ihre Leistung.</p>
-          {{ !user.stripe.payouts_enabled }}
         </v-container>
       </v-sheet>
     </v-col>
@@ -46,6 +45,7 @@
                 von Ihnen und Ihrem Angebot. Dann können die Frauen besser
                 abwägen, an wen Sie sich wenden wollen.
               </p>
+              
               <CoachingSelection
                 :info="user"
                 :avatar="avatarPreview ? avatarPreview : user.avatar"
@@ -150,13 +150,11 @@ export default {
       disabled: false,
       error: null,
       avatarPreview: null,
+      user: null,
     };
   },
-  computed: {
-    user() {
-      console.log("user", this.$strapi.user);
-      return this.$strapi.user;
-    },
+  async mounted() {
+    this.user= await this.$strapi.$users.findOne(this.$strapi.user.id, {populate: 'avatar'})
   },
   methods: {
     updateAvatarPreview(img) {

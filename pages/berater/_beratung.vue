@@ -241,7 +241,7 @@
       >
       <v-text-field
         ref="link"
-        style="opacity: 1"
+        style="opacity: 0"
         readonly
         :value="linkVal"
         @click="copy"
