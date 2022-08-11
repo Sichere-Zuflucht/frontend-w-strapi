@@ -26,7 +26,7 @@ export default {
     if (this.$store.getters["getActiveUser"].roleName != "woman") {
       const id = this.$store.getters["getActiveUser"].stripe.id;
       this.$axios
-        .get(this.$strapi.options.url + "/retrievestripe?acc=" + id, {
+        .get(this.$config.strapi.url + "/retrievestripe?acc=" + id, {
           headers: {
             Authorization:
               "Bearer " +
