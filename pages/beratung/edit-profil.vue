@@ -154,7 +154,9 @@ export default {
     };
   },
   async mounted() {
-    this.user= await this.$strapi.$users.findOne(this.$strapi.user.id, {populate: 'avatar'})
+    const u = await this.$strapi.$users.findOne(this.$strapi.user.id, {populate: 'avatar'})
+    this.avatarPreview = u.avatar
+    this.user = this.$strapi.user
   },
   methods: {
     updateAvatarPreview(img) {

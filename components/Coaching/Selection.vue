@@ -134,7 +134,7 @@
               v-else-if="!avatar || changeImg"
               v-model="imageFile"
               labelIdle='Ziehe eine Datei per Drag & Drop hierher oder <span class="filepond--label-action"> durchsuche den Computer </span>'
-              server="/api"
+              server="/api/imgApi"
               :src="avatar ? imgUrl + avatar.url : null"
               imagePreviewHeight="200"
               imageCropAspectRatio="1:1"
@@ -261,6 +261,7 @@ export default {
       this.$strapi.$http.$delete("upload/files/" + this.avatar.id).then(() => {
         this.$store.dispatch("changeAvatar", null);
         this.$emit("changeAvatarPreview", null);
+        this.user.avatar = null
       });
     },
     cropImage() {
