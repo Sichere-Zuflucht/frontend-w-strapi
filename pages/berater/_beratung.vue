@@ -89,13 +89,6 @@
         </div>
       </div>
     </v-container>
-    <!-- <div
-      v-if="
-        $store.getters['getActiveUser'] 
-        && ($route.params.beratung !== $store.getters['getActiveUser'].id) 
-        && $store.getters['getActiveUser'].roleName !== 'Coach'
-      "
-    >-->
     <div
       v-if="
         $strapi.user &&
@@ -248,7 +241,7 @@
       >
       <v-text-field
         ref="link"
-        style="opacity: 0"
+        style="opacity: 1"
         readonly
         :value="linkVal"
         @click="copy"
@@ -265,7 +258,6 @@
     </v-container>
   </div>
   <div v-else>
-    {{ pubData }}
     <v-container class="mt-16">
       <h1 class="text-h1 secondary--text mb-4">Unbekannt</h1>
       <v-alert type="error" dark color="red">
@@ -304,7 +296,7 @@ export default {
       allCoaches: [],
       filteredCoaches: [],
       dialog: false,
-      linkVal: this.$route.fullPath,
+      linkVal: window.location.href, //this.$route.fullPath,
       copied: false,
       pubData: undefined,
     };
