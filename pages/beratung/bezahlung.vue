@@ -2,7 +2,7 @@
   <div>
     <UtilsBanner icon="mdi-credit-card-plus-outline" />
     <v-container>
-      <div v-if="!stripe || !stripe.verified">
+      <div v-if="!stripe || !stripe.charges_enabled">
         <h1 class="text-h1 primary--text mb-4">Bezahlung<br />verwalten</h1>
         <p>
           Sie erhalten für Ihre Beratungsleistung über unser Portal
@@ -30,7 +30,7 @@
         </div>
         <div v-else>
           <v-alert
-            v-if="!stripe.chargesEnabled"
+            v-if="!stripe.charges_enabled"
             color="error"
             icon="mdi-clock-fast"
             outlined
@@ -54,7 +54,7 @@
             </v-btn>
           </v-alert>
           <v-alert
-            v-else-if="stripe.chargesEnabled && !stripe.payoutsEnabled"
+            v-else-if="stripe.charges_enabled && !stripe.payouts_enabled"
             color="error"
             icon="mdi-clock-fast"
             outlined
@@ -81,10 +81,14 @@
       </div>
       <div v-else>
         <h2 class="text-h2 primary--text">Stripe Übersicht</h2>
-        <v-btn :href="stripeDash" target="_blank" color="secondary" class="mt-4"
+        <v-btn
+          :href="stripeLoginURL"
+          target="_blank"
+          color="secondary"
+          class="mt-4"
           >Zum Stripe Dashboard</v-btn
         >
-        <div v-if="stripeData">
+        <!--<div v-if="stripeData">
           <p>Kartenzahlung:</p>
         </div>
         <v-card v-for="(item, i) of stripeData" :key="i">
@@ -99,7 +103,7 @@
 
             <v-btn @click="more(item.id)">Mehr</v-btn>
           </v-card-text>
-        </v-card>
+        </v-card>-->
       </div>
 
       <p v-if="stripeRegisterURL" class="caption">
@@ -113,39 +117,78 @@
 
 <script>
 export default {
-  middleware: 'authCoach',
+  middleware: "authCoach",
   data() {
     return {
       stripeRegisterURL: null,
+      stripeLoginURL: null,
+      
       loading: false,
       disabled: false,
       stripeData: null,
-    }
+    };
+  },
+  mounted() {
+    const id = this.$store.getters["getActiveUser"].stripe.id;
+    this.$axios
+      .get("http://localhost:1337/api/stripeloginlink?acc=" + id)
+      .then((body) => {
+        this.stripeLoginURL = body.data.url;
+      });
+
+    this.$axios
+      .get("http://localhost:1337/api/retrievestripe?email=" + this.$store.getters["getActiveUser"].email)
+      .then((body) => {
+        console.log(body.data)
+        this.stripeData = body.data;
+      });
+    
   },
   computed: {
     user() {
-      return this.$store.user
+      return this.$store.getters["getActiveUser"];
     },
     stripe() {
       try {
-        return this.$store.getters['getActiveUser'].stripe
+        return this.$store.getters["getActiveUser"].stripe;
       } catch (TypeError) {
-        return 'type error'
+        return "type error";
       }
-    },
-    stripeDash() {
-      return (
-        'https://dashboard.stripe.com/' +
-        this.stripe.id +
-        (this.$config.isDev ? '/test/' : '/') +
-        'dashboard'
-      )
     },
   },
   methods: {
     addStripe() {
-      this.loading = true
-      this.$fire.functions
+      console.log(this.user);
+      this.loading = true;
+      this.$axios
+        .get("http://localhost:1337/api/createStripe?email=" + this.user.email)
+        .then((body) => {
+          console.log(body.data);
+          this.$strapi.$users
+            .update(this.$strapi.user.id, {
+              stripe: {
+                payouts_enabled: false,
+                id: body.data.stripeId,
+              },
+            })
+            .then((r) => {
+              this.stripeRegisterURL = body.data.url;
+              this.loading = false;
+              this.disabled = true;
+              if (
+                confirm(
+                  "Sichere Zuflucht möchte Sie weiterleiten zu: " +
+                    body.data.url
+                )
+              ) {
+                location.replace(this.stripeRegisterURL);
+              }
+            })
+            .catch((e) => {
+              this.$store.dispatch("errorhandling", e);
+            });
+        });
+      /*this.$fire.functions
         .httpsCallable('stripe-getStripeLink')({
           email: this.user.private.email,
           isDev: this.$config.isDev,
@@ -162,8 +205,17 @@ export default {
           ) {
             location.replace(this.stripeRegisterURL)
           }
-        })
+        })*/
+    },
+    getStripeLoginURL() {
+      const id = this.$store.getters["getActiveUser"].stripe.id;
+      this.$axios
+        .get("http://localhost:1337/api/stripeloginlink?acc=" + id)
+        .then((body) => {
+          console.log(body);
+          //this.stripeLoginURL = body.url
+        });
     },
   },
-}
+};
 </script>

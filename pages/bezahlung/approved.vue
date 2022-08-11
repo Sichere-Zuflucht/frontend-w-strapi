@@ -9,7 +9,7 @@
           <v-icon size="60" class="pb-4" color="white">mdi-check</v-icon>
           <h1 class="h2--text text-uppercase">Geschafft!</h1>
           <p>Ihr Stripe-Prozess war erfolgreich!</p>
-          <v-btn to="/profile" color="secondary">Zum Profil</v-btn>
+          <v-btn to="/beratung" color="secondary">Zum Profil</v-btn>
         </v-container>
       </v-sheet></v-col
     >
@@ -21,6 +21,54 @@
 
 <script>
 export default {
-  name: 'Approved',
-}
+  name: "Approved",
+  mounted() {
+    if (this.$store.getters["getActiveUser"].roleName != "woman") {
+      const id = this.$store.getters["getActiveUser"].stripe.id;
+      this.$axios
+        .get(this.$strapi.options.url + "/retrievestripe?acc=" + id)
+        .then((body) => {
+          console.log(body.data);
+          //just proof, if account is valid due to having content
+          if (body.data.capabilities) {
+            this.$strapi.$users
+              .update(this.$strapi.user.id, {
+                stripe: {
+                  payouts_enabled: body.data.payouts_enabled,
+                  id: body.data.id,
+                  charges_enabled: body.data.charges_enabled,
+                },
+              })
+              .then((newUser) => {
+                console.log(newUser);
+                this.$store.dispatch("changeData", newUser);
+              });
+          }
+        });
+    } else {
+      const meetingID = window.localStorage.getItem("meetingID");
+      const sessionID = window.localStorage.getItem("sessionID");
+      if (!sessionID) return
+      this.$axios
+        .$get(
+          this.$config.strapi.url +
+            "/retrievestripepaysession?paymentID=" +
+            sessionID
+        )
+        .then((sessionData) => {
+          const data = {
+            payed: sessionData.payment_status == "paid" ? true : false,
+          };
+          this.$strapi.$meetings
+            .update(meetingID, {
+              data,
+            })
+            .then(() => {
+              window.localStorage.removeItem("meetingID")
+              window.localStorage.removeItem("sessionID")
+            });
+        })
+    }
+  },
+};
 </script>

@@ -330,13 +330,6 @@ export default {
         console.log("route user", this.pubData);
         if (this.pubData === undefined) this.pubData = false;
       });
-    console.log(
-      "meetings find",
-      (await this.$strapi.$meetings.find({
-        populate: "users_permissions_users",
-      })).data[0].attributes
-    );
-    //}
   },
   fetchOnServer: false,
   computed: {

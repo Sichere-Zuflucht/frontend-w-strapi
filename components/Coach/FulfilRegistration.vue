@@ -12,7 +12,7 @@
           </v-col>
         </v-row></v-alert
       >
-      <v-alert v-if="!userData.stripe.payoutsEnabled" dark color="error"
+      <v-alert v-if="!userData.stripe.payouts_enabled" dark color="error"
         ><v-row align="center">
           <v-col class="shrink">
             <v-icon>mdi-credit-card-off-outline</v-icon>
@@ -47,7 +47,7 @@
       >
       <p
         v-if="
-          !userData.topicArea && !userData.stripe.payoutsEnabled && userData.verification != 'done'
+          !userData.topicArea && !userData.stripe.payouts_enabled && userData.verification != 'done'
         "
         class="caption"
       >
@@ -57,7 +57,7 @@
             ? 'von uns verifiziert wurden, '
             : null
         }}{{
-          !userData.stripe.payoutsEnabled
+          !userData.stripe.payouts_enabled
             ? 'Stripe eingerichtet haben, '
             : null
         }}

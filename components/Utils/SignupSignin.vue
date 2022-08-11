@@ -340,7 +340,7 @@ export default {
           email: this.email, 
           password: this.password,
           stripe: {
-            payoutsEnabled: false,
+            payouts_enabled: false,
           }
         })
         .then(() => {

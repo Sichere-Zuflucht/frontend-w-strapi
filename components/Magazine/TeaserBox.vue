@@ -12,7 +12,7 @@
       :src="(this.magazineData.attributes.cover.data.attributes.url.includes('http') ? '' : 'http://localhost:1337') + this.magazineData.attributes.cover.data.attributes.url"
       class="flex-grow-0 flex-shrink-1"
     />
-    <v-card-actions>
+    <v-card-actions v-if="magazineData.attributes.tags.data != 0">
       <v-avatar style="margin-top: -30px" color="white"
         ><v-icon>{{ magazineData.attributes.tags.data[0].attributes.icon }}</v-icon></v-avatar
       ></v-card-actions

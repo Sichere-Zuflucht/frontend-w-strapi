@@ -52,7 +52,7 @@
         </v-list>
         <v-divider />
         <v-list v-if="user">
-          <div v-if="user.roleName === 'Woman'">
+          <div v-if="user.roleName === 'woman'">
             <v-list-group
               v-for="(item, i) in loggedInWoman"
               :key="i"

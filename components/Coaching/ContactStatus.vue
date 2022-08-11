@@ -24,9 +24,15 @@
       "
     >
       <v-avatar v-if="coach.avatar" color="primary ma-5" size="35%">
-        <v-img 
-          :lazy-src="(coach.avatar.url.includes('http') ? '' : 'http://localhost:1337') + coach.avatar.url"
-          :src="(coach.avatar.url.includes('http') ? '' : 'http://localhost:1337') + coach.avatar.url"
+        <v-img
+          :lazy-src="
+            (coach.avatar.url.includes('http') ? '' : 'http://localhost:1337') +
+            coach.avatar.url
+          "
+          :src="
+            (coach.avatar.url.includes('http') ? '' : 'http://localhost:1337') +
+            coach.avatar.url
+          "
         />
       </v-avatar>
       <div class="ma-5 ml-2 d-flex flex-column justify-center">
@@ -100,14 +106,14 @@
             :disabled="coachingLiesInPast"
             :href="
               response.videoType === 'sicherer Anbieter'
-                ? response.video
-                : response.video.codePatient
+                ? response.videoCoach
+                : response.videoWoman
             "
             >zum Videocall
           </v-btn>
           <v-alert dark text dense color="success"
-            >Zugesagt für {{ formatDate(response.acceptedDate.date) }} um
-            {{ response.acceptedDate.time }}
+            >Zugesagt für {{ formatDate(response.acceptedDate) }} um
+            {{ formatTime(response.acceptedDate) }}
           </v-alert>
         </div>
         <div v-else>
@@ -136,12 +142,7 @@
       style="border-top: 1px solid lightgrey"
       class="align-stretch pa-4"
     >
-      <v-btn
-        small
-        color="primary"
-        outlined
-        nuxt
-        :to="'/berater/' + coach.id"
+      <v-btn small color="primary" outlined nuxt :to="'/berater/' + coach.id"
         >Neue Anfrage stellen
       </v-btn>
       <v-dialog v-model="isDelete" persistent max-width="290">
@@ -175,7 +176,7 @@
 
 <script>
 export default {
-  name: 'Coaching',
+  name: "Coaching",
   props: {
     coach: {
       type: Object,
@@ -205,66 +206,84 @@ export default {
       eraseLoading: false,
       btn: {
         error: false,
-        errorMsg: '',
+        errorMsg: "",
         acceptText: this.response
           ? this.response.acceptedDate
-            ? 'Bezahlt'
-            : 'Termin verbindlich buchen'
+            ? "Bezahlt"
+            : "Termin verbindlich buchen"
           : null,
         isDisabled: false,
         payButtonLoading: false,
       },
       redirectWarning: false,
       error: null,
-    }
+    };
   },
   computed: {
     coachingLiesInPast() {
-      const acceptedDate = new Date(this.response.acceptedDate?.date || '')
-      acceptedDate.setDate(acceptedDate.getDate() + 1)
-      return !!this.response.acceptedDate && acceptedDate <= new Date()
+      const acceptedDate = new Date(this.response.acceptedDate?.date || "");
+      acceptedDate.setDate(acceptedDate.getDate() + 1);
+      return !!this.response.acceptedDate && acceptedDate <= new Date();
     },
   },
   methods: {
     cancel() {
-      this.eraseLoading = true
-      console.log(this.id)
-      this.$strapi.$meetings.delete(this.id)
+      this.eraseLoading = true;
+      console.log(this.id);
+      this.$strapi.$meetings
+        .delete(this.id)
         .then(() => {
-          console.log('erased')
-          this.isDelete = false
-          this.eraseLoading = false
-          this.error = null
-          this.$emit('cancel')
+          console.log("erased");
+          this.isDelete = false;
+          this.eraseLoading = false;
+          this.error = null;
+          this.$emit("cancel");
         })
         .catch((err) => {
-          this.isDelete = false
-          this.eraseLoading = false
-          this.error = err
-          console.log('delete error: ', err)
-        })
+          this.isDelete = false;
+          this.eraseLoading = false;
+          this.error = err;
+          console.log("delete error: ", err);
+        });
     },
     async pay(dateInput) {
-      console.log(dateInput)
-      this.payButtonLoading = true
-      this.redirectWarning = true
-      let redReq, data, video
-      if (this.response.videoType === 'RED') {
+      this.btn.payButtonLoading = true;
+      let redReq, data, video;
+      if (this.response.videoType === "secure") {
         data = {
-          method: 'getEntrycodes',
-          date: dateInput.date,
+          //method: 'getEntryCodes',
+          //date: (dateInput.date.split('T'))[0],
+          //token: this.$config.redAPI,
+          method: "getEntryCodes",
+          date: "2019-11-27",
           token: this.$config.redAPI,
-        }
-        redReq = await fetch('https://redclient.redmedical.de/service/video', {
+        };
+        console.log("data", data);
+        this.$axios
+          .$post("https://redclient.redmedical.de/service/video", {
+            header: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          })
+          .then((response) => {
+            console.log(response);
+            if (!response.success) return (this.error = response.error);
+            console.log("after error");
+            this.redirectWarning = true;
+          });
+        /*redReq = await fetch('https://redclient.redmedical.de/service/video', {
           method: 'POST',
           header: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(data),
         })
+        console.log("redReq", redReq)
         redReq
           .json()
           .then((redRes) => {
+            console.log("redRes", redRes)
             video = {
               codeArzt:
                 'https://video.redmedical.de/#/login?name=' +
@@ -280,39 +299,60 @@ export default {
           .catch((error) => {
             // eslint-disable-next-line no-console
             console.log('err: ', error)
-          })
+          })*/
       } else {
-        video =
-          'https://meet.jit.si/' + this.coach.username.toLowerCase().replace(' ','-') + '-meetingid-' + this.id // no ?:&'"%# symbols allowed
-        this.standardPayment(video, dateInput)
+        video = {
+          codeArzt:
+            "https://meet.jit.si/" +
+            this.coach.username +
+            "-meetingid-" +
+            this.id, // no ?:&'"%# symbols allowed
+          codePatient:
+            "https://meet.jit.si/" +
+            this.coach.username +
+            "-meetingid-" +
+            this.id,
+        };
+        this.redirectWarning = true;
+        this.standardPayment(video, dateInput);
       }
     },
     standardPayment(v, dI) {
-      console.log('v',v)
-      console.log('date', dI.date.toString())
-      const data = {
-        acceptedDate: dI.date,
-        video: v,
-      }
-      this.$strapi.$meetings
-        .update(this.id, {
-          data
-        })
-      /*this.$fire.functions
-        .httpsCallable('request-acceptDate')({
-          coachName:
-            this.response.coach.firstName + ' ' + this.response.coach.lastName,
-          acceptedDate: dI,
-          requestId: this.response.id,
-          video: v,
-        })*/
-        .then((r) => {
-          console.log('result',r)
-          this.payButtonLoading = false
-          this.btn.isDisabled = true
-          this.response.acceptedDate = dI
-          this.response.video = v
-          console.log('payment end too early')
+      this.$axios
+        .$get(
+          `${this.$config.strapi.url}/paywithstripe?id=${this.id}&coachStripeId=${this.coach.stripe.id}`
+        )
+        .then((paymentID) => {
+          const data = {
+            acceptedDate: dI.date,
+            videoCoach: v.codeArzt,
+            videoWoman: v.codePatient,
+            paymentID: paymentID,
+          };
+
+          this.$strapi.$meetings
+            .update(this.id, {
+              data,
+            })
+            .then((r) => {
+              console.log("result", r);
+              this.btn.payButtonLoading = false;
+              this.btn.isDisabled = true;
+              this.response.acceptedDate = dI;
+              this.response.video = v;
+              window.localStorage.setItem('meetingID', this.id)
+              window.localStorage.setItem('sessionID', paymentID)
+
+              this.$stripe.redirectToCheckout({
+                // Make the id field from the Checkout Session creation API response
+                // available to this file, so you can provide it as argument here
+                // instead of the {{CHECKOUT_SESSION_ID}} placeholder.
+                sessionId: paymentID,
+              });
+            })
+            .catch((e) => {
+              this.$store.dispatch("errorhandling", e);
+            });
           /*const paymentID = (
             await this.$fire.functions.httpsCallable('stripe-payCoaching')({
               responseID: this.response.id,
@@ -326,26 +366,26 @@ export default {
             sessionId: paymentID,
           })*/
         })
-        .catch((e)=>{
-          this.$store.dispatch('errorhandling',e)
-        })
+        .catch((e) => {
+          this.$store.dispatch("errorhandling", e);
+        });
     },
     formatDate(date) {
-      const d = new Date(date)
-      return d.toLocaleDateString('de-DE', {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      })
+      const d = new Date(date);
+      return d.toLocaleDateString("de-DE", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
     },
     formatTime(date) {
-      const d = new Date(date)
-      return d.toLocaleTimeString('de-DE', {
-        hour: 'numeric',
-        minute: 'numeric'
-      })
+      const d = new Date(date);
+      return d.toLocaleTimeString("de-DE", {
+        hour: "numeric",
+        minute: "numeric",
+      });
     },
   },
-}
+};
 </script>

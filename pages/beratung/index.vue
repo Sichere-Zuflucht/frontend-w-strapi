@@ -9,7 +9,7 @@
     <CoachFulfilRegistration />
     <div v-if="
       user.topicArea && 
-      user.stripe.payoutsEnabled && 
+      user.stripe.payouts_enabled && 
       user.verification == 'done'"
     >
       <h2 class="primary--text mb-2">Anfragen</h2>
@@ -33,17 +33,9 @@
                 >
                   <v-avatar
                     class="mr-2 flex-shrink-1 flex-grow-0"
-                    :style="'border: 1px solid ' + item.attributes.womanColor"
+                    style="border: 1px solid lightgrey"
                   >
-                    <!-- <v-img
-                    lazy-src="woman-icon-sichere-zuflucht.svg"
-                    src="woman-icon-sichere-zuflucht.svg"
-                    :style="'border: 1px solid ' + item.womanColor"
-                    :color="item.womanColor"
-                    max-height="40"
-                    max-width="40"
-                  ></v-img> -->
-                    <SharedWomanIcon :color="item.attributes.womanColor" class="pa-2" />
+                    <SharedWomanIcon color="black" class="pa-2" />
                   </v-avatar>
                   <div
                     class="d-flex flex-column flex-grow-0 flex-shrink-0"
@@ -57,13 +49,12 @@
                         font-size: 0.5em !important;
                       "
                     >
-                      KryptoNr. Frau
+                      KryptoNr.
                     </p>
                     <p
                       class="font-weight-bold mb-0"
-                      :style="'color: ' + item.attributes.womanColor"
                     >
-                      {{ item.attributes.womanUserName }}
+                      {{ item.attributes.users_permissions_users.data[0].attributes.username }}
                     </p>
                   </div>
                   
@@ -178,11 +169,11 @@
                           target="_blank"
                           :href="
                             item.attributes.videoType.value === 'normal'
-                              ? item.attributes.video
-                              : item.attributes.video.codeArzt
+                              ? item.attributes.videoWoman
+                              : item.attributes.videoCoach
                           "
-                          >zum Videocall ({{ item.attributes.videoType }})
-                        </v-btn>
+                          >zum Videocall
+                        </v-btn> ({{ item.attributes.videoType == 'normal' ? 'standard Videoanbieter ' : 'zertifizierter Videoanbieter' }})
                       </div>
 
                       <v-banner v-else>
@@ -259,9 +250,9 @@
                 >
                   <v-avatar
                     class="mr-2 flex-shrink-1 flex-grow-0"
-                    :style="'border: 1px solid ' + item.attributes.womanColor"
+                    style="border: 1px solid lightgrey"
                   >
-                    <SharedWomanIcon :color="item.attributes.womanColor" class="pa-2" />
+                    <SharedWomanIcon  class="pa-2" />
                   </v-avatar>
                   <div
                     class="d-flex flex-column flex-grow-0 flex-shrink-0"
@@ -279,7 +270,6 @@
                     </p>
                     <p
                       class="font-weight-bold mb-0"
-                      :style="'color: ' + item.attributes.womanColor"
                     >
                       {{ item.attributes.womanUserName }}
                     </p>
@@ -409,7 +399,7 @@ export default {
     })
 
     this.$strapi.$meetings.find({
-      populate: 'suggestions',
+      populate: '*',
       "filters[users_permissions_users]": this.$strapi.user.id
     }).then((meetings)=>{
       this.requests = meetings.data

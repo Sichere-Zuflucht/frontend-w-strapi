@@ -14,6 +14,7 @@ export const getters = {
 
 export const actions = {
   async checkAuth({ commit }){
+    console.log(this.$strapi.user)
     if (this.$strapi.user) commit('setUserData', this.$strapi.user)
     else commit('setUserData', null)
   },

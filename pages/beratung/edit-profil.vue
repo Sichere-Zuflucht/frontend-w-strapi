@@ -11,7 +11,7 @@
           >
           <h1 class="h2--text text-uppercase">Zeigen Sie sich</h1>
           <p>In Ihrem Profil präsentieren Sie sich und Ihre Leistung.</p>
-          {{ !user.stripe.payoutsEnabled }}
+          {{ !user.stripe.payouts_enabled }}
         </v-container>
       </v-sheet>
     </v-col>
@@ -27,9 +27,9 @@
             >
               Profil
             </v-stepper-step>
-            <v-divider v-if="!user.stripe.payoutsEnabled"></v-divider>
+            <v-divider v-if="!user.stripe.payouts_enabled"></v-divider>
             <v-stepper-step
-              v-if="!user.stripe.payoutsEnabled"
+              v-if="!user.stripe.payouts_enabled"
               step="2"
               editable
             >
@@ -54,11 +54,11 @@
               />
               <v-btn
                 text
-                :to="user.stripe.payoutsEnabled ? '/berater/' + user.id : null"
+                :to="user.stripe.payouts_enabled ? '/berater/' + user.id : null"
                 color="grey"
-                @click="!user.stripe.payoutsEnabled ? stepper++ : null"
+                @click="!user.stripe.payouts_enabled ? stepper++ : null"
                 >{{
-                  !user.stripe.payoutsEnabled
+                  !user.stripe.payouts_enabled
                     ? "Später"
                     : "Weiter ohne Speichern"
                 }}</v-btn
@@ -79,7 +79,7 @@
                   :to="'/berater/' + user.id"
                   >Profil ansehen</v-btn
                 ><v-btn
-                  v-if="!user.stripe.payoutsEnabled"
+                  v-if="!user.stripe.payouts_enabled"
                   color="secondary"
                   class="mt-4"
                   @click="stepper++"
@@ -148,7 +148,6 @@ export default {
       stripeRegisterURL: null,
       loading: false,
       disabled: false,
-      stripeData: null,
       error: null,
       avatarPreview: null,
     };
@@ -187,6 +186,36 @@ export default {
     },
     addStripe() {
       this.loading = true;
+      console.log(this.user.email)
+      this.$axios
+        .get("http://localhost:1337/api/createStripe?email=" + this.user.email)
+        .then((body) => {
+          console.log(body.data);
+          this.$strapi.$users
+            .update(this.$strapi.user.id, {
+              stripe: {
+                payouts_enabled: false,
+                id: body.data.stripeId,
+              },
+            })
+            .then((r) => {
+              this.stripeRegisterURL = body.data.url;
+              this.loading = false;
+              this.disabled = true;
+              if (
+                confirm(
+                  "Sichere Zuflucht möchte Sie weiterleiten zu: " +
+                    body.data.url
+                )
+              ) {
+                location.replace(this.stripeRegisterURL);
+              }
+            })
+            .catch((e) => {
+              this.$store.dispatch("errorhandling", e);
+            });
+        });
+      /*
       this.$fire.functions
         .httpsCallable("stripe-getStripeLink")({
           email: this.user.private.email,
@@ -205,7 +234,7 @@ export default {
             location.replace(this.stripeRegisterURL);
           }
         })
-        .catch((err) => (this.error = err));
+        .catch((err) => (this.error = err));*/
     },
   },
 };

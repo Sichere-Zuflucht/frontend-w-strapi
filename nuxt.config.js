@@ -36,6 +36,9 @@ export default {
   css: [
   ],
 
+  env: {
+  },
+
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     "~/plugins/cropper",
@@ -55,6 +58,7 @@ export default {
   modules: [
     '@nuxtjs/axios',
     '@nuxtjs/strapi',
+    'nuxt-stripe-module',
   ],
 
   axios: {
@@ -79,7 +83,12 @@ export default {
   publicRuntimeConfig: {
     strapi: {
       url: process.env.STRAPI_URL,
-    }
+    },
+    redAPI: process.env.RED_API,
+    stripe: {
+      publishableKey:
+        process.env.STRIPE_PK,
+    },
   },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify

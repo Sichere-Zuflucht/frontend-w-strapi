@@ -133,25 +133,74 @@ export default {
         populate: "users_permissions_users, suggestions",
         "filters[users_permissions_users]": this.$strapi.user.id,
       })
-      .then((res) => {
-        //const responses = res.data.map((response) => {
-          console.log(res)
-        res.data
-          .forEach((response) => {
-            this.$strapi.$users
-              .find({
+      .then(async (res) => {
+        /*const responses = await Promise.all(
+          res.data.map(async (response) => {
+            const coach = (
+              await this.$strapi.$users.find({
                 populate: "avatar",
                 "filters[id]":
                   response.attributes.users_permissions_users.data[1].id,
               })
-              .then((thisCoach) => {
-                const coach = thisCoach[0];
-                this.responses.push({
-                  coach,
-                  ...response,
+            )[0];
+            if(response.attributes.paymentID && !response.attributes.payed){
+              await this.$axios.$get(
+                this.$config.strapi.url +
+                  "/retrievestripepaysession?paymentID=" +
+                  response.attributes.paymentID
+              ).then((sessionData)=>{
+                this.$strapi.$meetings.update(response.id,{
+                  payed: sessionData.payment_status == 'paid' ? true : false
+                })
+              })
+            }
+            
+            //response.attributes.payed = sessionData.payment_status ? sessionData.payment_status : false
+            const newRes = {
+              ...response,
+              coach,
+              //sessionData,
+            };
+            return newRes;
+          })
+        );
+        console.log("responses", responses);
+        console.log("res", res);*/
+        res.data.forEach((response) => {
+          /*if (response.attributes.paymentID && !response.attributes.payed) {
+            this.$axios
+              .$get(
+                this.$config.strapi.url +
+                  "/retrievestripepaysession?paymentID=" +
+                  response.attributes.paymentID
+              )
+              .then((sessionData) => {
+                const isPayed =
+                  sessionData.payment_status == "paid" ? true : false;
+
+                const d = {
+                  message: "new what ever",
+                };
+                console.log(d);
+                this.$strapi.$meetings.update(response.id, {
+                  d,
                 });
               });
-          })
+          }*/
+          this.$strapi.$users
+            .find({
+              populate: "avatar",
+              "filters[id]":
+                response.attributes.users_permissions_users.data[1].id,
+            })
+            .then((thisCoach) => {
+              const coach = thisCoach[0];
+              this.responses.push({
+                coach,
+                ...response,
+              });
+            });
+        });
         const oldRes = this.responses;
         this.responses = oldRes.sort((a, b) => {
           return a.createdAt._seconds - b.createdAt._seconds;
