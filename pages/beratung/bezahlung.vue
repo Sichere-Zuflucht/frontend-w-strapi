@@ -122,7 +122,7 @@ export default {
     return {
       stripeRegisterURL: null,
       stripeLoginURL: null,
-      
+
       loading: false,
       disabled: false,
       stripeData: null,
@@ -131,18 +131,33 @@ export default {
   mounted() {
     const id = this.$store.getters["getActiveUser"].stripe.id;
     this.$axios
-      .get("http://localhost:1337/api/stripeloginlink?acc=" + id)
+      .get("http://localhost:1337/api/stripeloginlink?acc=" + id, {
+        headers: {
+          Authorization:
+            "Bearer " +
+            JSON.parse(window.localStorage.getItem("strapi_jwt")).token,
+        },
+      })
       .then((body) => {
         this.stripeLoginURL = body.data.url;
       });
 
     this.$axios
-      .get("http://localhost:1337/api/retrievestripe?email=" + this.$store.getters["getActiveUser"].email)
+      .get(
+        "http://localhost:1337/api/retrievestripe?email=" +
+          this.$store.getters["getActiveUser"].email,
+        {
+          headers: {
+            Authorization:
+              "Bearer " +
+              JSON.parse(window.localStorage.getItem("strapi_jwt")).token,
+          },
+        }
+      )
       .then((body) => {
-        console.log(body.data)
+        console.log(body.data);
         this.stripeData = body.data;
       });
-    
   },
   computed: {
     user() {
@@ -161,7 +176,16 @@ export default {
       console.log(this.user);
       this.loading = true;
       this.$axios
-        .get("http://localhost:1337/api/createStripe?email=" + this.user.email)
+        .get(
+          "http://localhost:1337/api/createStripe?email=" + this.user.email,
+          {
+            headers: {
+              Authorization:
+                "Bearer " +
+                JSON.parse(window.localStorage.getItem("strapi_jwt")).token,
+            },
+          }
+        )
         .then((body) => {
           console.log(body.data);
           this.$strapi.$users
@@ -210,7 +234,13 @@ export default {
     getStripeLoginURL() {
       const id = this.$store.getters["getActiveUser"].stripe.id;
       this.$axios
-        .get("http://localhost:1337/api/stripeloginlink?acc=" + id)
+        .get("http://localhost:1337/api/stripeloginlink?acc=" + id, {
+          headers: {
+            Authorization:
+              "Bearer " +
+              JSON.parse(window.localStorage.getItem("strapi_jwt")).token,
+          },
+        })
         .then((body) => {
           console.log(body);
           //this.stripeLoginURL = body.url

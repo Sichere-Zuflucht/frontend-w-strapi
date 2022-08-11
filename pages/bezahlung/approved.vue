@@ -26,7 +26,13 @@ export default {
     if (this.$store.getters["getActiveUser"].roleName != "woman") {
       const id = this.$store.getters["getActiveUser"].stripe.id;
       this.$axios
-        .get(this.$strapi.options.url + "/retrievestripe?acc=" + id)
+        .get(this.$strapi.options.url + "/retrievestripe?acc=" + id, {
+          headers: {
+            Authorization:
+              "Bearer " +
+              JSON.parse(window.localStorage.getItem("strapi_jwt")).token,
+          },
+        })
         .then((body) => {
           console.log(body.data);
           //just proof, if account is valid due to having content
@@ -48,12 +54,19 @@ export default {
     } else {
       const meetingID = window.localStorage.getItem("meetingID");
       const sessionID = window.localStorage.getItem("sessionID");
-      if (!sessionID) return
+      if (!sessionID) return;
       this.$axios
         .$get(
           this.$config.strapi.url +
             "/retrievestripepaysession?paymentID=" +
-            sessionID
+            sessionID,
+          {
+            headers: {
+              Authorization:
+                "Bearer " +
+                JSON.parse(window.localStorage.getItem("strapi_jwt")).token,
+            },
+          }
         )
         .then((sessionData) => {
           const data = {
@@ -64,10 +77,10 @@ export default {
               data,
             })
             .then(() => {
-              window.localStorage.removeItem("meetingID")
-              window.localStorage.removeItem("sessionID")
+              window.localStorage.removeItem("meetingID");
+              window.localStorage.removeItem("sessionID");
             });
-        })
+        });
     }
   },
 };

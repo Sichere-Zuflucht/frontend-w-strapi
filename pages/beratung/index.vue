@@ -7,13 +7,15 @@
       </h1>
     </client-only>
     <CoachFulfilRegistration />
-    <div v-if="
-      user.topicArea && 
-      user.stripe.payouts_enabled && 
-      user.verification == 'done'"
+    <div
+      v-if="
+        user.topicArea &&
+        user.stripe.payouts_enabled &&
+        user.verification == 'done'
+      "
     >
       <h2 class="primary--text mb-2">Anfragen</h2>
-      
+
       <div v-if="requests != null">
         <div v-if="requests.length != 0">
           <v-expansion-panels>
@@ -21,9 +23,7 @@
               <div
                 v-if="
                   item.attributes.acceptedDate
-                    ? new Date(
-                        item.attributes.acceptedDate
-                      ) >= newDate
+                    ? new Date(item.attributes.acceptedDate) >= newDate
                     : true
                 "
               >
@@ -51,19 +51,18 @@
                     >
                       KryptoNr.
                     </p>
-                    <p
-                      class="font-weight-bold mb-0"
-                    >
-                      {{ item.attributes.users_permissions_users.data[0].attributes.username }}
+                    <p class="font-weight-bold mb-0">
+                      {{
+                        item.attributes.users_permissions_users.data[0]
+                          .attributes.username
+                      }}
                     </p>
                   </div>
-                  
+
                   <div v-if="item.attributes.acceptedDate">
                     <v-chip
                       v-if="
-                        new Date(
-                          item.attributes.acceptedDate
-                        ) <= new Date()
+                        new Date(item.attributes.acceptedDate) <= new Date()
                       "
                       class="ma-2 flex-shrink-0 flex-grow-1"
                       color="success"
@@ -116,7 +115,9 @@
                         >
                           Nachricht
                         </p>
-                        <p class="mb-0">{{ item.attributes.message }}</p></v-sheet
+                        <p class="mb-0">
+                          {{ item.attributes.message }}
+                        </p></v-sheet
                       >
                       <div v-if="!item.attributes.coachAnswered" class="pt-4">
                         <v-select
@@ -139,10 +140,15 @@
                                   style="font-size: 1em"
                                   >{{ formatDate(d.date) }}
                                 </v-list-item-title>
-                                <p class="caption">{{ formatTime(d.date) }} Uhr</p>
+                                <p class="caption">
+                                  {{ formatTime(d.date) }} Uhr
+                                </p>
                               </v-list-item-content>
                               <v-list-item-icon>
-                                <v-icon @click="eraseDate(di, item.attributes.suggestions)"
+                                <v-icon
+                                  @click="
+                                    eraseDate(di, item.attributes.suggestions)
+                                  "
                                   >mdi-close
                                 </v-icon>
                               </v-list-item-icon>
@@ -173,7 +179,12 @@
                               : item.attributes.videoCoach
                           "
                           >zum Videocall
-                        </v-btn> ({{ item.attributes.videoType == 'normal' ? 'standard Videoanbieter ' : 'zertifizierter Videoanbieter' }})
+                        </v-btn>
+                        ({{
+                          item.attributes.videoType == "normal"
+                            ? "standard Videoanbieter "
+                            : "zertifizierter Videoanbieter"
+                        }})
                       </div>
 
                       <v-banner v-else>
@@ -230,7 +241,7 @@
           <div class="my-8 d-flex justify-center">
             <v-btn text color="grey" @click="showOld = !showOld"
               >vergangene Termine
-              {{ showOld ? 'verbergen' : 'anzeigen' }}</v-btn
+              {{ showOld ? "verbergen" : "anzeigen" }}</v-btn
             >
           </div>
           <v-expansion-panels v-if="showOld">
@@ -238,9 +249,7 @@
               <div
                 v-if="
                   item.attributes.acceptedDate
-                    ? new Date(
-                        item.attributes.acceptedDate
-                      ) < newDate
+                    ? new Date(item.attributes.acceptedDate) < newDate
                     : false
                 "
               >
@@ -252,7 +261,7 @@
                     class="mr-2 flex-shrink-1 flex-grow-0"
                     style="border: 1px solid lightgrey"
                   >
-                    <SharedWomanIcon  class="pa-2" />
+                    <SharedWomanIcon class="pa-2" />
                   </v-avatar>
                   <div
                     class="d-flex flex-column flex-grow-0 flex-shrink-0"
@@ -268,9 +277,7 @@
                     >
                       KryptoNr. Frau
                     </p>
-                    <p
-                      class="font-weight-bold mb-0"
-                    >
+                    <p class="font-weight-bold mb-0">
                       {{ item.attributes.womanUserName }}
                     </p>
                   </div>
@@ -301,7 +308,9 @@
                         >
                           Nachricht
                         </p>
-                        <p class="mb-0">{{ item.attributes.message }}</p></v-sheet
+                        <p class="mb-0">
+                          {{ item.attributes.message }}
+                        </p></v-sheet
                       >
                       <div v-if="item.attributes.acceptedDate">
                         <p class="caption">Stattgefunden am</p>
@@ -363,27 +372,30 @@
 
 <script>
 export default {
-  middleware: 'authCoach',
+  middleware: "authCoach",
   data() {
     return {
       requests: null,
-      videoTypes: [{
-        text: 'sicherer Anbieter',
-        value: 'normal'
-      },{
-         text:'zertifizierter Anbieter',
-         value: 'secure'
-      }],
-      selectedVideoType: 'normal',
+      videoTypes: [
+        {
+          text: "sicherer Anbieter",
+          value: "normal",
+        },
+        {
+          text: "zertifizierter Anbieter",
+          value: "secure",
+        },
+      ],
+      selectedVideoType: "normal",
       loading: false,
       isDelete: false,
       eraseLoading: false,
       showOld: false,
       newDate: new Date(new Date().setHours(new Date().getHours() - 1)),
       roleTypes: [],
-    }
+    };
   },
-  async mounted(){
+  async mounted() {
     /*const req = (
       await this.$fire.functions.httpsCallable('request-getRequests')()
     ).data
@@ -392,60 +404,61 @@ export default {
       return a.createdAt._seconds - b.createdAt._seconds
     })*/
     //console.log('this user id', this.$strapi.user.id)
-    const res = (await this.$strapi.find('users-permissions/roles')).roles
-    res.forEach((role)=>{
-      if(role.type == 'coach') this.roleTypes.push(role)
-      if(role.type == 'woman') this.roleTypes.push(role)
-    })
+    const res = (await this.$strapi.find("users-permissions/roles")).roles;
+    res.forEach((role) => {
+      if (role.type == "coach") this.roleTypes.push(role);
+      if (role.type == "woman") this.roleTypes.push(role);
+    });
 
-    this.$strapi.$meetings.find({
-      populate: '*',
-      "filters[users_permissions_users]": this.$strapi.user.id
-    }).then((meetings)=>{
-      this.requests = meetings.data
-      console.log(this.requests)
-    })
+    this.$strapi.$meetings
+      .find({
+        populate: "*",
+        "filters[users_permissions_users]": this.$strapi.user.id,
+      })
+      .then((meetings) => {
+        this.requests = meetings.data;
+        console.log(this.requests);
+      });
     //this.$strapi.$http
     //  .$get(`users?filters[id][$eq]=${this.$strapi.user.id}`)
-    
-    
+
     //const responses = (await this.$strapi.$http.$get(`users`)).data
-    
   },
   fetchOnServer: false,
   computed: {
     user() {
-      return this.$store.getters['getActiveUser']
+      return this.$store.getters["getActiveUser"];
     },
   },
   methods: {
     cancel(doc) {
-      this.eraseLoading = true
+      this.eraseLoading = true;
       this.$fire.functions
-        .httpsCallable('request-delete')({
+        .httpsCallable("request-delete")({
           docId: doc.id,
           email: this.user.private.email,
         })
         .then(() => {
-          this.isDelete = false
-          this.eraseLoading = false
-          this.$emit('cancel')
-        })
+          this.isDelete = false;
+          this.eraseLoading = false;
+          this.$emit("cancel");
+        });
     },
     addSuggestions(request) {
-      this.loading = true
-      console.log('request',request)
+      this.loading = true;
+      console.log("request", request);
       const data = {
         coachAnswered: true,
         suggestions: request.attributes.suggestions,
-        updatedAt: (new Date()).toISOString(),
-        videoType: this.selectedVideoType
-      }
-      console.log('data',data)
-      this.$strapi.$meetings.update(request.id, {
-        data
-      })
-      /*this.$fire.functions
+        updatedAt: new Date().toISOString(),
+        videoType: this.selectedVideoType,
+      };
+      console.log("data", data);
+      this.$strapi.$meetings
+        .update(request.id, {
+          data,
+        })
+        /*this.$fire.functions
         .httpsCallable('request-addSuggestions')({
           coachName: this.coachName,
           suggestions: request.suggestions,
@@ -453,31 +466,31 @@ export default {
           videoType: this.selectedVideoType,
         })*/
         .then(() => {
-          request.attributes.coachAnswered = true
-          request.attributes.updatedAt = new Date()
-          this.loading = false
-        })
+          request.attributes.coachAnswered = true;
+          request.attributes.updatedAt = new Date();
+          this.loading = false;
+        });
     },
     eraseDate(d, list) {
-      const d2 = d + 1
-      list.splice(d, d2)
+      const d2 = d + 1;
+      list.splice(d, d2);
     },
     formatDate(date) {
-      const d = new Date(date)
-      return d.toLocaleDateString('de-DE', {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      })
+      const d = new Date(date);
+      return d.toLocaleDateString("de-DE", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
     },
     formatTime(date) {
-      const d = new Date(date)
-      return d.toLocaleTimeString('de-DE', {
-        hour: 'numeric',
-        minute: 'numeric'
-      })
+      const d = new Date(date);
+      return d.toLocaleTimeString("de-DE", {
+        hour: "numeric",
+        minute: "numeric",
+      });
     },
   },
-}
+};
 </script>

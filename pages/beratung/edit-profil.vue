@@ -161,7 +161,7 @@ export default {
   methods: {
     updateAvatarPreview(img) {
       console.log("new preview:", img);
-      this.avatarPreview = img
+      this.avatarPreview = img;
     },
     updateProfile(data) {
       this.$strapi.$users
@@ -173,9 +173,9 @@ export default {
           profession: data.profession,
         })
         .then((r) => {
-          console.log('updated',r)
-          this.loading = false
-          this.success = true
+          console.log("updated", r);
+          this.loading = false;
+          this.success = true;
         })
         .catch((e) => {
           this.$store.dispatch("errorhandling", e);
@@ -186,9 +186,18 @@ export default {
     },
     addStripe() {
       this.loading = true;
-      console.log(this.user.email)
+      console.log(this.user.email);
       this.$axios
-        .get("http://localhost:1337/api/createStripe?email=" + this.user.email)
+        .get(
+          "http://localhost:1337/api/createStripe?email=" + this.user.email,
+          {
+            headers: {
+              Authorization:
+                "Bearer " +
+                JSON.parse(window.localStorage.getItem("strapi_jwt")).token,
+            },
+          }
+        )
         .then((body) => {
           console.log(body.data);
           this.$strapi.$users

@@ -320,7 +320,14 @@ export default {
     standardPayment(v, dI) {
       this.$axios
         .$get(
-          `${this.$config.strapi.url}/paywithstripe?id=${this.id}&coachStripeId=${this.coach.stripe.id}`
+          `${this.$config.strapi.url}/paywithstripe?id=${this.id}&coachStripeId=${this.coach.stripe.id}`,
+          {
+            headers: {
+              Authorization:
+                "Bearer " +
+                JSON.parse(window.localStorage.getItem("strapi_jwt")).token,
+            },
+          }
         )
         .then((paymentID) => {
           const data = {
@@ -340,8 +347,8 @@ export default {
               this.btn.isDisabled = true;
               this.response.acceptedDate = dI;
               this.response.video = v;
-              window.localStorage.setItem('meetingID', this.id)
-              window.localStorage.setItem('sessionID', paymentID)
+              window.localStorage.setItem("meetingID", this.id);
+              window.localStorage.setItem("sessionID", paymentID);
 
               this.$stripe.redirectToCheckout({
                 // Make the id field from the Checkout Session creation API response

@@ -167,26 +167,6 @@ export default {
         console.log("responses", responses);
         console.log("res", res);*/
         res.data.forEach((response) => {
-          /*if (response.attributes.paymentID && !response.attributes.payed) {
-            this.$axios
-              .$get(
-                this.$config.strapi.url +
-                  "/retrievestripepaysession?paymentID=" +
-                  response.attributes.paymentID
-              )
-              .then((sessionData) => {
-                const isPayed =
-                  sessionData.payment_status == "paid" ? true : false;
-
-                const d = {
-                  message: "new what ever",
-                };
-                console.log(d);
-                this.$strapi.$meetings.update(response.id, {
-                  d,
-                });
-              });
-          }*/
           this.$strapi.$users
             .find({
               populate: "avatar",
