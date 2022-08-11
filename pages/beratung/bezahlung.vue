@@ -131,7 +131,7 @@ export default {
   mounted() {
     const id = this.$store.getters["getActiveUser"].stripe.id;
     this.$axios
-      .get("http://localhost:1337/api/stripeloginlink?acc=" + id, {
+      .get(this.$config.strapi.url+"/api/stripeloginlink?acc=" + id, {
         headers: {
           Authorization:
             "Bearer " +
@@ -144,7 +144,7 @@ export default {
 
     this.$axios
       .get(
-        "http://localhost:1337/api/retrievestripe?email=" +
+        this.$config.strapi.url+"/api/retrievestripe?email=" +
           this.$store.getters["getActiveUser"].email,
         {
           headers: {
@@ -177,7 +177,7 @@ export default {
       this.loading = true;
       this.$axios
         .get(
-          "http://localhost:1337/api/createStripe?email=" + this.user.email,
+          this.$config.strapi.url+"/api/createStripe?email=" + this.user.email,
           {
             headers: {
               Authorization:
@@ -234,7 +234,7 @@ export default {
     getStripeLoginURL() {
       const id = this.$store.getters["getActiveUser"].stripe.id;
       this.$axios
-        .get("http://localhost:1337/api/stripeloginlink?acc=" + id, {
+        .get(this.$config.strapi.url+"/api/stripeloginlink?acc=" + id, {
           headers: {
             Authorization:
               "Bearer " +
