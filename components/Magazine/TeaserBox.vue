@@ -71,8 +71,7 @@ export default {
           "https"
         )
           ? ""
-          : "http://localhost:1337") +
-        this.magazineData.attributes.cover.data.attributes.url
+          : "http://localhost:1337")
       );
     },
   },
