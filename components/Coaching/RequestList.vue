@@ -311,12 +311,12 @@
         </div>
       </v-expansion-panel>
     </v-expansion-panels>
-    <p v-else class="caption">
+    <p v-else-if="requests.length == 0 && !oldlist" class="caption">
       <b>Noch keine existierenden Anfragen.</b><br />
       Sobald eine Frau eine Anfrage an Sie stellt, wird diese hier angezeigt.
     </p>
   </div>
-  <v-sheet v-else elevation="2" class="pa-2"
+  <v-sheet v-else-if="requests == null && !oldlist" elevation="2" class="pa-2"
     ><v-skeleton-loader
       class="mx-auto"
       max-width="300"
