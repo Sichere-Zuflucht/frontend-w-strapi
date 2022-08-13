@@ -193,7 +193,7 @@
       </v-container>
     </v-sheet>
     <v-container>
-      <SharedFaq price onlinecoaching forcoaches />
+      <SharedFaq /><!-- list="???price" price onlinecoaching forcoaches />-->
     </v-container>
     <UtilsDonation />
   </div>

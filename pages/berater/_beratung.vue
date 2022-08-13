@@ -216,7 +216,7 @@
         ><v-container> <WomanPriceInfo /></v-container
       ></v-sheet>
       <v-container>
-        <SharedFaq price onlinecoaching />
+        <SharedFaq /><!-- list="???price" price onlinecoaching />-->
       </v-container>
       <v-divider class="mt-16 mb-6" />
       <v-container>

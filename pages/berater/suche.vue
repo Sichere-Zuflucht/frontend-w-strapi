@@ -19,7 +19,7 @@
         so laufen Terminfindung und Beratung ab
       </h3>
       <SharedSteps class="pb-16" />
-      <SharedFaq price onlinecoaching />
+      <SharedFaq /><!-- list="???price" price onlinecoaching />-->
     </v-container>
   </div>
 </template>

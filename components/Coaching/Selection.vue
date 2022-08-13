@@ -261,7 +261,7 @@ export default {
       this.$strapi.$http.$delete("upload/files/" + this.avatar.id).then(() => {
         this.$store.dispatch("changeAvatar", null);
         this.$emit("changeAvatarPreview", null);
-        this.user.avatar = null
+        // did it happend accidently??? this.user.avatar = null
       });
     },
     cropImage() {
