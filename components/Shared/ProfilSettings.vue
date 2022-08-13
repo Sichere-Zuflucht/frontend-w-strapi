@@ -132,8 +132,6 @@ export default {
     resetPassword() {
       this.btn.loading = true
       this.$strapi.forgotPassword({ email: this.$strapi.user.email })
-     //this.$fire.auth
-       // .sendPasswordResetEmail(this.privData.email)
         .then(() => {
           this.btn.loading = false
           this.btn.disabled = true

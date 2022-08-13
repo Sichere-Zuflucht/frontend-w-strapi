@@ -186,37 +186,6 @@ export default {
           return a.createdAt._seconds - b.createdAt._seconds;
         });
       });
-    /*const res = await Promise.all(
-      responses.map(async (response) => {
-        console.log('response',response)
-        const coach = (
-          await this.$strapi.$http
-            .$get(`users?filters[id][$eq]=${response.attributes.coachID}`)
-        )[0]
-        return { coach, ...response }
-      })
-    )
-    this.responses = res*/
-
-    // get the data for each coach and add it to the response
-    // then push it to the responses list
-    /*const res = await Promise.all(
-      responses.map(async (response) => {
-        const coach = (
-          await this.$fire.firestore
-            .collection('users')
-            .doc(response.coachId)
-            .collection('public')
-            .doc('data')
-            .get()
-        ).data()
-        return { coach, ...response }
-      })
-    )*/
-
-    /*this.responses = res.sort((a, b) => {
-      return a.createdAt._seconds - b.createdAt._seconds
-    })*/
 
     this.newWoman = window.localStorage.getItem("newWoman");
     window.localStorage.removeItem("newWoman");

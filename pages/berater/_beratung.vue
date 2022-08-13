@@ -330,28 +330,6 @@ export default {
     },
   },
   methods: {
-    /*sendRequest() {
-      this.loading = true
-      this.$fire.functions
-        .httpsCallable('request-sendRequest')({
-          coachName: this.coachName,
-          message: this.msgTitle + ': ' + this.message,
-          coachUID: this.$route.params.beratung,
-          coachEmail: this.$store.getters['modules/user/private'].email,
-          createdAt: new Date(),
-          isDev: this.$config.isDev,
-        })
-        .then(() => {
-          this.buttonText = 'versendet'
-          this.loading = false
-          this.showConfirmation = true
-          this.isDisabled = true
-        })
-        .catch((err) => {
-          this.error.status = true
-          this.error.message = err.message
-        })
-    },*/
     createMeeting() {
       this.loading = true
       const woman = this.$store.getters["getActiveUser"];
@@ -362,7 +340,8 @@ export default {
         //womanID: this.$store.getters["getActiveUser"].id.toString(),
         //coachEmail: this.pubData.email,
         users_permissions_users: [woman, coach],
-        meetingId: `w${woman.id.toString()}-c${this.$route.params.beratung}-${(new Date).getTime()}`
+        meetingId: `w${woman.id.toString()}-c${this.$route.params.beratung}-${(new Date).getTime()}`,
+        informViaEmail: coach.email
       };
       console.log("data", data);
 

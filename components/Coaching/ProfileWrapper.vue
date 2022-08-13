@@ -78,30 +78,5 @@ export default {
       isDelete: false,
     }
   },
-  methods: {
-    cancel(doc) {
-      const db = this.$fire.firestore
-      db.collection('requests').doc(doc).delete()
-      this.$fire.functions.httpsCallable('email-sendRequestDeleted')(
-        this.response.acceptedDate
-      )
-    },
-    async pay() {
-      this.payButtonLoading = true
-      const paymentID = (
-        await this.$fire.functions.httpsCallable('stripe-payCoaching')({
-          responseID: this.response.id,
-          isDev: this.$config.isDev,
-        })
-      ).data
-
-      this.$stripe.redirectToCheckout({
-        // Make the id field from the Checkout Session creation API response
-        // available to this file, so you can provide it as argument here
-        // instead of the {{CHECKOUT_SESSION_ID}} placeholder.
-        sessionId: paymentID,
-      })
-    },
-  },
 }
 </script>

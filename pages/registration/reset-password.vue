@@ -91,20 +91,6 @@ export default {
           this.error.status = true
           this.error.message = err.message
         })
-      /*this.$fire.auth
-        .sendPasswordResetEmail(this.email)
-        .then(() => {
-          // Email sent.
-          this.loading = false
-          this.buttonText = 'Versendet'
-          this.showConfirmation = true
-        })
-        .catch((err) => {
-          // An error happened.
-          console.log(err)
-          this.error.status = true
-          this.error.message = err.message
-        })*/
     },
   },
 }

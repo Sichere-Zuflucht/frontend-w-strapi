@@ -212,24 +212,6 @@ export default {
               this.$store.dispatch("errorhandling", e);
             });
         });
-      /*this.$fire.functions
-        .httpsCallable('stripe-getStripeLink')({
-          email: this.user.private.email,
-          isDev: this.$config.isDev,
-        })
-        .then((stripeData) => {
-          this.stripeRegisterURL = stripeData.data.url
-          this.loading = false
-          this.disabled = true
-          if (
-            confirm(
-              'Sichere Zuflucht möchte Sie weiterleiten zu: ' +
-                stripeData.data.url
-            )
-          ) {
-            location.replace(this.stripeRegisterURL)
-          }
-        })*/
     },
     getStripeLoginURL() {
       const id = this.$store.getters["getActiveUser"].stripe.id;

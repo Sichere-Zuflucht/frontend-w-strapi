@@ -45,7 +45,7 @@
                 von Ihnen und Ihrem Angebot. Dann können die Frauen besser
                 abwägen, an wen Sie sich wenden wollen.
               </p>
-              
+
               <CoachingSelection
                 :info="user"
                 :avatar="avatarPreview ? avatarPreview : user.avatar"
@@ -67,8 +67,11 @@
             <v-stepper-content v-else step="1">
               <h2 class="text-h2 secondary--text pb-4">PROFIL erstellt</h2>
               <p>
-                Sie können sich Ihr Profil ansehen oder direkt weiter zur
-                Zahlungsanbindung gehen.
+                Sie können sich Ihr Profil ansehen{{
+                  !user.stripe.payouts_enabled
+                    ? "oder direkt weiter zur Zahlungsanbindung gehen."
+                    : "."
+                }}
               </p>
               <div class="d-flex">
                 <v-btn
@@ -154,9 +157,11 @@ export default {
     };
   },
   async mounted() {
-    const u = await this.$strapi.$users.findOne(this.$strapi.user.id, {populate: 'avatar'})
-    this.avatarPreview = u.avatar
-    this.user = this.$strapi.user
+    const u = await this.$strapi.$users.findOne(this.$strapi.user.id, {
+      populate: "avatar",
+    });
+    this.avatarPreview = u.avatar;
+    this.user = this.$strapi.user;
   },
   methods: {
     updateAvatarPreview(img) {
@@ -189,7 +194,7 @@ export default {
       console.log(this.user.email);
       this.$axios
         .get(
-          this.$config.strapi.url+"/createStripe?email=" + this.user.email,
+          this.$config.strapi.url + "/createStripe?email=" + this.user.email,
           {
             headers: {
               Authorization:
@@ -224,26 +229,6 @@ export default {
               this.$store.dispatch("errorhandling", e);
             });
         });
-      /*
-      this.$fire.functions
-        .httpsCallable("stripe-getStripeLink")({
-          email: this.user.private.email,
-          isDev: this.$config.isDev,
-        })
-        .then((stripeData) => {
-          this.stripeRegisterURL = stripeData.data.url;
-          this.loading = false;
-          this.disabled = true;
-          if (
-            confirm(
-              "Sichere Zuflucht möchte Sie weiterleiten zu: " +
-                stripeData.data.url
-            )
-          ) {
-            location.replace(this.stripeRegisterURL);
-          }
-        })
-        .catch((err) => (this.error = err));*/
     },
   },
 };

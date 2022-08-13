@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <h1 class="text-h1 primary--text mb-4">Wohnungssuche</h1>
+    <!--<h1 class="text-h1 primary--text mb-4">Wohnungssuche</h1>
     <SharedVerificationPage v-if="!$store.getters['modules/user/verified']" />
     <v-form v-else ref="housing" v-model="valid" class="mb-8">
       <h2 class="text-h2 secondary--text">Deine Daten sind sicher</h2>
@@ -135,7 +135,7 @@
           }}</v-alert>
         </v-col>
       </v-row>
-    </v-form>
+    </v-form>-->
   </v-container>
 </template>
 
@@ -211,7 +211,7 @@ export default {
     },
   },
   methods: {
-    validate() {
+    /*validate() {
       if (!this.$refs.housing.validate()) return
       this.loading = true
       this.$fire.functions
@@ -235,7 +235,7 @@ export default {
           this.error.status = true
           this.error.message = err.message
         })
-    },
+    },*/
   },
 }
 </script>

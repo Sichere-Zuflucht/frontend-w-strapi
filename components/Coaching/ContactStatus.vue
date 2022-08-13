@@ -227,13 +227,20 @@ export default {
     },
   },
   methods: {
-    cancel() {
+    cancel(doc) {
       this.eraseLoading = true;
-      console.log(this.id);
-      this.$strapi.$meetings
-        .delete(this.id)
+      this.$axios
+        .get(
+          `${this.$config.strapi.url}/deletemeeting?email=${this.coach.email}&id=${this.id}&acceptedDate=${doc.acceptedDate}`,
+          {
+            headers: {
+              Authorization:
+                "Bearer " +
+                JSON.parse(window.localStorage.getItem("strapi_jwt")).token,
+            },
+          }
+        )
         .then(() => {
-          console.log("erased");
           this.isDelete = false;
           this.eraseLoading = false;
           this.error = null;
@@ -360,18 +367,6 @@ export default {
             .catch((e) => {
               this.$store.dispatch("errorhandling", e);
             });
-          /*const paymentID = (
-            await this.$fire.functions.httpsCallable('stripe-payCoaching')({
-              responseID: this.response.id,
-              isDev: this.$config.isDev,
-            })
-          ).data
-          this.$stripe.redirectToCheckout({
-            // Make the id field from the Checkout Session creation API response
-            // available to this file, so you can provide it as argument here
-            // instead of the {{CHECKOUT_SESSION_ID}} placeholder.
-            sessionId: paymentID,
-          })*/
         })
         .catch((e) => {
           this.$store.dispatch("errorhandling", e);
