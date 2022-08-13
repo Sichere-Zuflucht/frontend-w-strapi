@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="faq">
     <h3
       class="text-h3 text-uppercase secondary--text pt-16 pb-8 font-weight-bold"
     >
@@ -87,3 +87,23 @@ export default {
   },
 };
 </script>
+
+<style>
+
+  #faq .v-expansion-panel::before {
+    box-shadow: none !important;
+  }
+  #faq .v-expansion-panel-header,
+  #faq .v-expansion-panel-content__wrap {
+    padding-right: 0;
+    padding-left: 0;
+  }
+  #faq .v-expansion-panels .v-expansion-panel:not(:first-child)::after {
+    border-color: transparent !important;
+  }
+
+  #faq .v-expansion-panel-header__icon i {
+    color: #f48fb1 !important;
+    opacity: 0.6;
+  }
+</style>

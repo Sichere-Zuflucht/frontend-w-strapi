@@ -293,20 +293,3 @@
   .cropper-disabled .cropper-point {
     cursor: not-allowed;
   }
-  
-  .v-expansion-panel::before {
-    box-shadow: none !important;
-  }
-  .v-expansion-panel-header,
-  .v-expansion-panel-content__wrap {
-    padding-right: 0;
-    padding-left: 0;
-  }
-  .v-expansion-panels .v-expansion-panel:not(:first-child)::after {
-    border-color: transparent !important;
-  }
-
-  .v-expansion-panel-header__icon i {
-    color: #f48fb1 !important;
-    opacity: 0.6;
-  }
