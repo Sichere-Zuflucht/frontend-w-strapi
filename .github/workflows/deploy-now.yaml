@@ -14,9 +14,6 @@ jobs:
         with:
           api-key: ${{ secrets.IONOS_API_KEY }}
           project: ${{ secrets.IONOS_PROJECT_ID }}
-          red-api: ${{ secrets.RED_API }}
-          strapi-url: ${{ secrets.STRAPI_URL }}
-          stripe-pk: ${{ secrets.STRIPE_PK }}
           service-host: api-eu.ionos.space
 
       - name: checkout
@@ -41,9 +38,9 @@ jobs:
       - name: Build Node assets
         env:
           CI: true
-          STRAPI_URL: ${{ steps.project.outputs.strapi-url }}
-          STRIPE_PK: ${{ steps.project.outputs.stripe-pk }}
-          RED_API: ${{ steps.project.outputs.red-api }}
+          STRAPI_URL: ${{ secrets.STRAPI_URL }}
+          STRIPE_PK: ${{ secrets.STRIPE_PK }}
+          RED_API: ${{ secrets.RED_API }}
         run: |
           npm install --global yarn
           yarn install --frozen-lockfile
