@@ -194,7 +194,11 @@ export default {
       console.log(this.user.email);
       this.$axios
         .get(
-          this.$config.strapi.url + "/createStripe?email=" + this.user.email,
+          this.$config.strapi.url +
+            "/createStripe?email=" +
+            this.user.email +
+            "&url=" +
+            window.location.origin,
           {
             headers: {
               Authorization:
