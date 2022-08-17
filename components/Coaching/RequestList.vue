@@ -150,8 +150,8 @@
                       color="success"
                       target="_blank"
                       :href="
-                        item.attributes.videoType.value === 'normal'
-                          ? item.attributes.videoWoman
+                        item.attributes.videoType === 'normal'
+                          ? getCodeQuery(item.attributes.videoCoach)
                           : item.attributes.videoCoach
                       "
                       >zum Videocall
@@ -438,6 +438,10 @@ export default {
         minute: "numeric",
       });
     },
+    getCodeQuery(d){
+      const n = d.replace('//','').split('/')
+      return window.location.origin + '/videomeeting/' + n[1]
+    }
   },
 };
 </script>

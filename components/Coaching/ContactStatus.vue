@@ -197,7 +197,7 @@
       </v-dialog>
     </v-card-actions>
     <v-card-actions>
-    <v-alert v-if="error" type="error" color="error">{{ error }}</v-alert>
+      <v-alert v-if="error" type="error" color="error">{{ error }}</v-alert>
     </v-card-actions>
     <v-overlay :value="redirectWarning" color="black" opacity="0.8">
       <p>
@@ -408,9 +408,10 @@ export default {
       }
     },
     standardPayment(v, dI) {
+      console.log("pay for: ", this.id, this.coach.stripe.id);
       this.$axios
         .$get(
-          `${this.$config.strapi.url}/paywithstripe?id=${this.id}&coachStripeId=${this.coach.stripe.id}`,
+          `${this.$config.strapi.url}/paywithstripe?id=${this.id}&coachStripeId=${this.coach.stripe.id}&url=${window.location.origin}`,
           {
             headers: {
               Authorization:
@@ -420,7 +421,7 @@ export default {
           }
         )
         .then((paymentID) => {
-          console.log('paymentID'. paymentID)
+          console.log("paymentID".paymentID);
           const data = {
             acceptedDate: dI.date,
             videoCoach: v.codeArzt,
@@ -450,13 +451,13 @@ export default {
             })
             .catch((e) => {
               this.$store.dispatch("errorhandling", e);
-              this.error = e.response.data.error.name
+              this.error = e.response.data.error.name;
               this.redirectWarning = false;
             });
         })
         .catch((e) => {
           this.$store.dispatch("errorhandling", e);
-          this.error = e.response.data.error.name
+          this.error = e.response.data.error.name;
           this.redirectWarning = false;
         });
     },
