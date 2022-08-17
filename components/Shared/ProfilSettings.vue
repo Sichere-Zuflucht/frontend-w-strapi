@@ -38,11 +38,11 @@
           <v-card-text>
             <p>
               Bist du dir sicher, dass du dein Profil löschen möchtest? Dieser
-              Vorgang ist nicht wieder Rückgängig zu machen. Alle deine Daten
+              Vorgang ist nicht wieder Rückgängig zu machen. Alle deine Daten und Termine
               werden unwiederuflich von unserer Datenbank gelöscht.
             </p>
             <p>
-              Bitte fügen "Löschen" ein, wenn du dein Profil wirklich
+              Bitte füge "Löschen" ein, wenn du dein Profil wirklich
               löschen möchtest.
             </p>
           </v-card-text>
@@ -147,7 +147,8 @@ export default {
       this.deleteLoading = true
       this.$strapi.$users.delete(this.$strapi.user.id)
       .then((e)=>{
-        this.$router.push('/')
+        //this.$router.push('/')
+        window.location.reload()
         this.deleteLoading = false
       })
       .catch((err) => {

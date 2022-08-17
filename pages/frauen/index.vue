@@ -57,19 +57,6 @@
           </div>
         </v-slide-item>
       </v-slide-group>
-      <!--<v-container>
-        <nuxt-link to="info/berater" text color="primary" small
-          >Wie läuft das Beratungsgespräch ab?
-        </nuxt-link>
-        <br />
-        <nuxt-link to="info/frauen" text color="primary" small
-          >Infos zur Termineinhaltung
-        </nuxt-link>
-        <br />
-        <nuxt-link to="info/frauen" text color="primary" small
-          >Infos zu Preisen</nuxt-link
-        >
-      </v-container>-->
       <UtilsBtn
         v-if="responses.length != 0"
         text="Beratungsangebote ansehen"
@@ -108,6 +95,7 @@ export default {
   data() {
     return {
       userData: null,
+      coachDeleted: false,
       responses: [],
       offers: [
         {
@@ -134,39 +122,14 @@ export default {
         "filters[users_permissions_users]": this.$strapi.user.id,
       })
       .then(async (res) => {
-        /*const responses = await Promise.all(
-          res.data.map(async (response) => {
-            const coach = (
-              await this.$strapi.$users.find({
-                populate: "avatar",
-                "filters[id]":
-                  response.attributes.users_permissions_users.data[1].id,
-              })
-            )[0];
-            if(response.attributes.paymentID && !response.attributes.payed){
-              await this.$axios.$get(
-                this.$config.strapi.url +
-                  "/retrievestripepaysession?paymentID=" +
-                  response.attributes.paymentID
-              ).then((sessionData)=>{
-                this.$strapi.$meetings.update(response.id,{
-                  payed: sessionData.payment_status == 'paid' ? true : false
-                })
-              })
-            }
-            
-            //response.attributes.payed = sessionData.payment_status ? sessionData.payment_status : false
-            const newRes = {
-              ...response,
-              coach,
-              //sessionData,
-            };
-            return newRes;
-          })
-        );
-        console.log("responses", responses);
-        console.log("res", res);*/
+        //if Coach still existed and didn't deleted the account, search for coach
         res.data.forEach((response) => {
+          console.log('id', response.attributes.users_permissions_users.data[1])
+          if (!response.attributes.users_permissions_users.data[1])
+            return this.responses.push({
+              coach: { noCoach: true },
+              ...response,
+            });
           this.$strapi.$users
             .find({
               populate: "avatar",

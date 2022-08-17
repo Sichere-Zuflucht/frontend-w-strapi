@@ -1,5 +1,6 @@
 <template>
   <v-card
+    v-if="!coach.noCoach"
     elevation="2"
     nuxt
     :dark="coachingLiesInPast"
@@ -26,12 +27,14 @@
       <v-avatar v-if="coach.avatar" color="primary ma-5" size="35%">
         <v-img
           :lazy-src="
-            (coach.avatar.url.includes('https') ? '' : 'http://localhost:1337') +
-            coach.avatar.url
+            (coach.avatar.url.includes('https')
+              ? ''
+              : 'http://localhost:1337') + coach.avatar.url
           "
           :src="
-            (coach.avatar.url.includes('https') ? '' : 'http://localhost:1337') +
-            coach.avatar.url
+            (coach.avatar.url.includes('https')
+              ? ''
+              : 'http://localhost:1337') + coach.avatar.url
           "
         />
       </v-avatar>
@@ -164,7 +167,37 @@
           <v-btn light @click="isDelete = false"> nein</v-btn>
         </v-alert>
       </v-dialog>
-      <v-alert v-if="error" type="error" color="error">{{ error }}</v-alert>
+    </v-card-actions>
+    <v-card-actions
+      v-else
+      style="border-top: 1px solid lightgrey"
+      class="align-stretch pa-4"
+    >
+      <v-btn small color="primary" outlined nuxt :to="'/berater/' + coach.id"
+        >Neue Anfrage stellen
+      </v-btn>
+      <v-dialog v-model="isDelete" persistent max-width="290">
+        <template #activator="{ on, attrs }">
+          <v-btn small text color="primary" v-bind="attrs" v-on="on"
+            >Termin löschen
+          </v-btn>
+        </template>
+        <v-alert type="error" color="error" class="mt-2 ma-2"
+          ><p>Wirklich löschen?</p>
+
+          <v-btn
+            light
+            class="mr-1"
+            :loading="eraseLoading"
+            @click="cancel(response)"
+            >Ja, löschen
+          </v-btn>
+          <v-btn light @click="isDelete = false"> nein</v-btn>
+        </v-alert>
+      </v-dialog>
+    </v-card-actions>
+    <v-card-actions>
+    <v-alert v-if="error" type="error" color="error">{{ error }}</v-alert>
     </v-card-actions>
     <v-overlay :value="redirectWarning" color="black" opacity="0.8">
       <p>
@@ -172,6 +205,56 @@
       </p>
     </v-overlay>
   </v-card>
+  <v-card
+    v-else
+    elevation="2"
+    nuxt
+    :dark="coachingLiesInPast"
+    :ripple="clickable"
+    outlined
+    :style="
+      'border: 1px solid ' +
+      (now
+        ? $vuetify.theme.themes.light.success
+        : $vuetify.theme.themes.light.primary)
+    "
+    ><v-sheet
+      class="d-flex"
+      :style="
+        'border-bottom: 1px solid ' +
+        $vuetify.theme.themes.light.error +
+        ' !important'
+      "
+      ><v-card-title class="ma-5 ml-2 d-flex flex-column justify-center"
+        >Coach existiert nicht mehr.</v-card-title
+      > </v-sheet
+    ><v-card-actions
+      v-if="!now"
+      style="border-top: 1px solid lightgrey"
+      class="align-stretch pa-4"
+    >
+      <v-dialog v-model="isDelete" persistent max-width="290">
+        <template #activator="{ on, attrs }">
+          <v-btn small text color="primary" v-bind="attrs" v-on="on"
+            >Termin löschen
+          </v-btn>
+        </template>
+        <v-alert type="error" color="error" class="mt-2 ma-2"
+          ><p>Wirklich löschen?</p>
+
+          <v-btn
+            light
+            class="mr-1"
+            :loading="eraseLoading"
+            @click="cancel(response)"
+            >Ja, löschen
+          </v-btn>
+          <v-btn light @click="isDelete = false"> nein</v-btn>
+        </v-alert>
+      </v-dialog>
+      <v-alert v-if="error" type="error" color="error">{{ error }}</v-alert>
+    </v-card-actions></v-card
+  >
 </template>
 
 <script>
@@ -337,6 +420,7 @@ export default {
           }
         )
         .then((paymentID) => {
+          console.log('paymentID'. paymentID)
           const data = {
             acceptedDate: dI.date,
             videoCoach: v.codeArzt,
@@ -366,10 +450,14 @@ export default {
             })
             .catch((e) => {
               this.$store.dispatch("errorhandling", e);
+              this.error = e.response.data.error.name
+              this.redirectWarning = false;
             });
         })
         .catch((e) => {
           this.$store.dispatch("errorhandling", e);
+          this.error = e.response.data.error.name
+          this.redirectWarning = false;
         });
     },
     formatDate(date) {
