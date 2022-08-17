@@ -12,7 +12,11 @@
       <small>E-Mail:</small>
       <p>{{ pubData.email }}</p>
       <small>Mitglied als:</small>
-      <p v-if="pubData.roleName">{{ pubData.roleName == 'Woman' ? 'gewaltbetroffene Frau' : 'Berater:in' }}</p>
+      <p v-if="pubData.roleName">
+        {{
+          pubData.roleName == "Woman" ? "gewaltbetroffene Frau" : "Berater:in"
+        }}
+      </p>
 
       <v-btn
         :disabled="btn.disabled"
@@ -38,12 +42,12 @@
           <v-card-text>
             <p>
               Bist du dir sicher, dass du dein Profil löschen möchtest? Dieser
-              Vorgang ist nicht wieder Rückgängig zu machen. Alle deine Daten und Termine
-              werden unwiederuflich von unserer Datenbank gelöscht.
+              Vorgang ist nicht wieder Rückgängig zu machen. Alle deine Daten
+              und Termine werden unwiederuflich von unserer Datenbank gelöscht.
             </p>
             <p>
-              Bitte füge "Löschen" ein, wenn du dein Profil wirklich
-              löschen möchtest.
+              Bitte füge "Löschen" ein, wenn du dein Profil wirklich löschen
+              möchtest.
             </p>
           </v-card-text>
           <v-card-actions
@@ -93,11 +97,11 @@
 
 <script>
 export default {
-  name: 'Settings',
+  name: "Settings",
   middleware({ store, redirect }) {
     // If the user is not authenticated
-    if (!store.getters['modules/user/isAuthenticated']) {
-      return redirect('/')
+    if (!store.getters["modules/user/isAuthenticated"]) {
+      return redirect("/");
     }
   },
   data() {
@@ -109,7 +113,7 @@ export default {
       },
       err: {
         status: false,
-        msg: '',
+        msg: "",
       },
       overlay: false,
       userProvidedErase: null,
@@ -117,47 +121,73 @@ export default {
       deleteLoading: false,
       rules: {
         delete: [
-          (v) => !!v || 'Passwort einfügen.',
-          (v) => v == 'Löschen' || 'Löschen schreiben',
+          (v) => !!v || "Passwort einfügen.",
+          (v) => v == "Löschen" || "Löschen schreiben",
         ],
       },
-    }
+    };
   },
   computed: {
     pubData() {
-      return this.$store.getters['getActiveUser']
+      return this.$store.getters["getActiveUser"];
     },
   },
   methods: {
     resetPassword() {
-      this.btn.loading = true
-      this.$strapi.forgotPassword({ email: this.$strapi.user.email })
+      this.btn.loading = true;
+      this.$strapi
+        .forgotPassword({ email: this.$strapi.user.email })
         .then(() => {
-          this.btn.loading = false
-          this.btn.disabled = true
-          this.btn.success = true
+          this.btn.loading = false;
+          this.btn.disabled = true;
+          this.btn.success = true;
         })
         .catch((error) => {
-          this.err.status = true
-          this.err.msg = error.code + ': ' + error.message
+          this.err.status = true;
+          this.err.msg = error.code + ": " + error.message;
           // ..
-        })
+        });
     },
     async deleteUser() {
-      this.deleteLoading = true
-      this.$strapi.$users.delete(this.$strapi.user.id)
-      .then((e)=>{
-        //this.$router.push('/')
-        window.location.reload()
-        this.deleteLoading = false
-      })
-      .catch((err) => {
-        this.deleteLoading = false
-        this.err.status = true
-        this.err.msg = 'Falsches Passwort eingegeben.'
-        this.overlay = false
-      })
+      this.deleteLoading = true;
+      console.log(this.$strapi.user.stripe.id)
+      if(!this.$strapi.user.stripe.id) return deleteSrapiUser()
+      this.$axios
+        .get(
+          `${this.$config.strapi.url}/deletestripeacc?acc=${this.$strapi.user.stripe.id}`,
+          {
+            headers: {
+              Authorization:
+                "Bearer " +
+                JSON.parse(window.localStorage.getItem("strapi_jwt")).token,
+            },
+          }
+        )
+        .then(() => {
+          this.deleteSrapiUser()
+        })
+        .catch((err) => {
+          this.deleteLoading = false;
+          this.err.status = true;
+          this.err.msg = "Stipe konnte nicht gelöscht werden.";
+          this.overlay = false;
+        });
     },
+    async deleteSrapiUser(){
+      this.$strapi.$users
+            .delete(this.$strapi.user.id)
+            .then((e) => {
+              //this.$router.push('/')
+              window.location.reload();
+              this.deleteLoading = false;
+            })
+            .catch((err) => {
+              this.deleteLoading = false;
+              this.err.status = true;
+              this.err.msg = "Falsches Passwort eingegeben.";
+              this.overlay = false;
+            });
+    }
   },
-}
+};
 </script>

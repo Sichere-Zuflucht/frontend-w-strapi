@@ -312,9 +312,10 @@ export default {
   methods: {
     cancel(doc) {
       this.eraseLoading = true;
+      const informTo = this.coach.email ? this.coach.email : 'nouser@sichere-zuflucht.de'
       this.$axios
         .get(
-          `${this.$config.strapi.url}/deletemeeting?email=${this.coach.email}&id=${this.id}&acceptedDate=${doc.acceptedDate}`,
+          `${this.$config.strapi.url}/deletemeeting?email=${informTo}&id=${this.id}&acceptedDate=${doc.acceptedDate}`,
           {
             headers: {
               Authorization:
