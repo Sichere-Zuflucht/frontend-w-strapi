@@ -18,7 +18,40 @@
       <h2 class="text-h2 text-center secondary--text pb-6">
         Hier könnt ihr wählen, wie ihr unterstüzen wollt.
       </h2>
-      <v-stepper v-model="donationStep" elevation="0">
+      <v-row>
+        <v-col
+          v-for="(option, i) in donationOptions"
+          :key="i"
+          cols="12"
+          sm="6"
+          :md="!option.ownVal ? 4 : 12"
+        >
+          <v-card class="my-4 mx-2">
+            <v-sheet
+              color="success"
+              class="pa-8 d-flex align-center justify-center"
+            >
+              <v-icon color="white" size="44">{{ option.icon }}</v-icon><h3 class="white--text ml-2">{{ option.value }}€</h3>
+            </v-sheet>
+            <v-card-title class="primary--text text-h3 font-weight-bold mb-2">{{
+              option.title
+            }}</v-card-title>
+            <v-card-subtitle
+              ><b>{{ option.value }}€ spenden</b> und eine {{!option.ownVal ? option.title : 'Beratung'}} für eine von Gewalt betroffene Frau ermöglichen</v-card-subtitle
+            >
+            <v-card-actions>
+              <v-btn
+                v-if="!option.ownVal ? option.value : validValue"
+                color="secondary"
+                :href="option.link"
+                target="_blank"
+                >Spenden</v-btn
+              ></v-card-actions
+            >
+          </v-card></v-col
+        ></v-row
+      >
+      <!--<v-stepper v-model="donationStep" elevation="0">
         <v-stepper-items>
           <v-stepper-content step="1" class="pa-0">
             <v-card
@@ -63,9 +96,10 @@
             </v-card>
           </v-stepper-content>
           <v-stepper-content step="2" class="pa-0">
+            <div v-if="donationChosen">
             <p class="text-center">Sie haben ausgewählt:</p>
             <v-card class="my-4 mx-2" color="secondary">
-              <v-card-text v-if="donationChosen">
+              <v-card-text >
                 <v-row
                   ><v-col cols="3"
                     ><v-icon size="64">mdi-check-circle-outline</v-icon></v-col
@@ -84,9 +118,10 @@
                 ></v-card-text
               >
             </v-card>
-            <v-btn color="success" class="float-right mr-2" @click="donate"
-              >Spenden</v-btn
+            <v-btn color="success" class="float-right mr-2" target="_blank" :href="donationChosen.link">
+              Spenden</v-btn
             >
+            </div>
           </v-stepper-content>
           <v-stepper-content step="3" class="pa-0">
             <v-card class="my-4 mx-2" color="grey lighten-3">
@@ -97,7 +132,7 @@
             </v-overlay>
           </v-stepper-content>
         </v-stepper-items>
-      </v-stepper>
+      </v-stepper>-->
       <p class="pt-8 text-center">
         Ihr könnt für eure Spende direkt eine Spendenquittung erhalten.
       </p>
@@ -144,46 +179,59 @@ export default {
       donationStep: 1,
       donationOptions: [
         {
-          icon: 'mdi-heart-circle',
-          title: '1 Stunde Beratung',
-          value: '50',
+          icon: "mdi-heart-circle",
+          title: "ganze Beratung",
+          value: "50",
+          link:
+            process.env.NODE_ENV == "development"
+              ? "https://donate.stripe.com/test_dR617b7G63FlehqfZ3"
+              : "",
         },
         {
-          icon: 'mdi-circle-slice-4',
-          title: '1/2 Stunde Beratung',
-          value: '25',
+          icon: "mdi-circle-slice-4",
+          title: "1/2 Beratung",
+          value: "25",
+          link:
+            process.env.NODE_ENV == "development"
+              ? "https://donate.stripe.com/test_00g4jngcCdfV4GQbIM"
+              : "",
         },
         {
-          icon: 'mdi-circle-slice-2',
-          title: '1/4 Stunde Beratung',
-          value: '17.50',
+          icon: "mdi-circle-slice-2",
+          title: "1/4 Beratung",
+          value: "17.50",
+          link:
+            process.env.NODE_ENV == "development"
+              ? "https://donate.stripe.com/test_4gw5nr0dEdfV1uE9AC"
+              : "",
         },
         {
-          icon: 'mdi-help-circle',
-          title: 'Einen freien Betrag spenden',
+          icon: "mdi-help-circle",
+          title: "Freien Betrag",
           ownVal: true,
-          value: null,
+          value: "x",
+          link:
+            process.env.NODE_ENV == "development"
+              ? "https://donate.stripe.com/test_9AQdTXd0qa3Jddm007"
+              : "",
         },
       ],
       donationChosen: null,
       numRule: [
-        (v) => parseInt(v) > 0 || 'Betrag muss größer 0 sein.',
+        (v) => parseInt(v) > 0 || "Betrag muss größer 0 sein.",
         (v) =>
           /^\d{0,5}([,.]\d{0,2})?$/.test(v) ||
-          'ungültiger oder zu hoher Betrag.',
+          "ungültiger oder zu hoher Betrag.",
       ],
       validValue: true,
-    }
+    };
   },
   methods: {
     choose(chosen) {
-      this.donationChosen = chosen
-      this.donationStep = 2
-      this.$vuetify.goTo('#paytitle')
-    },
-    donate() {
-      this.donationStep = 3
+      this.donationChosen = chosen;
+      this.donationStep = 2;
+      this.$vuetify.goTo("#paytitle");
     },
   },
-}
+};
 </script>
