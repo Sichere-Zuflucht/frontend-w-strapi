@@ -89,13 +89,7 @@
         </div>
       </div>
     </v-container>
-    <div
-      v-if="
-        $strapi.user &&
-        $route.params.beratung !== $strapi.user.id &&
-        $strapi.user.roleName !== 'coach'
-      "
-    >
+    <div v-if="!$strapi.user || $strapi.user.roleName === 'woman'">
       <v-container>
         <v-card
           outlined
@@ -232,7 +226,12 @@
       <CoachingSlider :withoutid="$route.params.beratung" />
     </div>
     <v-container v-else class="mt-16">
-      <v-btn to="/beratung/edit-profil" outlined nuxt color="primary"
+      <v-btn
+        v-if="$route.params.beratung == $strapi.user.id ? true : false"
+        to="/beratung/edit-profil"
+        outlined
+        nuxt
+        color="primary"
         >Profil bearbeiten</v-btn
       >
       <v-btn outlined nuxt color="primary" @click="copy">Profil teilen</v-btn>
@@ -273,7 +272,6 @@
       </p>
       <SharedServiceOverview class="pb-16" />
     </v-container>
-    
   </div>
 </template>
 
@@ -331,7 +329,7 @@ export default {
   },
   methods: {
     createMeeting() {
-      this.loading = true
+      this.loading = true;
       const woman = this.$store.getters["getActiveUser"];
       const coach = this.pubData;
       const data = {
@@ -340,21 +338,24 @@ export default {
         //womanID: this.$store.getters["getActiveUser"].id.toString(),
         //coachEmail: this.pubData.email,
         users_permissions_users: [woman, coach],
-        meetingId: `w${woman.id.toString()}-c${this.$route.params.beratung}-${(new Date).getTime()}`,
-        informViaEmail: coach.email
+        meetingId: `w${woman.id.toString()}-c${
+          this.$route.params.beratung
+        }-${new Date().getTime()}`,
+        informViaEmail: coach.email,
       };
       console.log("data", data);
 
-      this.$strapi.$meetings.create({ data })
-      .then(()=>{
-        this.buttonText = 'versendet'
-        this.loading = false
-        this.showConfirmation = true
-        this.isDisabled = true
-      })
-      .catch((error) => {
-        this.$store.dispatch("errorhandling", error); //errorhandling(error)
-      });
+      this.$strapi.$meetings
+        .create({ data })
+        .then(() => {
+          this.buttonText = "versendet";
+          this.loading = false;
+          this.showConfirmation = true;
+          this.isDisabled = true;
+        })
+        .catch((error) => {
+          this.$store.dispatch("errorhandling", error); //errorhandling(error)
+        });
     },
     copy() {
       const markup = this.$refs.link;
