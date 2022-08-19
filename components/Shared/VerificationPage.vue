@@ -1,6 +1,6 @@
 <template>
   <div v-if="userdata" class="pa-3">
-    <div v-if="!success && userdata.verification == 'false'" >
+    <div v-if="!success && userdata.verification == 'false'">
       <h2 class="text-h2 secondary--text pb-4">Verifizierung</h2>
       <p>
         Wir nehmen innerhalb der nächsten Tage mit Ihnen Kontakt auf, um Sie
@@ -25,7 +25,10 @@
           v-if="!userAltEmail"
           v-model="userAltEmail"
           label="Alterative Email nutzen"
-          :hint="'Nutze zur Verifizierung eine alternative Emailadresse, anstatt ' + userdata.email"
+          :hint="
+            'Nutze zur Verifizierung eine alternative Emailadresse, anstatt ' +
+            userdata.email
+          "
           persistent-hint
         ></v-checkbox>
         <v-text-field
@@ -87,7 +90,7 @@
     <div v-else-if="userdata.verification == 'done'">
       <h2 class="text-h2 secondary--text pb-4">VERIFIZIERUNG GESCHAFFT</h2>
     </div>
-    <v-alert v-if="error">{{ error ? error : '' }}</v-alert>
+    <v-alert v-if="error">{{ error ? error : "" }}</v-alert>
   </div>
 </template>
 
@@ -100,51 +103,67 @@ export default {
     },
     userdata: {
       type: Object,
-    }
+    },
   },
   data() {
     return {
       validRef: false,
       success: false,
       error: null,
-      verPhone: '',
-      verEmail: '',
-      verWeb: '',
+      verPhone: "",
+      verEmail: "",
+      verWeb: "",
       loading: false,
       userAltEmail: false,
       useWeb: false,
       rules: {
         phone: [
-          (v) => !!v || 'Telefonnummer nicht vergessen',
+          (v) => !!v || "Telefonnummer nicht vergessen",
           (v) =>
             /^(?:\+\d{2}|0|00\d{2})(?:\s*\d{3}){2}\s*\d{4,10}/.test(v) ||
-            'Ungültiges Format',
+            "Ungültiges Format",
         ],
         email: [
           (v) =>
             /[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+/.test(v) ||
-            'Ungültiges Format',
+            "Ungültiges Format",
         ],
       },
-    }
+    };
   },
   methods: {
     verifyProfil() {
-      this.loading = true
+      this.loading = true;
       const data = {
-        verification: 'inprogress',
+        verification: "inprogress",
         tel: this.verPhone,
         www: this.verWeb,
         altEmail: this.verEmail,
-      }
-      this.$strapi.$users
-        .update(this.$strapi.user.id, data)
-        .then((r) => {
-          console.log('updated',r)
-          this.loading = false
-          this.success = true
-        })
+      };
+      this.$strapi.$users.update(this.$strapi.user.id, data).then((r) => {
+        console.log("updated", r);
+        const body = {
+          tel: data.tel,
+          www: data.www,
+          altEmail: data.altEmail,
+        };
+        this.$axios.$post(this.$config.strapi.url+"/newcoachemail", {
+          headers: {
+            Authorization:
+              "Bearer " +
+              JSON.parse(window.localStorage.getItem("strapi_jwt")).token,
+          },
+          body: body,
+        }).then(()=>{
+          this.loading = false;
+          this.success = true;
+        }).catch((err)=>{
+          this.$store.dispatch("errorhandling", err);
+        });
+        
+      });
     },
+    
   },
-}
+};
 </script>

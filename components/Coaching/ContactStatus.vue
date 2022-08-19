@@ -14,7 +14,7 @@
         : $vuetify.theme.themes.light.primary)
     "
   >
-  <v-btn @click="testRED">test RED</v-btn>
+    <!--<v-btn @click="testRED">test RED</v-btn>-->
     <v-sheet
       class="d-flex"
       :style="
@@ -360,15 +360,19 @@ export default {
         console.log("redRes", redRes);
       });*/
       this.$axios
-          .$post("https://redclient.redmedical.de/service/video", {
-            header: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
-          })
-          .then((response) => {
-            console.log(response);
-          })
+        .$post("https://redclient.redmedical.de/service/video", {
+          body: {
+            method: "getEntryCodes",
+            date: "2023-11-27",
+            token: this.$config.redAPI,
+          },
+        })
+        .then((response) => {
+          console.log('res', response);
+        })
+        .catch((err)=>{
+          this.$store.dispatch("errorhandling", err);
+        });
     },
     async pay(dateInput) {
       this.btn.payButtonLoading = true;
