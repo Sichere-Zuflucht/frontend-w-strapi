@@ -14,6 +14,7 @@
         : $vuetify.theme.themes.light.primary)
     "
   >
+  <v-btn @click="testRED">test RED</v-btn>
     <v-sheet
       class="d-flex"
       :style="
@@ -312,7 +313,9 @@ export default {
   methods: {
     cancel(doc) {
       this.eraseLoading = true;
-      const informTo = this.coach.email ? this.coach.email : 'nouser@sichere-zuflucht.de'
+      const informTo = this.coach.email
+        ? this.coach.email
+        : "nouser@sichere-zuflucht.de";
       this.$axios
         .get(
           `${this.$config.strapi.url}/deletemeeting?email=${informTo}&id=${this.id}&acceptedDate=${doc.acceptedDate}`,
@@ -337,6 +340,36 @@ export default {
           console.log("delete error: ", err);
         });
     },
+    async testRED() {
+      const data = {
+        method: "getEntryCodes",
+        date: "2023-11-27",
+        token: this.$config.redAPI,
+      };
+      /*const redReq = await this.$axios.$post(
+        "https://redclient.redmedical.de/service/video",
+        {
+          header: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+      console.log("redReq", redReq);
+      redReq.json().then((redRes) => {
+        console.log("redRes", redRes);
+      });*/
+      this.$axios
+          .$post("https://redclient.redmedical.de/service/video", {
+            header: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          })
+          .then((response) => {
+            console.log(response);
+          })
+    },
     async pay(dateInput) {
       this.btn.payButtonLoading = true;
       let redReq, data, video;
@@ -346,7 +379,7 @@ export default {
           //date: (dateInput.date.split('T'))[0],
           //token: this.$config.redAPI,
           method: "getEntryCodes",
-          date: "2019-11-27",
+          date: "2023-11-27",
           token: this.$config.redAPI,
         };
         console.log("data", data);
@@ -422,7 +455,7 @@ export default {
           }
         )
         .then((paymentID) => {
-          console.log("paymentID".paymentID);
+          console.log("paymentID", paymentID);
           const data = {
             acceptedDate: dI.date,
             videoCoach: v.codeArzt,
