@@ -106,13 +106,15 @@
                 Ihr Vor- und Nachname werden in Ihrem Profil öffentlich sichtbar
                 sein.
               </p>
-              <v-form ref="form" v-model="validMem" class="pt-8">
+              <v-form ref="form" v-model="validMem" class="pt-8" autocomplete="on">
                 <v-text-field
                   v-model="firstName"
                   class="secondary--text font-weight-bold"
                   :rules="rules.textRules"
                   label="Vorname"
                   type="name"
+                  name="fname"
+                  autocomplete="given-name"
                 ></v-text-field>
                 <v-text-field
                   v-model="lastName"
@@ -120,6 +122,8 @@
                   :rules="rules.textRules"
                   label="Nachname"
                   type="name"
+                  name="lname"
+                  autocomplete="family-name"
                 ></v-text-field>
                 <v-btn
                   color="secondary"

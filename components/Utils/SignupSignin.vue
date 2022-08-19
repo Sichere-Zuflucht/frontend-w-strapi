@@ -38,7 +38,7 @@
         <v-stepper v-model="step" :flat="true" style="box-shadow: none">
           <v-stepper-items>
             <v-stepper-content step="1" class="pa-0">
-              <v-form v-model="valid.email" style="width: 100%" class="mb-4">
+              <v-form v-model="valid.email" style="width: 100%" class="mb-4" autocomplete="on">
                 <v-text-field
                   v-model="email"
                   type="email"
@@ -46,6 +46,8 @@
                   label="E-mail-Adresse"
                   required
                   persistent-hint
+                  name="email"
+                  autocomplete="email"
                   :hint="
                     makeLogin
                       ? ''
@@ -70,7 +72,7 @@
               </v-form>
             </v-stepper-content>
             <v-stepper-content step="2" class="pa-0">
-              <v-form v-model="valid.password" style="width: 100%" class="mb-4">
+              <v-form v-model="valid.password" style="width: 100%" class="mb-8" autocomplete="on">
                 <v-alert
                   v-if="emailExisting && !makeLogin"
                   type="info"
@@ -93,13 +95,17 @@
                   <b>{{ email }}</b> bei Sichere Zuflucht registrieren?
                 </v-alert>
                 <h2 v-if="!emailExisting" class="text-h3 secondary--text">Account erstellen</h2>
-                <p class="grey--text">für {{email}}</p>
+                <v-text-field type="email" disabled name="username" autocomplete="off" v-model="email" class="mt-0 pt-0"/>
+                <!--<p class="grey--text">für {{email}}</p>-->
+                
                 <v-text-field
                   v-model="password"
                   label="Passwort"
                   :rules="emailExisting ? [] : rules.passwordRules"
                   :type="hidePassword ? 'password' : 'text'"
                   :append-icon="hidePassword ? 'mdi-eye' : 'mdi-eye-off'"
+                  :name="emailExisting ? 'current-password' : 'new-password'"
+                  :autocomplete="emailExisting ? 'current-password' : 'new-password'"
                   :hint="
                     emailExisting
                       ? ''
@@ -127,6 +133,8 @@
                     :rules="rules.passwordRules2"
                     label="Passwort wiederholen"
                     type="password"
+                    name="new-password"
+                    autocomplete="off"
                     class="mt-6"
                   ></v-text-field>
                 </div>

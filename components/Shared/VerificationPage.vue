@@ -9,7 +9,7 @@
       <nuxt-link to="" target="_blank"
         >Warum ist eine Verifizierung nötig?</nuxt-link
       >
-      <v-form ref="verify" v-model="validRef" class="pt-8">
+      <v-form ref="verify" v-model="validRef" class="pt-8" autocomplete="on">
         <v-text-field
           v-model="verPhone"
           class="secondary--text font-weight-bold"
@@ -18,6 +18,8 @@
           type="tel"
           persistent-hint
           hint="Wir werden Sie telefonisch kontaktieren."
+          name="mobile"
+          autocomplete="tel"
         ></v-text-field>
         <v-checkbox
           v-if="!userAltEmail"
@@ -36,6 +38,8 @@
           persistent-hint
           append-icon="mdi-close"
           hint="Wir werden Sie eventuell per Email kontaktieren."
+          name="email"
+          autocomplete="email"
           @click:append="userAltEmail = !userAltEmail"
         ></v-text-field>
         <v-checkbox
