@@ -202,7 +202,7 @@ export default {
           value: "17.50",
           link:
             process.env.NODE_ENV == "development"
-              ? "https://donate.stripe.com/test_4gw5nr0dEdfV1uE9AC"
+              ? "https://donate.stripe.com/test_00gcPW8bVce9dUY000" //"https://donate.stripe.com/test_4gw5nr0dEdfV1uE9AC"
               : "",
         },
         {
@@ -212,7 +212,7 @@ export default {
           value: "x",
           link:
             process.env.NODE_ENV == "development"
-              ? "https://donate.stripe.com/test_9AQdTXd0qa3Jddm007"
+              ? "https://book.stripe.com/test_bIYg284ZJ1zv18caEF" //"https://donate.stripe.com/test_9AQdTXd0qa3Jddm007"
               : "",
         },
       ],
