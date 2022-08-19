@@ -58,6 +58,7 @@ export default {
   modules: [
     '@nuxtjs/axios',
     '@nuxtjs/strapi',
+    '@nuxtjs/markdownit',
     'nuxt-stripe-module',
   ],
 
@@ -78,6 +79,10 @@ export default {
     cookie: {
       path: '/'
     }
+  },
+
+  markdownit: {
+    runtime: true, // Support `$md()`
   },
 
   publicRuntimeConfig: {

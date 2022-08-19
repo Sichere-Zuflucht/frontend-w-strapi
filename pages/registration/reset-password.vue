@@ -127,7 +127,6 @@ export default {
   methods: {
     resetPassword() {
       this.loading = true;
-      console.log("code", this.$route.query.code);
       this.$strapi
         .resetPassword({
           code: this.$route.query.code,
@@ -140,12 +139,12 @@ export default {
           this.buttonText = "Versendet";
           this.showConfirmation = true;
           this.valid = false;
+          window.location.replace('/')
         })
         .catch((err) => {
           this.$store.dispatch("errorhandling", err);
-          // An error happened.
           this.error.status = true;
-          this.error.message = err.message;
+          this.error.message = err.response.data.error.message;
         });
     },
   },

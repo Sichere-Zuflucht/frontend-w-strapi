@@ -134,7 +134,7 @@
               v-else-if="!avatar || changeImg"
               v-model="imageFile"
               labelIdle='Ziehe eine Datei per Drag & Drop hierher oder <span class="filepond--label-action"> durchsuche den Computer </span>'
-              :server="imgUrl + '/api/imgApi'"
+              :server="imgServerUrl + '/imgapi'"
               :src="avatar ? imgUrl + avatar.url : null"
               imagePreviewHeight="200"
               imageCropAspectRatio="1:1"
@@ -241,6 +241,15 @@ export default {
     };
   },
   computed: {
+    imgServerUrl() {
+      return (
+        (this.$config.strapi.url.includes(
+          "https"
+        )
+          ? this.$config.strapi.url
+          : "http://localhost:1337/api")
+      );
+    },
     imgUrl() {
       return (
         (this.$config.strapi.url.includes(

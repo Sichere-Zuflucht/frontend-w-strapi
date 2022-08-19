@@ -12,19 +12,26 @@
         cols="12"
         sm="6"
         md="4"
-        >
+      >
         <div v-if="cat">
-        <p class="caption font-weight-bold">{{ cat.catTitle }}</p>
-        <v-expansion-panels style="box-shadow: none !important">
-          <v-expansion-panel v-for="faq in cat.faqs" :key="faq.id" style="box-shadow: none !important">
-            <v-expansion-panel-header class="caption primary--text align-start">
-              {{ faq.question }}
-            </v-expansion-panel-header>
-            <v-expansion-panel-content class="caption bluegray--text">
-              {{ faq.answer }}
-            </v-expansion-panel-content>
-          </v-expansion-panel>
-        </v-expansion-panels></div>
+          <p class="caption font-weight-bold">{{ cat.catTitle }}</p>
+          <v-expansion-panels style="box-shadow: none !important">
+            <v-expansion-panel
+              v-for="faq in cat.faqs"
+              :key="faq.id"
+              style="box-shadow: none !important"
+            >
+              <v-expansion-panel-header
+                class="caption primary--text align-start"
+              >
+                {{ faq.question }}
+              </v-expansion-panel-header>
+              <v-expansion-panel-content class="caption bluegray--text">
+                <div v-html="$md.render(faq.answer)"></div>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+          </v-expansion-panels>
+        </div>
       </v-col>
     </v-row>
   </div>
@@ -51,8 +58,8 @@ export default {
     },*/
     list: {
       type: String,
-      default: '',
-    }
+      default: "",
+    },
   },
   data() {
     return {
@@ -66,13 +73,13 @@ export default {
       })
     ).data;
     console.log(f);
-    const newFaqCatList = f.attributes.faqCategory.map((cat)=>{
-      if(this.list == '') return cat
-      if(this.list.includes(cat.filterTag)) return cat
-    })
-    console.log('newFaqCatList',newFaqCatList)
-    f.attributes.faqCategory = newFaqCatList
-    console.log('f new',f)
+    const newFaqCatList = f.attributes.faqCategory.map((cat) => {
+      if (this.list == "") return cat;
+      if (this.list.includes(cat.filterTag)) return cat;
+    });
+    console.log("newFaqCatList", newFaqCatList);
+    f.attributes.faqCategory = newFaqCatList;
+    console.log("f new", f);
     /*f.attributes.faqCategory.forEach((c)=>{
       console.log(this.forwoman && c.catTitle == 'Frauen')
       if(this.forwoman && c.catTitle == 'Frauen') {
@@ -82,28 +89,26 @@ export default {
       
     })*/
     //console.log(this.faqList)
-    this.faqList = f
-    
+    this.faqList = f;
   },
 };
 </script>
 
 <style>
+#faq .v-expansion-panel::before {
+  box-shadow: none !important;
+}
+#faq .v-expansion-panel-header,
+#faq .v-expansion-panel-content__wrap {
+  padding-right: 0;
+  padding-left: 0;
+}
+#faq .v-expansion-panels .v-expansion-panel:not(:first-child)::after {
+  border-color: transparent !important;
+}
 
-  #faq .v-expansion-panel::before {
-    box-shadow: none !important;
-  }
-  #faq .v-expansion-panel-header,
-  #faq .v-expansion-panel-content__wrap {
-    padding-right: 0;
-    padding-left: 0;
-  }
-  #faq .v-expansion-panels .v-expansion-panel:not(:first-child)::after {
-    border-color: transparent !important;
-  }
-
-  #faq .v-expansion-panel-header__icon i {
-    color: #f48fb1 !important;
-    opacity: 0.6;
-  }
+#faq .v-expansion-panel-header__icon i {
+  color: #f48fb1 !important;
+  opacity: 0.6;
+}
 </style>
