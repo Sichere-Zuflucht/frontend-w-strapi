@@ -184,7 +184,7 @@ export default {
           value: "50",
           link:
             process.env.NODE_ENV == "development"
-              ? "https://donate.stripe.com/test_dR617b7G63FlehqfZ3"
+              ? "https://donate.stripe.com/test_7sI5nr6C20t97T29AI"
               : "",
         },
         {
@@ -193,7 +193,7 @@ export default {
           value: "25",
           link:
             process.env.NODE_ENV == "development"
-              ? "https://donate.stripe.com/test_00g4jngcCdfV4GQbIM"
+              ? "https://donate.stripe.com/test_00g6rvaSigs71uEbIR"
               : "",
         },
         {
@@ -202,7 +202,7 @@ export default {
           value: "17.50",
           link:
             process.env.NODE_ENV == "development"
-              ? "https://donate.stripe.com/test_00gcPW8bVce9dUY000" //"https://donate.stripe.com/test_4gw5nr0dEdfV1uE9AC"
+              ? "https://donate.stripe.com/test_8wM3fj6C24Jp7T25ku"
               : "",
         },
         {
@@ -212,7 +212,7 @@ export default {
           value: "x",
           link:
             process.env.NODE_ENV == "development"
-              ? "https://book.stripe.com/test_bIYg284ZJ1zv18caEF" //"https://donate.stripe.com/test_9AQdTXd0qa3Jddm007"
+              ? "https://donate.stripe.com/test_28og255xY5Nta1a14f"
               : "",
         },
       ],
