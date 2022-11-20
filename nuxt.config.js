@@ -1,4 +1,5 @@
 import colors from 'vuetify/es5/util/colors'
+import axios from 'axios'
 
 export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
@@ -47,6 +48,30 @@ export default {
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
+
+  generate: {
+    /*routes(callback) {
+      axios
+        .get('http://localhost:1337/api/magazines')
+        .then(res => {
+          const routes = res.data.map(magazin => {
+            return '/magazine/' + magazin.id
+          })
+          callback(null, routes)
+        })
+        .catch(callback)
+    }*/
+    routes() {
+      return axios.get('http://localhost:1337/api/magazines').then(res => {
+        return res.data.map(magazin => {
+          return {
+            route: '/magazine/' + magazin.id,
+            payload: magazin
+          }
+        })
+      })
+    }
+  },
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [

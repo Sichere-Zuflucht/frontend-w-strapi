@@ -2,13 +2,19 @@
   <div v-if="article">
     <v-img
       v-if="article.attributes.cover"
-      :src="article.attributes.cover.data.attributes.url ? imgUrl + article.attributes.cover.data.attributes.url : null"
+      :src="
+        article.attributes.cover.data.attributes.url
+          ? imgUrl + article.attributes.cover.data.attributes.url
+          : null
+      "
       width="100%"
       max-height="300"
     />
     <v-container style="margin-top: -45px">
       <v-avatar color="white"
-        ><v-icon>{{ article.attributes.tags.data[0].attributes.icon }}</v-icon></v-avatar
+        ><v-icon>{{
+          article.attributes.tags.data[0].attributes.icon
+        }}</v-icon></v-avatar
       >
       <h1 class="text-h1 primary--text pt-2">{{ article.attributes.title }}</h1>
       <p class="font-weight-bold pb-6">{{ article.attributes.subtitle }}</p>
@@ -18,7 +24,10 @@
         v-if="article.attributes.spotifylink"
         :src="
           'https://open.spotify.com/embed/' +
-          article.attributes.spotifylink.replace('https://open.spotify.com/', '')
+          article.attributes.spotifylink.replace(
+            'https://open.spotify.com/',
+            ''
+          )
         "
         class="pt-2"
         width="100%"
@@ -87,9 +96,12 @@
       ></v-row>
     </v-container>
   </div>
+  <div v-else>user: {{user}}</div>
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   data() {
     return {
@@ -99,6 +111,11 @@ export default {
       slugpath: this.$route.params.slug,
     };
   },
+  async asyncData({ params, error, payload }) {
+    if (payload) console.log('payload', payload)
+    
+    //else return { user: await backend.fetchUser(params.id) };
+  },
   computed: {
     cssVars() {
       return {
@@ -107,16 +124,12 @@ export default {
       };
     },
     imgUrl() {
-      return (
-        (this.$config.strapi.url.includes(
-          "https"
-        )
-          ? this.$config.strapi.url.replace('/api','')
-          : "http://localhost:1337")
-      );
+      return this.$config.strapi.url.includes("https")
+        ? this.$config.strapi.url.replace("/api", "")
+        : "http://localhost:1337";
     },
   },
-  async mounted() {
+  /*async mounted() {
     console.log(this.$route.params.slug);
     await this.$strapi.$magazines
       .find({
@@ -140,7 +153,7 @@ export default {
       .catch((e) => {
         this.$store.dispatch("errorhandling", e);
       });
-  },
+  },*/
 };
 </script>
 
