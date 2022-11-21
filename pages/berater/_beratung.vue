@@ -184,7 +184,7 @@
               class="mt-4 d-flex flex-column justify-center"
             >
               <p class="mb-0">
-                Fertig! Deine Anfrage wurde gesendet, {{ coachName }} wird sich
+                Fertig! Deine Anfrage wurde gesendet, {{ pubData.displayName }} wird sich
                 in den nächsten Tagen bei dir melden. <br />Sieh bitte auch in
                 deinem Spam-Ordner nach.
               </p>
@@ -299,35 +299,31 @@ export default {
       pubData: undefined,
     };
   },
-  async fetch() {
-    /*if (
-      this.$store.getters['getActiveUser'] && this.$route.params.beratung === this.$store.getters['getActiveUser'].id
-    ) {
-      this.pubData = this.$store.getters['getActiveUser']
-    } else {
-      */
-
-    this.$strapi.$users
-      .find({
-        populate: "avatar",
-        "filters[id]": this.$route.params.beratung,
-      })
-      .then((r) => {
-        console.log("route:", this.$route);
-        console.log("router:", this.$router);
-        console.log("route user list", r);
-        this.pubData = r[0];
-        console.log("route user", this.pubData);
-        if (this.pubData === undefined) this.pubData = false;
-      });
-  },
-  fetchOnServer: false,
-  computed: {
-    coachName() {
-      return this.pubData.displayName;
-    },
+  created () {
+    this.getCoachContent()
   },
   methods: {
+    async getCoachContent () {
+      /*const userIdPromise = await fetch(`https://sample.api.com/users/id/${this.$route.params.users}`)
+      const userIdJson = userIdPromise.json()
+      userIdJson.then((res) => {
+        this.users = res.data
+      })*/
+
+      this.$strapi.$users
+        .find({
+          populate: "avatar",
+          "filters[id]": this.$route.params.beratung,
+        })
+        .then((r) => {
+          console.log("route:", this.$route);
+          console.log("router:", this.$router);
+          console.log("route user list", r);
+          this.pubData = r[0];
+          console.log("route user", this.pubData);
+          if (this.pubData === undefined) this.pubData = false;
+        });
+    },
     createMeeting() {
       this.loading = true;
       const woman = this.$store.getters["getActiveUser"];

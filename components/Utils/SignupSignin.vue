@@ -341,7 +341,8 @@ export default {
         d.getDay().toString() +
         d.getMonth().toString() +
         d.getFullYear().toString().slice(2);
-
+      
+      // Ist nodemailer aktiviert, damit die Registrierung via localhost funktioniert?
       this.$strapi
         .register({ 
           username: username, 
