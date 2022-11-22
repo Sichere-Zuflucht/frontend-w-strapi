@@ -45,9 +45,9 @@ export default {
           text:
             'Die Frau sucht sich eine passende Beratung aus und schreibt innerhalb unseres Portals eine Nachricht an die beratende Person.',
           btn: 'Berater*innen-Übersicht',
-          link: '/berater/suche',
+          link: '/berater',
           textStyle: true,
-          rule: !this.$route.path.startsWith('/berater/suche'),
+          rule: !this.$route.path.startsWith('/berater'),
         },
         {
           icon: 'mdi-message-text',

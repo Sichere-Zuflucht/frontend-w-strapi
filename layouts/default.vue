@@ -302,7 +302,7 @@ export default {
             {
               icon: 'mdi-account-search',
               title: 'Beratung finden',
-              to: '/berater/suche',
+              to: '/berater',
             },
           ],
         },

@@ -55,7 +55,7 @@ export default {
           text: 'Schauen Sie sich gern um, welche Kolleg*innen noch ihre Hilfe anbieten.',
           alternativText: 'Schaue dich gerne um, welche Berater*innen dir noch zur Hilfe stehen.',
           img: '/le-buzz-tVnm9I9jb8I-unsplash.jpg',
-          link: '/berater/suche',
+          link: '/berater',
           btntext: 'Berater*innen Übersicht',
         },
       ],

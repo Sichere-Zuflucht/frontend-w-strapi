@@ -60,7 +60,7 @@
       <UtilsBtn
         v-if="responses.length != 0"
         text="Beratungsangebote ansehen"
-        link="/berater/suche"
+        link="/berater"
       />
     </div>
     <v-container v-else>
@@ -107,7 +107,7 @@ export default {
         {
           title: "Berater*innen und Coaches",
           img: "le-buzz-tVnm9I9jb8I-unsplash.jpg",
-          link: "/berater/suche",
+          link: "/berater",
           btntext: "Berater*innen Übersicht",
         },
       ],

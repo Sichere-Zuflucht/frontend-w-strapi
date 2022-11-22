@@ -256,7 +256,7 @@
       ></v-skeleton-loader>
     </v-container>
   </div>
-  <div v-else>
+  <!--<div v-else>
     <v-container class="mt-16">
       <h1 class="text-h1 secondary--text mb-4">Unbekannt</h1>
       <v-alert type="error" dark color="red">
@@ -272,11 +272,22 @@
       </p>
       <SharedServiceOverview class="pb-16" />
     </v-container>
-  </div>
+  </div>-->
 </template>
 
 <script>
 export default {
+  async validate({ params, $strapi }){
+    console.log(params)
+    const coach = await $strapi.$users
+        .find({
+          populate: "avatar",
+          "filters[id]": params.beratung,
+        })
+    console.log(coach)
+    if (coach.length == 0) window.location.replace('/')
+    return coach[0]
+  },
   data() {
     return {
       requestForm: false,
@@ -316,11 +327,7 @@ export default {
           "filters[id]": this.$route.params.beratung,
         })
         .then((r) => {
-          console.log("route:", this.$route);
-          console.log("router:", this.$router);
-          console.log("route user list", r);
           this.pubData = r[0];
-          console.log("route user", this.pubData);
           if (this.pubData === undefined) this.pubData = false;
         });
     },
