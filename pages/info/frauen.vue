@@ -36,7 +36,7 @@
     </v-container>
     <CoachingSlider />
     <v-container>
-      <UtilsBtn text="Berater*innen" link="/berater/suche" classname="pb-0" />
+      <UtilsBtn text="Berater*innen" link="/berater" classname="pb-0" />
       <h2 class="text-h2 secondary--text text-center pt-16">
         DU STEHST VOR DER TRENNUNG, HAST ABER VIELE FRAGEN?!
       </h2>

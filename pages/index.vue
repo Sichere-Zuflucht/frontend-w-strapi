@@ -45,7 +45,7 @@
                 Themen. Diese kannst du von überall ganz
                 <b>einfach, sicher und anonym</b> mit deinem
                 <b>Handy</b> machen.
-                <v-btn color="secondary my-4" nuxt exact to="berater/suche">
+                <v-btn color="secondary my-4" nuxt exact to="berater">
                   Berater*innen ansehen
                 </v-btn>
               </v-card-subtitle>
