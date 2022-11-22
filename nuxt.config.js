@@ -97,6 +97,40 @@ export default {
     },
   },
 
+  generate: {
+    // create an array of all routes for generating static pages
+    // careful, this is only used by `npm run generate`. These must match SPA mode routes
+
+    routes: function () {
+      $strapi.$users.find()
+      .then((response) => {
+        let users = response.data.map((user) => {
+            return {
+              route: '/berater/' + user.id,
+              payload: user
+            }
+        });
+        return [...users]
+     });
+    }
+
+    /* EXAMPLE
+    routes: function () {
+      return axios.get(
+        'https://jsonplaceholder.typicode.com/users'
+      )
+      .then((response) => {
+          let users = response.data.map((user) => {
+              return {
+                route: '/users/' + user.id,
+                payload: user
+              }
+          });
+          return ['/some-other-dynamic-route-or-array-of-routes/', ...users]
+       });
+     }*/
+   },
+
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
     customVariables: ['~/assets/variables.scss'],

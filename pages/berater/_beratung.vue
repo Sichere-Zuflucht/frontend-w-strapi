@@ -17,7 +17,6 @@
         ></v-img
       ></v-avatar>
     </v-sheet>
-
     <v-container>
       <h1 class="text-center text-h1 primary--text text-uppercase">
         {{ pubData.firstName }} {{ pubData.lastName }}
