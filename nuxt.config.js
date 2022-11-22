@@ -102,7 +102,7 @@ export default {
     // careful, this is only used by `npm run generate`. These must match SPA mode routes
 
     routes: function () {
-      $strapi.$users.find()
+      return axios.get(process.env.STRAPI_URL+"/users")
       .then((response) => {
         let users = response.data.map((user) => {
             return {
