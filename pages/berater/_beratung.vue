@@ -277,16 +277,15 @@
 
 <script>
 export default {
-  async validate({ params, $strapi }){
-    console.log(params)
-    const coach = await $strapi.$users
-        .find({
-          populate: "avatar",
-          "filters[id]": params.beratung,
-        })
-    console.log(coach)
-    if (coach.length == 0) window.location.replace('/')
-    return coach[0]
+  async asyncData({params, $strapi}){
+    const pubData = await $strapi.$users
+      .find({
+        populate: "avatar",
+        "filters[id]": params.beratung,
+      })
+      .then((data) => data[0])
+    if(pubData === undefined) window.location.replace('/')
+    return { pubData }
   },
   data() {
     return {
@@ -307,20 +306,20 @@ export default {
       dialog: false,
       linkVal: window.location.href, //this.$route.fullPath,
       copied: false,
-      pubData: undefined,
+      //pubData: undefined,
     };
   },
-  created () {
+  /*created () {
     this.getCoachContent()
-  },
+  },*/
   methods: {
-    async getCoachContent () {
+    /*async getCoachContent () {
       /*const userIdPromise = await fetch(`https://sample.api.com/users/id/${this.$route.params.users}`)
       const userIdJson = userIdPromise.json()
       userIdJson.then((res) => {
         this.users = res.data
       })*/
-
+/*
       this.$strapi.$users
         .find({
           populate: "avatar",
@@ -330,7 +329,7 @@ export default {
           this.pubData = r[0];
           if (this.pubData === undefined) this.pubData = false;
         });
-    },
+    },*/
     createMeeting() {
       this.loading = true;
       const woman = this.$store.getters["getActiveUser"];
