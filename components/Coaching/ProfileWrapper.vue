@@ -7,7 +7,7 @@
     class="d-flex flex-column pb-2"
   >
     <v-card-text class="pt-0 flex-grow-1 flex-shrink-0">
-      <nuxt-link :to="'/berater/' + pubCoachData.id">
+      <nuxt-link :to="'/berater/' + pubCoachData.username">
         <v-avatar color="primary" class="my-5" size="80"
           ><v-img 
             v-if="pubCoachData.avatar"
@@ -17,7 +17,7 @@
       ></nuxt-link>
       <div class="d-flex flex-column justify-center">
         <nuxt-link
-          :to="'/berater/' + pubCoachData.id"
+          :to="'/berater/' + pubCoachData.username"
           style="text-decoration: none"
           ><h2 class="secondary--text text-h2">
             {{ pubCoachData.displayName }}
@@ -36,7 +36,7 @@
       </div>
     </v-card-text>
     <v-card-actions class="my-4 flex-grow-0 flex-shrink-1">
-      <v-btn absolute right color="primary" :to="'/berater/' + pubCoachData.id"
+      <v-btn absolute right color="primary" :to="'/berater/' + pubCoachData.username"
         >Profil ansehen</v-btn
       >
     </v-card-actions>
