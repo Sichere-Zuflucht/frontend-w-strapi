@@ -96,25 +96,29 @@
       ></v-row>
     </v-container>
   </div>
-  <div v-else>user: {{user}}</div>
+  <div v-else>user: {{article}}</div>
 </template>
 
 <script>
-import { mapState } from "vuex";
-
 export default {
+  async asyncData({params, $strapi}){
+    const article = await $strapi.$magazines
+      .find({
+        populate: '*',
+        "filters[slug]": params.slug
+      })
+      .then(({data}) => data[0])
+      
+    //if(article === undefined) window.location.replace('/')
+    return { article }
+  },
   data() {
     return {
-      article: null,
+      //article: null,
       error: null,
       relatedArticles: null,
       slugpath: this.$route.params.slug,
     };
-  },
-  async asyncData({ params, error, payload }) {
-    if (payload) console.log('payload', payload)
-    
-    //else return { user: await backend.fetchUser(params.id) };
   },
   computed: {
     cssVars() {

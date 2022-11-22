@@ -17,7 +17,6 @@
         ></v-img
       ></v-avatar>
     </v-sheet>
-    <v-btn @click="testloadAllCoaches">load coaches</v-btn>
     <v-container>
       <h1 class="text-center text-h1 primary--text text-uppercase">
         {{ pubData.firstName }} {{ pubData.lastName }}
@@ -281,12 +280,13 @@ export default {
     const pubData = await $strapi.$users
       .find({
         populate: "avatar",
-        "filters[id]": params.beratung,
+        "filters[username]": params.beratung,
       })
       .then((data) => data[0])
     if(pubData === undefined) window.location.replace('/')
     return { pubData }
   },
+  
   data() {
     return {
       requestForm: false,
@@ -330,24 +330,6 @@ export default {
           if (this.pubData === undefined) this.pubData = false;
         });
     },*/
-    testloadAllCoaches(){
-      this.$axios.$get(this.$config.strapi.url+"/users", {
-          headers: {
-            Authorization:
-              "Bearer " +
-              JSON.parse(window.localStorage.getItem("strapi_jwt")).token,
-          },
-        }).then((data)=>{
-          console.log(data)
-        }).catch((err)=>{
-          this.$store.dispatch("errorhandling", err);
-        });
-      /*this.$strapi.$users
-      .find()
-      .then((data) => {
-        console.log(data)
-      })*/
-    },
     createMeeting() {
       this.loading = true;
       const woman = this.$store.getters["getActiveUser"];

@@ -101,18 +101,33 @@ export default {
     // create an array of all routes for generating static pages
     // careful, this is only used by `npm run generate`. These must match SPA mode routes
 
-    routes: function () {
-      return axios.get(process.env.STRAPI_URL+"/users")
-      .then((response) => {
-        let users = response.data.map((user) => {
-            return {
-              route: '/berater/' + user.id,
-              payload: user
-            }
+    routes:
+      async function () {
+        const userRoute = await axios.get(process.env.STRAPI_URL+"/users")
+          .then(async (response) => {
+            let users = response.data.map((user) => {
+                return {
+                  route: '/berater/' + user.username,
+                  payload: user
+                }
+            });
+            return [...users]
         });
-        return [...users]
-     });
-    }
+        const magazineRoute = await axios.get(process.env.STRAPI_URL+"/magazines")
+          .then((response) => {
+            let magazines = response.data.data.map((magazin) => {
+                return {
+                  route: '/magazine/' + magazin.attributes.slug,
+                  payload: magazin
+                }
+            });
+            return [...magazines]
+          })
+
+      console.log([...userRoute, ...magazineRoute])
+      return [...userRoute, ...magazineRoute]
+      }
+  
 
     /* EXAMPLE
     routes: function () {
