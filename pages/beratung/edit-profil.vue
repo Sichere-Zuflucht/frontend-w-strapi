@@ -54,7 +54,7 @@
               />
               <v-btn
                 text
-                :to="user.stripe.payouts_enabled ? '/berater/' + user.id : null"
+                :to="user.stripe.payouts_enabled ? '/berater/' + user.username : null"
                 color="grey"
                 @click="!user.stripe.payouts_enabled ? stepper++ : null"
                 >{{
@@ -79,7 +79,7 @@
                   class="mt-4 mr-3"
                   outlined
                   target="_blank"
-                  :to="'/berater/' + user.id"
+                  :to="'/berater/' + user.username"
                   >Profil ansehen</v-btn
                 ><v-btn
                   v-if="!user.stripe.payouts_enabled"
