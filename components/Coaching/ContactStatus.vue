@@ -5,7 +5,7 @@
     nuxt
     :dark="coachingLiesInPast"
     :ripple="clickable"
-    :to="clickable ? '/berater/' + coach.id : null"
+    :to="clickable ? '/berater/' + coach.username : null"
     outlined
     :style="
       'border: 1px solid ' +
@@ -146,7 +146,7 @@
       style="border-top: 1px solid lightgrey"
       class="align-stretch pa-4"
     >
-      <v-btn small color="primary" outlined nuxt :to="'/berater/' + coach.id"
+      <v-btn small color="primary" outlined nuxt :to="'/berater/' + coach.username"
         >Neue Anfrage stellen
       </v-btn>
       <v-dialog v-model="isDelete" persistent max-width="290">
@@ -174,7 +174,7 @@
       style="border-top: 1px solid lightgrey"
       class="align-stretch pa-4"
     >
-      <v-btn small color="primary" outlined nuxt :to="'/berater/' + coach.id"
+      <v-btn small color="primary" outlined nuxt :to="'/berater/' + coach.username"
         >Neue Anfrage stellen
       </v-btn>
       <v-dialog v-model="isDelete" persistent max-width="290">

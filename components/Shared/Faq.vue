@@ -7,7 +7,7 @@
     </h3>
     <v-row v-if="faqList.length != 0" id="faqwrapper" class="pb-8">
       <v-col
-        v-for="(cat, i) in faqList.attributes.faqCategory"
+        v-for="(cat, i) in faqList"
         :key="i"
         cols="12"
         sm="6"
@@ -40,33 +40,31 @@
 <script>
 export default {
   props: {
-    /*price: {
-      type: Boolean,
-      default: false,
-    },
-    onlinecoaching: {
-      type: Boolean,
-      default: false,
-    },
-    forcoaches: {
-      type: Boolean,
-      default: false,
-    },
-    forwoman: {
-      type: Boolean,
-      default: false,
-    },*/
     list: {
       type: String,
       default: "",
+      // filter the list with the words written in strapi under faq > faqCategory > filterTag
     },
   },
+
   data() {
     return {
       faqList: [],
     };
   },
-  async mounted() {
+
+  async mounted(){
+    const faqs = await this.$strapi.$faq
+      .find({
+        populate: "*",
+      })
+      .then(({data}) => {
+        return data.attributes.faqCategory
+      })
+    console.log('faqs', await faqs)
+    this.faqList = await faqs
+  },
+  /*async mounted() {
     const f = (
       await this.$strapi.$faq.find({
         populate: "*",
@@ -87,10 +85,10 @@ export default {
         this.faqList.push(c)
       }
       
-    })*/
+    })*//*
     //console.log(this.faqList)
     this.faqList = f;
-  },
+  },*/
 };
 </script>
 
@@ -110,5 +108,9 @@ export default {
 #faq .v-expansion-panel-header__icon i {
   color: #f48fb1 !important;
   opacity: 0.6;
+}
+
+#faq .v-expansion-panel-header__icon {
+  margin-left: 0px;
 }
 </style>
