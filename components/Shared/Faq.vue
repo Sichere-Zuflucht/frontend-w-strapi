@@ -31,9 +31,6 @@
                 <div
                   v-html="$md.render(faq.answer)"
                 ></div>
-                <p
-                  v-html="$md.render(faq.answer)"
-                ></p>
               </v-expansion-panel-content>
             </v-expansion-panel>
           </v-expansion-panels>
