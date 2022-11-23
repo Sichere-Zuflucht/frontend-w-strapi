@@ -1,15 +1,6 @@
 <template>
   <div v-if="article">
-    <v-img
-      v-if="article.attributes.cover"
-      :src="
-        article.attributes.cover.data.attributes.url
-          ? imgUrl + article.attributes.cover.data.attributes.url
-          : null
-      "
-      width="100%"
-      max-height="300"
-    />
+    <UtilsBanner :url="article.attributes.cover.data.attributes.url" strapiImg/>
     <v-container style="margin-top: -45px">
       <v-avatar color="white"
         ><v-icon>{{
@@ -126,11 +117,6 @@ export default {
         "--primary": this.$vuetify.theme.themes.light.primary,
         "--secondary": this.$vuetify.theme.themes.light.secondary,
       };
-    },
-    imgUrl() {
-      return this.$config.strapi.url.includes("https")
-        ? this.$config.strapi.url.replace("/api", "")
-        : "http://localhost:1337";
     },
   },
   /*async mounted() {
