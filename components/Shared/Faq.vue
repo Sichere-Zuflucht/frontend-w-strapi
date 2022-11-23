@@ -14,7 +14,7 @@
         md="4"
       >
         <div v-if="cat">
-          <p class="caption font-weight-bold">catTitle<!--{{ cat.catTitle }}--></p>
+          <p class="caption font-weight-bold">{{ cat.catTitle }}</p>
           <v-expansion-panels style="box-shadow: none !important">
             <v-expansion-panel
               v-for="faq in cat.faqs"
@@ -24,11 +24,11 @@
               <v-expansion-panel-header
                 class="caption primary--text align-start"
               >
-              question<!--{{ faq.question }}-->
+             {{ faq.question }}
               </v-expansion-panel-header>
               <v-expansion-panel-content class="caption bluegray--text">
                 <!--<div v-html="$md.render(faq.answer)"></div>-->
-                render answers
+                render answers typeof {{typeof faq.answer}}
               </v-expansion-panel-content>
             </v-expansion-panel>
           </v-expansion-panels>
