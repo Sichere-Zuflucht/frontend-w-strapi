@@ -28,9 +28,9 @@
               </v-expansion-panel-header>
               <v-expansion-panel-content v-if="faq.answer" class="caption bluegray--text">
                 <!--<div v-html="$md.render(faq.answer)"></div>-->
-                <div
+                <p
                   v-html="$md.render(faq.answer)"
-                ></div>
+                ></p>
               </v-expansion-panel-content>
             </v-expansion-panel>
           </v-expansion-panels>
