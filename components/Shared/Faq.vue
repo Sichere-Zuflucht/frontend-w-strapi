@@ -28,7 +28,9 @@
               </v-expansion-panel-header>
               <v-expansion-panel-content class="caption bluegray--text">
                 <!--<div v-html="$md.render(faq.answer)"></div>-->
-                render answers typeof {{typeof faq.answer}}
+                <div
+                  v-html="$md.render(faq.answer)"
+                ></div>
               </v-expansion-panel-content>
             </v-expansion-panel>
           </v-expansion-panels>
