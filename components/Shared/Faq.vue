@@ -26,11 +26,14 @@
               >
              {{ faq.question }}
               </v-expansion-panel-header>
-              <v-expansion-panel-content class="caption bluegray--text">
+              <v-expansion-panel-content v-if="faq.answer" class="caption bluegray--text">
                 <!--<div v-html="$md.render(faq.answer)"></div>-->
                 <div
                   v-html="$md.render(faq.answer)"
                 ></div>
+                <p
+                  v-html="$md.render(faq.answer)"
+                ></p>
               </v-expansion-panel-content>
             </v-expansion-panel>
           </v-expansion-panels>
