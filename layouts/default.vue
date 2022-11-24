@@ -100,7 +100,7 @@
                 :key="n"
                 :to="
                   sub.appendUser
-                    ? sub.to + user.id
+                    ? sub.to + user.username
                     : sub.to
                 "
                 nuxt

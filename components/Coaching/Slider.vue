@@ -33,7 +33,7 @@ export default {
   },
   data() {
     return {
-      allCoaches: [],
+      //allCoaches: [],
       loading: true,
       error: {
         status: false,
@@ -41,21 +41,57 @@ export default {
       },
     }
   },
-  mounted() {
-    this.$strapi.$users.find({
-      populate: 'avatar',
-      'filters[roleName]': 'coach',
-      'filters[verification]': 'done',
-    }).then((d) => {
-      console.log('list of alternative coaches:',d)
-      d.forEach((single)=>{
-        if (this.withoutid != single.id) this.allCoaches.push(single)
+  /*async asyncData({params, $strapi}){
+    const allCoaches = await $strapi.$users
+      .find({
+        populate: "avatar",
+        'filters[roleName]': 'coach',
+        'filters[verification]': 'done',
       })
-      this.loading = false
-    })
-    .catch((err)=>{
-      this.$store.dispatch('errorhandling',err)
-    })
+      .then((data) => {
+        this.loading = false
+        return data[0]
+      })
+    if(pubData === undefined) window.location.replace('/')
+    const relatedCoaches = await $strapi.$users
+      .find({
+        populate: "avatar",
+        "username_ncontains": params.beratung,
+        "limit": 3,
+      })
+      .then((data) => data)
+    console.log('relatedCoaches', relatedCoaches)
+    return { allCoaches }
+  },*/
+  mounted() {
+    this.withoutid 
+      ? (
+        this.$strapi.$users.find({
+          populate: 'avatar',
+          'filters[roleName]': 'coach',
+          'filters[verification]': 'done',
+          'filters[username][$ne]': this.withoutid ,
+          'limit': 3,
+        }).then((d) => {
+          this.allCoaches = d
+          /*d.forEach((single)=>{
+            if (this.withoutid != single.id) this.allCoaches.push(single)
+          })*/
+          this.loading = false
+        })
+      ) : (
+        this.$strapi.$users.find({
+          populate: 'avatar',
+          'filters[roleName]': 'coach',
+          'filters[verification]': 'done',
+        }).then((d) => {
+          this.allCoaches = d
+          /*d.forEach((single)=>{
+            if (this.withoutid != single.id) this.allCoaches.push(single)
+          })*/
+          this.loading = false
+        })
+      )
   },
 }
 </script>
