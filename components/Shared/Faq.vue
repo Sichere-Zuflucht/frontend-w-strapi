@@ -64,7 +64,6 @@ export default {
       .then(({data}) => {
         return data.attributes.faqCategory
       })
-    console.log('faqs', await faqs)
     this.faqList = await faqs
   },
   /*async mounted() {

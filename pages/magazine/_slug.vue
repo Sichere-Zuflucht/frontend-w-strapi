@@ -101,13 +101,27 @@ export default {
       .then(({data}) => data[0])
       
     //if(article === undefined) window.location.replace('/')
-    return { article }
+
+    const relatedArticles = await $strapi.$magazines
+      .find({
+        populate: '*',
+        "filters[slug][$ne]": params.slug,
+        "_limit": 3,
+      })
+      .then(({data}) => data)
+      /*{
+        return getRelatedArticles.data
+          .filter((art) => art.attributes.slug !== params.slug)
+          .slice(0, 2);
+      })*/
+    console.log(relatedArticles)
+    return { article, relatedArticles } //, relatedArticles }
   },
   data() {
     return {
       //article: null,
       error: null,
-      relatedArticles: null,
+      //relatedArticles: null,
       slugpath: this.$route.params.slug,
     };
   },

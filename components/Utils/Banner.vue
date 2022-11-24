@@ -27,7 +27,6 @@ export default {
   },
   computed: {
     imgUrl() {
-      console.log("url", this.url)
       return (
         (this.url.includes(
           "https"

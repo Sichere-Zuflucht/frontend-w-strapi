@@ -19,7 +19,7 @@
     </v-sheet>
     <v-container>
       <h1 class="text-center text-h1 primary--text text-uppercase">
-        {{ pubData.firstName }} {{ pubData.lastName }}
+        {{ pubData.displayName }}
       </h1>
       <h2 class="text-center text-h4 mb-4">
         {{ pubData.profession }}
@@ -226,7 +226,7 @@
     </div>
     <v-container v-else class="mt-16">
       <v-btn
-        v-if="$route.params.beratung == $strapi.user.id ? true : false"
+        v-if="$route.params.beratung == $strapi.user.username ? true : false"
         to="/beratung/edit-profil"
         outlined
         nuxt

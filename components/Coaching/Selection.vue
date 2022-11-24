@@ -133,7 +133,7 @@
             <file-pond
               v-else-if="!avatar || changeImg"
               v-model="imageFile"
-              labelIdle='Ziehe eine Datei per Drag & Drop hierher oder <span class="filepond--label-action"> durchsuche den Computer </span>'
+              labelIdle="Ziehe eine Datei per Drag & Drop hierher oder <span class='filepond--label-action'> durchsuche den Computer </span>"
               :server="imgServerUrl + '/imgapi'"
               :src="avatar ? imgUrl + avatar.url : null"
               imagePreviewHeight="200"
@@ -216,7 +216,7 @@ export default {
         bioTitle: "Kurzbeschreibung",
         bioSubtitle: "Damit die Frauen Ihr Angebot besser einschätzen können.",
       },
-      topics: ["Beratung", "Coaching", "Supervision"],
+      topics: ["psychosoziale Beratung", "Coaching", "Rechtsberatung"],
       selectedTopic: null,
       changeProfession: this.info.profession,
       changeQuote: this.info.quote,
