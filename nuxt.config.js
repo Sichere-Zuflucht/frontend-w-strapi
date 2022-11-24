@@ -8,6 +8,9 @@ export default {
   // Target: https://go.nuxtjs.dev/config-target
   target: 'static',
 
+  // Maybe helpful to see the /favicon.ico in generated mode
+  router: { base: '/' },
+
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     titleTemplate: '%s - sicherezuflucht',
@@ -23,6 +26,8 @@ export default {
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      { rel: 'icon', sizes: '32x32', href: '/favicon-32x32.png' },
+      { rel: 'icon', sizes: '16x16', href: '/favicon-16x16.png' },
       { rel: 'preconnect', href: 'https://fonts.gstatic.com' },
       {
         href:
@@ -123,27 +128,8 @@ export default {
             });
             return [...magazines]
           })
-
-      console.log([...userRoute, ...magazineRoute])
       return [...userRoute, ...magazineRoute]
       }
-  
-
-    /* EXAMPLE
-    routes: function () {
-      return axios.get(
-        'https://jsonplaceholder.typicode.com/users'
-      )
-      .then((response) => {
-          let users = response.data.map((user) => {
-              return {
-                route: '/users/' + user.id,
-                payload: user
-              }
-          });
-          return ['/some-other-dynamic-route-or-array-of-routes/', ...users]
-       });
-     }*/
    },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
