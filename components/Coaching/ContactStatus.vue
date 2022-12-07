@@ -11,7 +11,9 @@
       'border: 1px solid ' +
       (now
         ? $vuetify.theme.themes.light.success
-        : $vuetify.theme.themes.light.primary)
+        : oldlist
+          ? 'grey'
+          : $vuetify.theme.themes.light.primary)
     "
   >
     <!--<v-btn @click="testRED">test RED</v-btn>-->
@@ -21,7 +23,9 @@
         'border-bottom: 1px solid ' +
         (now
           ? $vuetify.theme.themes.light.success
-          : $vuetify.theme.themes.light.primary) +
+          : oldlist
+            ? 'grey'
+            : $vuetify.theme.themes.light.primary) +
         ' !important'
       "
     >
@@ -40,7 +44,7 @@
         />
       </v-avatar>
       <div class="ma-5 ml-2 d-flex flex-column justify-center">
-        <h2 class="secondary--text text-h2">
+        <h2 :class="'text-h2 '+ (oldlist ? 'grey--text' : 'secondary--text')">
           {{ coach.displayName }}
         </h2>
         <h3 class="mt-2 text-h5">
@@ -49,7 +53,7 @@
       </div>
     </v-sheet>
     <v-card-text v-if="response">
-      <p class="text-uppercase font-weight-bold mb-1 mt-2 caption">
+      <p v-if="!oldlist" class="text-uppercase font-weight-bold mb-1 mt-2 caption">
         Vorschläge für einen Online-Beratungstermin
       </p>
       <div v-if="!response.coachAnswered">
@@ -102,7 +106,7 @@
       </div>
 
       <div v-else>
-        <div v-if="response.payed">
+        <div v-if="response.payed && !oldlist">
           <v-btn
             class="my-2"
             color="success"
@@ -115,12 +119,25 @@
             "
             >zum Videocall
           </v-btn>
+          <v-btn
+            v-if="response.videoType !== 'sicherer Anbieter'"
+            class="my-2"
+            color="darkgrey"
+            target="_blank"
+            outlined
+            :href="
+              response.videoType === 'sicherer Anbieter'
+                ? response.videoCoach
+                : (response.videoWoman + '-testlink-' + new Date().getTime() * Math.random())
+            "
+            >Videoanbieter testen
+          </v-btn>
           <v-alert dark text dense color="success"
             >Zugesagt für {{ formatDate(response.acceptedDate) }} um
             {{ formatTime(response.acceptedDate) }}
           </v-alert>
         </div>
-        <div v-else>
+        <div v-else-if="!response.payed && !oldlist">
           <v-alert dark color="error" type="error"
             ><p>
               Es liegt (noch) keine Bezahlung vor. Der Bezahlungsprozess kann
@@ -139,10 +156,17 @@
             </p>
           </v-alert>
         </div>
+        <div v-else-if="oldlist">
+          <v-alert dark text dense color="grey"
+            >Hat stattgefunden am {{ formatDate(response.acceptedDate) }} um
+            {{ formatTime(response.acceptedDate) }}
+          </v-alert>
+        </div>
+
       </div>
     </v-card-text>
     <v-card-actions
-      v-if="!now"
+      v-if="!now && !oldlist"
       style="border-top: 1px solid lightgrey"
       class="align-stretch pa-4"
     >
@@ -170,7 +194,7 @@
       </v-dialog>
     </v-card-actions>
     <v-card-actions
-      v-else
+      v-else-if="now && !oldlist"
       style="border-top: 1px solid lightgrey"
       class="align-stretch pa-4"
     >
@@ -196,6 +220,15 @@
           <v-btn light @click="isDelete = false"> nein</v-btn>
         </v-alert>
       </v-dialog>
+    </v-card-actions>
+    <v-card-actions
+      v-else
+      style="border-top: 1px solid lightgrey"
+      class="align-stretch pa-4"
+    >
+      <v-btn small color="grey" outlined nuxt :to="'/berater/' + coach.username"
+        >Profil ansehen
+      </v-btn>
     </v-card-actions>
     <v-card-actions>
       <v-alert v-if="error" type="error" color="error">{{ error }}</v-alert>
@@ -262,6 +295,14 @@
 export default {
   name: "Coaching",
   props: {
+    oldlist: {
+      type: Boolean,
+      defdault: false,
+    },
+    showold: {
+      type: Boolean,
+      defdault: false,
+    },
     coach: {
       type: Object,
       default: () => {},

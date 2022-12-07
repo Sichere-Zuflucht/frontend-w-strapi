@@ -11,52 +11,15 @@
           Deine Korrespondenz
         </h2>
       </v-container>
-      <v-container v-if="responses.length === 1">
-        <CoachingContactStatus
-          :coach="responses[0].coach"
-          :response="responses[0].attributes"
-          :id="responses[0].id"
-          :clickable="false"
-          @cancel="responses = []"
-        />
-      </v-container>
-      <v-slide-group
-        v-else-if="responses.length > 1"
-        show-arrows
-        class="px-1 pb-4"
-      >
-        <v-slide-item v-for="(response, i) in responses" :key="i">
-          <div
-            v-if="
-              response.acceptedDate
-                ? new Date(
-                    response.acceptedDate.date +
-                      ' ' +
-                      response.acceptedDate.time
-                  ) >= newDate
-                : true
-            "
-            style="width: 95vw; max-width: 300px; padding: 5px"
-          >
-            <CoachingContactStatus
-              :coach="response.coach"
-              :response="response.attributes"
-              :id="response.id"
-              :clickable="false"
-              :now="
-                response.acceptedDate
-                  ? new Date(
-                      response.acceptedDate.date +
-                        ' ' +
-                        response.acceptedDate.time
-                    ) <= new Date()
-                  : false
-              "
-              @cancel="cancel(response)"
-            />
-          </div>
-        </v-slide-item>
-      </v-slide-group>
+      <CoachingContactStatusWrapper :responses="responses" />
+      <div class="my-8 d-flex justify-center">
+        <v-btn text color="grey" @click="showOld = !showOld"
+          >vergangene Termine {{ showOld ? "verbergen" : "anzeigen" }}</v-btn
+        >
+      </div>
+      <div v-if="showOld">
+        <CoachingContactStatusWrapper :responses="responses" oldlist :showold="showOld"/>
+      </div>
       <UtilsBtn
         v-if="responses.length != 0"
         text="Beratungsangebote ansehen"
@@ -113,6 +76,7 @@ export default {
       ],
       newWoman: false,
       newDate: new Date(new Date().setHours(new Date().getHours() - 2)),
+      showOld: false,
     };
   },
   async mounted() {
