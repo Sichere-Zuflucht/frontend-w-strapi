@@ -38,7 +38,7 @@ jobs:
           node-version: v16.x
 
       - if: ${{ github.ref == 'refs/heads/master' }}
-        name: Build Node assets Master ${{ secrets.STRAPI_URL_PROD }}
+        name: Build Node assets Master
         env:
           CI: true
           STRAPI_URL: ${{ secrets.STRAPI_URL_PROD }}
