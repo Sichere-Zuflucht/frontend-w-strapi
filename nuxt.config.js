@@ -8,7 +8,7 @@ export default {
   // Target: https://go.nuxtjs.dev/config-target
   target: 'static',
 
-  // Helpful to see the /favicon.ico in generated mode
+  // Maybe helpful to see the /favicon.ico in generated mode
   router: { base: '/' },
 
   // Global page headers: https://go.nuxtjs.dev/config-head
@@ -28,8 +28,6 @@ export default {
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
       { rel: 'icon', sizes: '32x32', href: '/favicon-32x32.png' },
       { rel: 'icon', sizes: '16x16', href: '/favicon-16x16.png' },
-      { rel: 'apple-touch-icon', href: '/apple-touch-icon.png'},
-
       { rel: 'preconnect', href: 'https://fonts.gstatic.com' },
       {
         href:
