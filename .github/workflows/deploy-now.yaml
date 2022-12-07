@@ -41,7 +41,7 @@ jobs:
         name: Build Node assets Master
         env:
           CI: true
-          STRAPI_URL: ${{ secrets.STRAPI_URL }}
+          STRAPI_URL: ${{ secrets.STRAPI_URL_PROD }}
           STRIPE_PK: ${{ secrets.STRIPE_PK }}
           RED_API: ${{ secrets.RED_API }}
         run: |
