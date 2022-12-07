@@ -1,8 +1,8 @@
 name: Deploy Now
 
 on:
-  - push: 
-      branches: [master, ionos_test_environment]
+  - push #: 
+      # branches: [master, ionos_test_environment]
   - workflow_dispatch
   
 
