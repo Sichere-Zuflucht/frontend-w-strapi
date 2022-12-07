@@ -145,22 +145,37 @@
                       <span class="caption">(50min)</span>
                     </b>
                     <v-divider></v-divider>
-                    <v-btn
-                      class="my-2"
-                      color="success"
-                      target="_blank"
-                      :href="
-                        item.attributes.videoType === 'normal'
-                          ? getCodeQuery(item.attributes.videoCoach)
-                          : item.attributes.videoCoach
-                      "
-                      >zum Videocall
-                    </v-btn>
-                    ({{
+                    {{
                       item.attributes.videoType == "normal"
                         ? "standard Videoanbieter "
                         : "zertifizierter Videoanbieter"
-                    }})
+                    }}
+                    <div>
+                      <v-btn
+                        class="my-2"
+                        color="success"
+                        target="_blank"
+                        :href="
+                          item.attributes.videoType === 'normal'
+                            ? getCodeQuery(item.attributes.videoCoach)
+                            : item.attributes.videoCoach
+                        "
+                        >zum Videocall
+                      </v-btn>
+                      <v-btn
+                        v-if="item.attributes.videoType === 'normal'"
+                        class="my-2"
+                        color="darkgrey"
+                        target="_blank"
+                        outlined
+                        :href="
+                          item.attributes.videoType === 'normal'
+                            ? getJitsiTestlink(item.attributes.videoCoach)
+                            : item.attributes.videoCoach
+                        "
+                        >Videoanbieter testen
+                      </v-btn>
+                    </div>
                   </div>
 
                   <v-banner v-else>
@@ -232,11 +247,7 @@
               >
                 <p
                   class="mb-0"
-                  style="
-                    position: absolute;
-                    top: -50%;
-                    font-size: 0.5em !important;
-                  "
+                  style="position: absolute; top: -50%; font-size: 0.5em !important;"
                 >
                   KryptoNr.
                 </p>
@@ -441,6 +452,11 @@ export default {
     getCodeQuery(d){
       const n = d.replace('//','').split('/')
       return window.location.origin + '/videomeeting/' + n[1]
+    },
+    getJitsiTestlink(d){
+      const n = d.replace('//','').split('/')
+      const time = new Date().getTime() * Math.random()
+      return 'https://meet.jit.si/' + n[1] + '-testlink-' + time
     }
   },
 };
