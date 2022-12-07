@@ -50,7 +50,7 @@ jobs:
           yarn build
           yarn generate
       
-      - if: ${{ github.ref == 'refs/heads/ionos_test_environment' }}
+      - if: ${{ github.ref != 'refs/heads/master' }}
         name: Build Node assets Dev
         env:
           CI: true
