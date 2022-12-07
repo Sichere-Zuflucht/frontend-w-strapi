@@ -96,6 +96,7 @@ export default {
       url: process.env.STRAPI_URL,
     },
     redAPI: process.env.RED_API,
+    test: process.env.TEST,
     stripe: {
       publishableKey:
         process.env.STRIPE_PK,

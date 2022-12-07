@@ -1,8 +1,10 @@
 name: Deploy Now
 
 on:
-  - push
+  - push: 
+      branches: [master, ionos_test_environment]
   - workflow_dispatch
+  
 
 jobs:
   deploy-now:
@@ -35,12 +37,28 @@ jobs:
         with:
           node-version: v16.x
 
-      - name: Build Node assets
+      - if: ${{ github.ref == 'refs/heads/master' }}
+        name: Build Node assets Master
         env:
           CI: true
           STRAPI_URL: ${{ secrets.STRAPI_URL }}
           STRIPE_PK: ${{ secrets.STRIPE_PK }}
           RED_API: ${{ secrets.RED_API }}
+          TEST: MasterRandom
+        run: |
+          npm install --global yarn
+          yarn install --frozen-lockfile
+          yarn build
+          yarn generate
+      
+      - if: ${{ github.ref == 'refs/heads/ionos_test_environment' }}
+        name: Build Node assets Master
+        env:
+          CI: true
+          STRAPI_URL: ${{ secrets.STRAPI_URL }}
+          STRIPE_PK: ${{ secrets.STRIPE_PK }}
+          RED_API: ${{ secrets.RED_API }}
+          TEST: MasterRandom
         run: |
           npm install --global yarn
           yarn install --frozen-lockfile
