@@ -10,6 +10,7 @@ export default {
 
   // Maybe helpful to see the /favicon.ico in generated mode
   router: { base: '/' },
+  
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
