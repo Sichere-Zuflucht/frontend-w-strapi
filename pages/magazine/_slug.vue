@@ -26,6 +26,10 @@
         allowtransparency="true"
         allow="encrypted-media"
       ></iframe>
+      <div
+        v-if="article.attributes.iframe"
+        v-html="article.attributes.iframe"
+      ></div>
       <iframe
         v-if="article.attributes.youtubelink"
         width="100%"
