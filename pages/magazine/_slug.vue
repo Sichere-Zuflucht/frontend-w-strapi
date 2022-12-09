@@ -188,4 +188,14 @@ export default {
 .singleArticleText h6 {
   font-size: 1rem;
 }
+
+.singleArticleText ul {
+  margin-bottom: 60px;
+}
+.singleArticleText li {
+  margin-top: 5px;
+}
+.singleArticleText p {
+  line-height: 2em;
+}
 </style>
