@@ -145,6 +145,7 @@ export default {
           tel: data.tel,
           www: data.www,
           altEmail: data.altEmail,
+          name: this.$strapi.user.displayName
         };
         this.$axios.$post(this.$config.strapi.url+"/newcoachemail", {
           headers: {
