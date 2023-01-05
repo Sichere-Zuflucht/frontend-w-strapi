@@ -141,11 +141,12 @@ export default {
       };
       this.$strapi.$users.update(this.$strapi.user.id, data).then((r) => {
         console.log("updated", r);
+        console.log(this.$strapi.user)
         const body = {
           tel: data.tel,
           www: data.www,
           altEmail: data.altEmail,
-          name: this.$strapi.user.displayName
+          name: this.$strapi.user.attributes.displayName
         };
         this.$axios.$post(this.$config.strapi.url+"/newcoachemail", {
           headers: {
