@@ -14,7 +14,7 @@
         md="4"
       >
         <div v-if="cat">
-          <p class="caption font-weight-bold">{{ cat.catTitle }}</p>
+          <p class="font-weight-bold">{{ cat.catTitle }}</p>
           <v-expansion-panels style="box-shadow: none !important">
             <v-expansion-panel
               v-for="faq in cat.faqs"
@@ -22,7 +22,7 @@
               style="box-shadow: none !important"
             >
               <v-expansion-panel-header
-                class="caption primary--text align-start"
+                class="primary--text align-start"
               >
              {{ faq.question }}
               </v-expansion-panel-header>

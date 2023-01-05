@@ -3,8 +3,7 @@
     <div v-if="!success && userdata.verification == 'false'">
       <h2 class="text-h2 secondary--text pb-4">Verifizierung</h2>
       <p>
-        Wir nehmen innerhalb der nächsten Tage mit Ihnen Kontakt auf, um Sie
-        kennenzulernen und offene Fragen klären zu können.
+        Sicherheit ist uns ein wichtiges Anliegen, deshalb nehmen wir in den nächsten Tagen Kontakt mit Ihnen auf, um mehr über Sie zu erfahren und offene Fragen zu klären.
       </p>
       <nuxt-link to="" target="_blank"
         >Warum ist eine Verifizierung nötig?</nuxt-link
@@ -24,7 +23,7 @@
         <v-checkbox
           v-if="!userAltEmail"
           v-model="userAltEmail"
-          label="Alterative Email nutzen"
+          label="Alterative E-Mail-Adresse nutzen"
           :hint="
             'Nutze zur Verifizierung eine alternative Emailadresse, anstatt ' +
             userdata.email

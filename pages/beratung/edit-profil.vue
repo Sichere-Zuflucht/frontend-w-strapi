@@ -73,7 +73,7 @@
                     : "."
                 }}
               </p>
-              <div class="d-flex">
+              <div class="d-flex flex-wrap">
                 <v-btn
                   color="secondary"
                   class="mt-4 mr-3"
@@ -86,7 +86,7 @@
                   color="secondary"
                   class="mt-4"
                   @click="stepper++"
-                  >Bezahlungssystem einrichten</v-btn
+                  >Zahlung einrichten</v-btn
                 >
               </div>
             </v-stepper-content>

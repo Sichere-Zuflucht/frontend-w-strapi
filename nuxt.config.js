@@ -16,7 +16,7 @@ export default {
     titleTemplate: '%s - sicherezuflucht',
     title: 'sicherezuflucht',
     htmlAttrs: {
-      lang: 'en'
+      lang: 'de'
     },
     meta: [
       { charset: 'utf-8' },
