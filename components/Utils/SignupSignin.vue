@@ -143,7 +143,8 @@
                   <v-btn
                     v-if="emailExisting"
                     text
-                    to="/registration/reset-password"
+                    @click="sendResetPasswortCode"
+                    :loading="resetLoading"
                     color="grey"
                     >Passwort vergessen</v-btn
                   ><v-btn
@@ -156,6 +157,7 @@
                     >{{ emailExisting ? "Einloggen" : "Account erstellen" }}</v-btn
                   >
                 </div>
+                <v-alert v-if="codeSent.status" type="success" class="mt-2">{{ codeSent.message }}</v-alert>
               </v-form>
             </v-stepper-content>
             <v-stepper-content step="3" class="pa-0">
@@ -198,9 +200,9 @@
             </v-stepper-content>
           </v-stepper-items>
         </v-stepper>
-        <v-alert v-if="error.status" color="error" class="white--text mt-4">{{
-          error.message
-        }}</v-alert>
+        <v-alert v-if="error.status" color="error" class="white--text mt-4">
+          Es wurde eine E-Mail inklusive einem Link an {{ email }} geschickt. Bitte folgen Sie den dort beschriebenen Anweisungen.
+        </v-alert>
       </v-container>
     </v-col></v-row
   >
@@ -280,6 +282,10 @@ export default {
         status: false,
         message: "",
       },
+      resetLoading: false,
+      codeSent: {
+        status: false,
+      }
     };
   },
   mounted() {
@@ -365,8 +371,18 @@ export default {
           console.log('error:', e)
         })
     },
-    resend(){
-      // somehow manage to be logged in to make a sendEmailConfirmation
+    sendResetPasswortCode(){
+      this.resetLoading = true
+      this.$strapi
+        .forgotPassword({ email: this.email })
+        .then(() => {
+          this.resetLoading = false;
+          this.codeSent.status = true;
+        })
+        .catch((error) => {
+          this.error.status = true;
+          this.error.message = error.code + ": " + error.message;
+        });
     }
   },
 };

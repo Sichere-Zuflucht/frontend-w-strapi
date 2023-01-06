@@ -59,7 +59,7 @@
               <v-text-field
                 v-model="userProvidedErase"
                 outlined
-                label="Löschen einfügen"
+                label='"Löschen" einfügen'
                 :rules="rules.delete"
                 color="grey"
                 required
@@ -127,6 +127,7 @@ export default {
       },
     };
   },
+
   computed: {
     pubData() {
       return this.$store.getters["getActiveUser"];
@@ -151,7 +152,11 @@ export default {
     async deleteUser() {
       this.deleteLoading = true;
       console.log(this.$strapi.user.stripe.id)
-      if(!this.$strapi.user.stripe.id) return deleteSrapiUser()
+      if(this.$strapi.user.stripe.id) this.deleteStripeUser()
+      else this.deleteStrapiUser()
+      
+    },
+    async deleteStripeUser(){
       this.$axios
         .get(
           `${this.$config.strapi.url}/deletestripeacc?acc=${this.$strapi.user.stripe.id}`,
@@ -164,7 +169,7 @@ export default {
           }
         )
         .then(() => {
-          this.deleteSrapiUser()
+          this.deleteStrapiUser()
         })
         .catch((err) => {
           this.deleteLoading = false;
@@ -173,7 +178,8 @@ export default {
           this.overlay = false;
         });
     },
-    async deleteSrapiUser(){
+    async deleteStrapiUser(){
+      console.log('delete strapi account')
       this.$strapi.$users
             .delete(this.$strapi.user.id)
             .then((e) => {
