@@ -151,10 +151,34 @@ export default {
     },
     async deleteUser() {
       this.deleteLoading = true;
-      console.log(this.$strapi.user.stripe.id)
-      if(this.$strapi.user.stripe.id) this.deleteStripeUser()
-      else this.deleteStrapiUser()
-      
+      this.$strapi.$meetings.find({
+        "filters[users_permissions_users]": this.$strapi.user.id,
+      }).then(async (res)=>{
+        console.log('before asyncForEach')
+        const meetings = res.data.map(meeting => this.deleteMeeting(meeting));
+        Promise.all(meetings).then(() => {
+          if(this.$strapi.user.stripe.id) this.deleteStripeUser()
+          else this.deleteStrapiUser()
+        })
+      })
+    },
+    async deleteMeeting(doc) {
+      this.$axios
+        .get(
+          `${this.$config.strapi.url}/deletemeeting?email=${this.$strapi.user.email}&id=${doc.id}&acceptedDate=${doc.attributes.acceptedDate}`,
+          {
+            headers: {
+              Authorization:
+                "Bearer " +
+                JSON.parse(window.localStorage.getItem("strapi_jwt")).token,
+            },
+          }
+        )
+        .then((r) => {
+          this.isDelete = false;
+          this.eraseLoading = false;
+          this.requests = this.requests.filter((request) => request.id !== r.data.data.id);
+        });
     },
     async deleteStripeUser(){
       this.$axios
@@ -196,4 +220,18 @@ export default {
     }
   },
 };
+
+Object.defineProperty(Array.prototype, "asyncForEach", {
+  enumerable: false,
+  value: function(task){
+      return new Promise((resolve, reject) => {
+          this.forEach(function(item, index, array){
+              task(item, index, array);
+              if(Object.is(array.length - 1, index)){
+                  resolve({ status: 'finished', count: array.length })
+              }
+          });        
+      })
+  }
+});
 </script>

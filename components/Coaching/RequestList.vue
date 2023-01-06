@@ -98,12 +98,14 @@
                     </p></v-sheet
                   >
                   <div v-if="!item.attributes.coachAnswered" class="pt-4">
+                    
                     <v-select
                       v-model="selectedVideoType"
+                      :hint="selectedVideoType == 'normal' ? descrNormal : descrSecure"
                       :items="videoTypes"
                       outlined
-                      hide-details
                       label="Videoanbieter auswählen"
+                      persistent-hint
                       class="mb-4"
                     ></v-select>
                     <v-list>
@@ -232,8 +234,7 @@
               >
                 <p
                   class="mb-0"
-                  style="
-                    position: absolute;
+                  style="position: absolute;
                     top: -50%;
                     font-size: 0.5em !important;
                   "
@@ -356,6 +357,8 @@ export default {
           value: "secure",
         },
       ],
+      descrNormal: 'Als sicheren Anbieter nutzen wir Jitsi. Viele Gespräche können hierüber abgewickelt werden, solange keine sensiblen Daten ausgetauscht werden.',
+      descrSecure: 'In seltenen Fällen lohnt es sich, unseren zertifizierten Anbieter RED zu nutzen. So zum Beispiel bei sensiblen ärztlichen Informationen.',
       loading: false,
       eraseLoading: false,
       isDelete: false,
