@@ -69,6 +69,7 @@ export default {
     '@nuxtjs/strapi',
     '@nuxtjs/markdownit',
     'nuxt-stripe-module',
+    "@dansmaculotte/nuxt-security",
   ],
 
   axios: {
