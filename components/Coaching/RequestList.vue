@@ -133,7 +133,8 @@
                         </v-list-item>
                       </v-list-item-group>
                     </v-list>
-                    <UtilsDatePicker :item="item" />
+                    <v-alert v-if="selectedVideoType !== 'normal'" type="info" color="primary">Aktuell können wir noch keinen Sicheren Anbieter zur Verfügung stellen. Wir arbeiten daran, dies bald zu möglich.</v-alert>
+                    <UtilsDatePicker v-if="selectedVideoType == 'normal'" :item="item" />
                     <p class="mt-2 mb-0 pa-2 caption">
                       Bitte füge mind. 3 Termine hinzu.
                     </p>
@@ -177,7 +178,7 @@
                       {{ formatTime(d.date) }} Uhr<br /><br
                     /></span> </v-banner
                 ></v-card-text>
-                <v-card-actions class="d-flex justify-end">
+                <v-card-actions v-if="selectedVideoType == 'normal'" class="d-flex justify-end">
                   <v-btn
                     v-if="!item.attributes.coachAnswered"
                     :loading="loading"
@@ -379,20 +380,17 @@ export default {
       })
       .then((meetings) => {
         this.requests = meetings.data;
-        console.log(this.requests);
       });
   },
   methods: {
     addSuggestions(request) {
       this.loading = true;
-      console.log("request", request);
       const data = {
         coachAnswered: true,
         suggestions: request.attributes.suggestions,
         updatedAt: new Date().toISOString(),
         videoType: this.selectedVideoType,
       };
-      console.log("data", data);
       this.$strapi.$meetings
         .update(request.id, {
           data,
@@ -404,17 +402,7 @@ export default {
         });
     },
     cancel(doc) {
-      this.$axios
-        .get(
-          `${this.$config.strapi.url}/deletemeeting?email=${this.user.email}&id=${doc.id}&acceptedDate=${doc.attributes.acceptedDate}`,
-          {
-            headers: {
-              Authorization:
-                "Bearer " +
-                JSON.parse(window.localStorage.getItem("strapi_jwt")).token,
-            },
-          }
-        )
+      this.$deleteMeeting(this.user.email, doc.id, doc.attributes.acceptedDate)
         .then((r) => {
           this.isDelete = false;
           this.eraseLoading = false;

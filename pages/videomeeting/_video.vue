@@ -34,34 +34,11 @@ export default {
     };
   },
   async fetch() {
-    this.$axios
-      .$get(
-        `${this.$config.strapi.url}/getvideomeeting?video=${this.$route.params.video}`,
-        {
-          headers: {
-            Authorization:
-              "Bearer " +
-              JSON.parse(window.localStorage.getItem("strapi_jwt")).token,
-          },
-        }
-      )
+    this.$getVideoMeeting(this.$route.params.video)
       .then((vData) => {
         if (vData.data.length == 0) return (this.error404 = true);
         this.videoUrl = vData.data[0].attributes.videoCoach;
       });
-    /*this.$strapi.$meetings
-      .find({
-        populate: "*",
-        "filters[id]": this.$route.params.beratung,
-      })
-      .then((r) => {
-        console.log("route:", this.$route);
-        console.log("router:", this.$router);
-        console.log("route user list", r);
-        this.pubData = r[0];
-        console.log("route user", this.pubData);
-        if (this.pubData === undefined) this.pubData = false;
-      });*/
   },
 };
 </script>

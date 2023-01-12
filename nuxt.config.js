@@ -52,6 +52,7 @@ export default {
   plugins: [
     "~/plugins/cropper",
     "~/plugins/filepond",
+    "~/plugins/functions",
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -123,7 +124,7 @@ export default {
   strapi: {
     url: 'http://localhost:1337/api', // process.env.STRAPI_URL, //process.env.STRAPI_URL, //|| 'http://localhost:1337/api', // erased + '/api'
     entities: ['meetings', 'users', 'magazines', 'tags', 'faq'],
-    expires: '30d',
+    expires: '1d',
     cookie: {
       path: '/'
     }
@@ -137,12 +138,11 @@ export default {
     strapi: {
       url: process.env.STRAPI_URL,
     },
-    redAPI: process.env.RED_API,
-    test: process.env.TEST,
     stripe: {
       publishableKey:
         process.env.STRIPE_PK,
     },
+    status: process.env.NODE_ENV,
   },
 
   generate: {
