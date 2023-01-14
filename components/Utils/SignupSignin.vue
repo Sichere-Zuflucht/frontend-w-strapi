@@ -190,13 +190,13 @@
                 Sollte nichts angekommen sein, kannst du dir die E-mail noch
                 einmal zusenden lassen.
               </p>
-              <!--<v-btn
+              <v-btn
                 color="primary"
                 :loading="loading"
                 class="mb-4"
-                @click="resend"
+                @click="sendConfirmationAgain"
                 >Erneut senden</v-btn
-              >-->
+              >
             </v-stepper-content>
           </v-stepper-items>
         </v-stepper>
@@ -370,6 +370,12 @@ export default {
         .catch((e)=>{
           console.log('error:', e)
         })
+    },
+    sendConfirmationAgain(){
+      this.loading = true;
+      this.$strapi.sendEmailConfirmation({ email: this.email }).then(()=>{
+        this.loading = false;
+      })
     },
     sendResetPasswortCode(){
       this.resetLoading = true

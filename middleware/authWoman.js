@@ -4,7 +4,10 @@ export default function ({ redirect, $strapi, route }) {
         redirect('/registration/signin')
     } else {
         console.log('role',$strapi.user.roleName)
-        if($strapi.user.roleName != 'woman') {
+        if($strapi.user.roleName == 'authenticated'){
+            redirect('/registration/membership-selection')
+        }
+        else if($strapi.user.roleName != 'woman') {
             redirect('/beratung')
         }
     }
