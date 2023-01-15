@@ -1,7 +1,3 @@
-function Auth() {
-  return `Authorization: "Bearer ${JSON.parse(localStorage.getItem("strapi_jwt")).token}"`
-}
-
 export default ({ app }, inject) => {
   //********* Default */
   inject('console', (...data) => {
@@ -10,7 +6,9 @@ export default ({ app }, inject) => {
 
   inject('newCoachEmail', (data) => {
     return app.$axios.$post(app.$config.strapi.url + "/newcoachemail", {
-      headers: Auth,
+      headers: {
+        Authorization: "Bearer "+ JSON.parse(localStorage.getItem("strapi_jwt")).token
+      },
       body: data,
     }).catch((e) => {
       app.store.dispatch("errorhandling", e);
@@ -22,7 +20,9 @@ export default ({ app }, inject) => {
   inject('loginStripeAccLink', () => {
     return app.$axios
       .get(app.$config.strapi.url + "/stripeloginlink?acc=" + app.store.getters["getActiveUser"].stripe.id, {
-        headers: Auth,
+        headers: {
+          Authorization: "Bearer "+ JSON.parse(localStorage.getItem("strapi_jwt")).token
+        },
       }).catch((e) => {
         app.store.dispatch("errorhandling", e);
       });
@@ -38,7 +38,9 @@ export default ({ app }, inject) => {
         "&url=" +
         location.origin,
         {
-          headers: Auth,
+          headers: {
+            Authorization: "Bearer "+ JSON.parse(localStorage.getItem("strapi_jwt")).token
+          },
         }
       )
       .then((body) => {
@@ -74,7 +76,9 @@ export default ({ app }, inject) => {
       .get(
         `${app.$config.strapi.url}/deletestripeacc?acc=${app.$strapi.user.stripe.id}`,
         {
-          headers: Auth,
+          headers: {
+            Authorization: "Bearer "+ JSON.parse(localStorage.getItem("strapi_jwt")).token
+          },
         }
       ).catch((e) => {
         app.store.dispatch("errorhandling", e);
@@ -86,7 +90,9 @@ export default ({ app }, inject) => {
       .$get(
         `${app.$config.strapi.url}/paywithstripe?id=${stripeId}&coachStripeId=${coachId}&url=${location.origin}`,
         {
-          headers: Auth,
+          headers: {
+            Authorization: "Bearer "+ JSON.parse(localStorage.getItem("strapi_jwt")).token
+          },
         }
       ).catch((e) => {
         app.store.dispatch("errorhandling", e);
@@ -100,7 +106,9 @@ export default ({ app }, inject) => {
         "/retrievestripe?email=" +
         app.store.getters["getActiveUser"].stripe.id,
         {
-          headers: Auth,
+          headers: {
+            Authorization: "Bearer "+ JSON.parse(localStorage.getItem("strapi_jwt")).token
+          },
         }
       ).catch((e) => {
         app.store.dispatch("errorhandling", e);
@@ -114,7 +122,9 @@ export default ({ app }, inject) => {
         "/retrievestripepaysession?paymentID=" +
         sessionID,
         {
-          headers: Auth,
+          headers: {
+            Authorization: "Bearer "+ JSON.parse(localStorage.getItem("strapi_jwt")).token
+          },
         }
       ).catch((e) => {
         app.store.dispatch("errorhandling", e);
@@ -142,7 +152,9 @@ export default ({ app }, inject) => {
       .$get(
         `${app.$config.strapi.url}/getvideomeeting?video=${video}`,
         {
-          headers: Auth,
+          headers: {
+            Authorization: "Bearer "+ JSON.parse(localStorage.getItem("strapi_jwt")).token
+          },
         }
       ).catch((e) => {
         app.store.dispatch("errorhandling", e);

@@ -153,7 +153,6 @@ export default {
   },
   methods: {
     addStripe() {
-      console.log(this.user);
       this.loading = true;
 
       this.$createStripeAcc().then((d)=>{
