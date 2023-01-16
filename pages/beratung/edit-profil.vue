@@ -165,7 +165,6 @@ export default {
   },
   methods: {
     updateAvatarPreview(img) {
-      console.log("new preview:", img);
       this.avatarPreview = img;
     },
     updateProfile(data) {
@@ -178,7 +177,6 @@ export default {
           profession: data.profession,
         })
         .then((r) => {
-          console.log("updated", r);
           this.loading = false;
           this.success = true;
         })

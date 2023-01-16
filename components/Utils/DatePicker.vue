@@ -127,7 +127,6 @@ export default {
       d.push({
         date: date//this.date+'T'+this.time+':00.000Z'
       })
-      console.log('d', d)
       this.date = ''
       this.time = ''
       this.isSelectDate = true

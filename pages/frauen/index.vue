@@ -124,7 +124,6 @@ export default {
       .then(async (res) => {
         //if Coach still existed and didn't deleted the account, search for coach
         res.data.forEach((response) => {
-          console.log('id', response.attributes.users_permissions_users.data[1])
           if (!response.attributes.users_permissions_users.data[1])
             return this.responses.push({
               coach: { noCoach: true },

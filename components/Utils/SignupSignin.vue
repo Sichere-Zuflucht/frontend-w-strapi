@@ -200,8 +200,9 @@
             </v-stepper-content>
           </v-stepper-items>
         </v-stepper>
-        <v-alert v-if="error.status" color="error" class="white--text mt-4">
-          Es wurde eine E-Mail inklusive einem Link an {{ email }} geschickt. Bitte folgen Sie den dort beschriebenen Anweisungen.
+        <v-alert v-if="error.status" color="error" class="white--text mt-4" dismissible>
+          {{ error.message ? error.message : `Es wurde eine E-Mail inklusive einem Link an ${email} geschickt. Bitte folgen Sie den dort beschriebenen Anweisungen.` }}
+          
         </v-alert>
       </v-container>
     </v-col></v-row
@@ -368,7 +369,7 @@ export default {
           
         })
         .catch((e)=>{
-          console.log('error:', e)
+          this.$store.dispatch("errorhandling", err);
         })
     },
     sendConfirmationAgain(){

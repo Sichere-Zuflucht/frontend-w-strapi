@@ -266,7 +266,6 @@ export default {
   fetchOnServer: false,
   methods: {
     removeImage() {
-      console.log("avatar id", this.avatar.id);
       this.$strapi.$http.$delete("upload/files/" + this.avatar.id).then(() => {
         this.$store.dispatch("changeAvatar", null);
         this.$emit("changeAvatarPreview", null);
@@ -281,7 +280,6 @@ export default {
         4
       );
       this.$refs.cropper.getCroppedCanvas(this.cropData).toBlob((blob) => {
-        console.log("blob", blob);
         this.upload(blob, true);
       });
     },
@@ -294,12 +292,10 @@ export default {
         history: this.changeHistory,
         profession: this.changeProfession,
       };
-      console.log("data", data);
       this.$store.dispatch("changeData", data);
       this.$emit("selection", data);
     },
     upload(file, close = false) {
-      console.log("file", file);
       const form = new FormData();
       form.append("files", file);
       this.$strapi.$http.$post("upload", form).then((res) => {
@@ -308,7 +304,7 @@ export default {
             avatar: res[0],
           })
           .then((r) => {
-            console.log("updated", r);
+            console.log("updated");
           })
           .catch((e) => {
             this.$store.dispatch("errorhandling", e);

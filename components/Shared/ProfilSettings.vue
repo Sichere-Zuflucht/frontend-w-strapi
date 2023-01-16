@@ -119,7 +119,6 @@ export default {
       this.$strapi.$meetings.find({
         "filters[users_permissions_users]": this.$strapi.user.id,
       }).then(async (res) => {
-        console.log('before asyncForEach')
         const meetings = res.data.map(meeting => this.deleteMeeting(meeting));
         Promise.all(meetings).then(() => {
           if (this.$strapi.user.stripe.id) this.deleteStripeUser()

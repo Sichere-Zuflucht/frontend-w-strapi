@@ -327,7 +327,7 @@ export default {
           this.isDelete = false;
           this.eraseLoading = false;
           this.error = err;
-          console.log("delete error: ", err);
+          this.$store.dispatch("errorhandling", err);
         });
     },
     // RED is not implemented yet
@@ -377,7 +377,6 @@ export default {
           date: "2023-11-27",
           token: this.$config.redAPI,
         };
-        console.log("data", data);
         // RED is not implemented
         /*this.$axios
           .$post("https://redclient.redmedical.de/service/video", {
@@ -438,10 +437,8 @@ export default {
       }
     },
     standardPayment(v, dI) {
-      console.log("pay for: ", this.id, this.coach.stripe.id);
       this.$stripePayment(this.id, this.coach.stripe.id)
         .then((paymentID) => {
-          console.log("paymentID", paymentID);
           const data = {
             acceptedDate: dI.date,
             videoCoach: v.codeArzt,
@@ -454,7 +451,6 @@ export default {
               data,
             })
             .then((r) => {
-              console.log("result", r);
               this.btn.payButtonLoading = false;
               this.btn.isDisabled = true;
               this.response.acceptedDate = dI;

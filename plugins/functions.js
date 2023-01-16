@@ -29,7 +29,6 @@ export default ({ app }, inject) => {
   })
 
   inject('createStripeAcc', () => {
-    //return console.log('data', location, localStorage.getItem("strapi_jwt"))
     return app.$axios
       .get(
         app.$config.strapi.url +
