@@ -78,7 +78,7 @@
                 uns über alle, die
                 <b>Frauen und ihre Kinder aktiv unterstützten</b> wollen.
               </p>
-              <v-btn color="primary mt-2 mb-1" to="/registration/signup">
+              <v-btn color="primary mt-2 mb-1" to="/registration/signup-coach">
                 Als Berater*in registrieren
               </v-btn>
               <v-btn to="info/berater" class="secondary mb-1">mehr erfahren</v-btn>

@@ -34,7 +34,8 @@
       </v-sheet></v-col
     ><v-col cols="12" md="6" class="pa-0">
       <v-container style="max-width: 450px" class="ma-auto py-16">
-        <h1 class="text-h1 my-4 primary--text">{{ title }}</h1>
+        <h1 class="text-h1 mt-4 primary--text">{{ title }}</h1>
+        <v-btn text :ripple="false" plain color="primary" class="pl-0" :to="buttonLink">{{ buttonText }}</v-btn>
         <v-stepper v-model="step" :flat="true" style="box-shadow: none">
           <v-stepper-items>
             <v-stepper-content step="1" class="pa-0">
@@ -65,7 +66,7 @@
                 </div>
                 <p v-if="!makeLogin" class="caption mt-4">
                   Wir senden im nächsten Schritt eine E-Mail an die o.g.
-                  Adresse, um sie zu bestätigen.<br /><b
+                  Adresse, um sie zu bestätigen.<b
                     >Bitte auch im Spam-Ordner nachsehen.</b
                   >
                 </p>
@@ -220,6 +221,15 @@ export default {
       type: String,
       default: "",
     },
+    buttonText: {
+      type: String,
+      default: "Als Berater*in registrieren?",
+    },
+    buttonLink: {
+      type: String,
+      default: "/registration/signup-coach",
+      
+    }
   },
   data() {
     return {

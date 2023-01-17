@@ -17,7 +17,7 @@
           </p>
           <UtilsBtn
             text="Ja, ich möchte beraten"
-            link="registration/signup"
+            link="/registration/signup-coach"
           /></div></v-container></v-sheet
     ><v-container class="py-16"
       ><div>
@@ -189,7 +189,7 @@
         <h4 class="text-h5 text-uppercase primary--text font-weight-bold">
           Vielen Dank für ihr Engagement!
         </h4>
-        <UtilsBtn text="Ja, ich möchte beraten" link="registration/signup" />
+        <UtilsBtn text="Ja, ich möchte beraten" link="/registration/signup-coach" />
       </v-container>
     </v-sheet>
     <v-container>
