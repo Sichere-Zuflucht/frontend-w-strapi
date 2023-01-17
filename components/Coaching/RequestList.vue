@@ -133,7 +133,7 @@
                         </v-list-item>
                       </v-list-item-group>
                     </v-list>
-                    <v-alert v-if="selectedVideoType !== 'normal'" type="info" color="primary">Aktuell können wir noch keinen Sicheren Anbieter zur Verfügung stellen. Wir arbeiten daran, dies bald zu möglich.</v-alert>
+                    <v-alert v-if="selectedVideoType !== 'normal'" type="info" color="primary">Aktuell können wir noch keinen zertifizierten Anbieter zur Verfügung stellen. Wir arbeiten daran, dies bald zu möglich.</v-alert>
                     <UtilsDatePicker v-if="selectedVideoType == 'normal'" :item="item" />
                     <p class="mt-2 mb-0 pa-2 caption">
                       Bitte füge mind. 3 Termine hinzu.
