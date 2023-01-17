@@ -66,7 +66,7 @@
                 </div>
                 <p v-if="!makeLogin" class="caption mt-4">
                   Wir senden im nächsten Schritt eine E-Mail an die o.g.
-                  Adresse, um sie zu bestätigen.<b
+                  Adresse, um sie zu bestätigen. <b
                     >Bitte auch im Spam-Ordner nachsehen.</b
                   >
                 </p>
