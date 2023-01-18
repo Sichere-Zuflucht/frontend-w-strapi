@@ -402,6 +402,7 @@ export default {
         });
     },
     cancel(doc) {
+      //this.$deleteMeeting(informTo, this.id, doc.acceptedDate)
       this.$deleteMeeting(this.user.email, doc.id, doc.attributes.acceptedDate)
         .then((r) => {
           this.isDelete = false;
