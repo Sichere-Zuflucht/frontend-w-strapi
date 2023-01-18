@@ -19,7 +19,7 @@
         Uhrzeit wählen
       </v-btn>
     </v-date-picker>
-    <v-sheet v-else-if="test" color="white">
+    <v-sheet v-else color="white">
       <v-sheet color="primary" class="pa-4 white--text v-date-picker-title" style="font-size: 1rem">
         <div class="v-date-picker-title__year ">
           <p class="mb-0">Uhrzeit</p>
@@ -50,22 +50,6 @@
         </v-btn>
       </div>
     </v-sheet>
-    <v-time-picker v-else v-model="time" min="7:00" max="20:00" format="24hr" :allowed-hours="allowed.hours"
-      :allowed-minutes="allowed.minutes">
-      <v-spacer></v-spacer>
-      <v-btn text color="primary" @click="
-        () => {
-          modal = false
-          date = ''
-          isSelectDate = true
-        }
-      ">
-        Abbrechen
-      </v-btn>
-      <v-btn :disabled="!time" color="primary" @click="addDates(item.attributes.suggestions)">
-        Fertig
-      </v-btn>
-    </v-time-picker>
   </v-dialog>
 </template>
 
@@ -79,7 +63,6 @@ export default {
   },
   data() {
     return {
-      test: true,
       hourRate: ['07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19'],
       minuteRate: ['00', '15', '30', '45'],
       selHour: '07',
