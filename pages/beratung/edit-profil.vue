@@ -45,7 +45,6 @@
                 von Ihnen und Ihrem Angebot. Dann können die Frauen besser
                 abwägen, an wen Sie sich wenden wollen.
               </p>
-
               <CoachingSelection
                 :info="user"
                 :avatar="avatarPreview ? avatarPreview : user.avatar"

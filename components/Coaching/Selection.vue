@@ -112,7 +112,7 @@
         <v-stepper-content step="3">
           <div class="mb-4 d-flex flex-column align-center">
             <v-avatar v-if="avatar && !changeImg" size="200">
-              <v-img :src="imgUrl + avatar.url"
+              <v-img :src="avatar.url"
                 ><div
                   class="d-flex justify-center align-end pb-2"
                   style="width: 100%"
@@ -160,7 +160,7 @@
                 ref="cropper"
                 :aspect-ratio="1 / 1"
                 alt="Source Image"
-                :src="imgUrl + avatar.url"
+                :src="avatar.url"
                 :zoomable="false"
               ></vue-cropper>
               <div class="d-flex align-center">
@@ -303,17 +303,17 @@ export default {
           .update(this.info.id, {
             avatar: res[0],
           })
-          .then((r) => {
-            console.log("updated");
+          .then(() => {
+            this.$emit("changeAvatarPreview", res[0]);
+            this.isLoading = false;
+            this.changeImg = false;
+            this.overlay = !close;
           })
           .catch((e) => {
             this.$store.dispatch("errorhandling", e);
           });
         this.$store.dispatch("changeAvatar", res[0]);
-        this.$emit("changeAvatarPreview", res[0]);
-        this.isLoading = false;
-        this.changeImg = false;
-        this.overlay = !close;
+        
       });
     },
   },
