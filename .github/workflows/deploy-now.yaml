@@ -42,7 +42,7 @@ jobs:
         env:
           CI: true
           STRAPI_URL: ${{ secrets.STRAPI_URL_PROD }}
-          STRIPE_PK: ${{ secrets.STRIPE_PK }}
+          STRIPE_PK: ${{ secrets.STRIPE_PK_LIVE }}
           RED_API: ${{ secrets.RED_API }}
         run: |
           npm install --global yarn
