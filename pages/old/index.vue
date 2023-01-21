@@ -99,7 +99,7 @@ Your account is now linked with: ${email}.`,
       this.test = t
       //this.test = (await this.$axios.$get('meetings?populate=users_permissions_users')).data
       //this.test2 = (await this.$axios.$get('users/me')).data
-      console.log('t',t)
+      
       //this.meetings = this.$strapi.user
       /*this.$strapi.$meetings.find()
       .then((response)=>{

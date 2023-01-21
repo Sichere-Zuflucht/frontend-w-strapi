@@ -45,7 +45,6 @@
                 von Ihnen und Ihrem Angebot. Dann können die Frauen besser
                 abwägen, an wen Sie sich wenden wollen.
               </p>
-
               <CoachingSelection
                 :info="user"
                 :avatar="avatarPreview ? avatarPreview : user.avatar"
@@ -73,7 +72,7 @@
                     : "."
                 }}
               </p>
-              <div class="d-flex">
+              <div class="d-flex flex-wrap">
                 <v-btn
                   color="secondary"
                   class="mt-4 mr-3"
@@ -86,7 +85,7 @@
                   color="secondary"
                   class="mt-4"
                   @click="stepper++"
-                  >Bezahlungssystem einrichten</v-btn
+                  >Zahlung einrichten</v-btn
                 >
               </div>
             </v-stepper-content>
@@ -121,7 +120,7 @@
               >
                 Falls die Weiterleitung nicht funktioniert, kopiere und öffne
                 bitte folgende URL:
-                <a :href="stripeRegisterURL" target="_blank">{{
+                <a :href="stripeRegisterURL" target="_blank" style="color: white">{{
                   stripeRegisterURL
                 }}</a>
               </v-alert>
@@ -129,7 +128,7 @@
                 {{ error }}
               </v-alert>
               <h2 class="text-h2 secondary--text pb-4 pt-12">HÄUFIGE FRAGEN</h2>
-              <nuxt-link to="">
+              <nuxt-link to="/footer/faq">
                 Wie erstelle ich ein Konto bei Stripe?
               </nuxt-link>
             </v-stepper-content></v-stepper-items
@@ -165,7 +164,6 @@ export default {
   },
   methods: {
     updateAvatarPreview(img) {
-      console.log("new preview:", img);
       this.avatarPreview = img;
     },
     updateProfile(data) {
@@ -178,20 +176,27 @@ export default {
           profession: data.profession,
         })
         .then((r) => {
-          console.log("updated", r);
           this.loading = false;
           this.success = true;
         })
         .catch((e) => {
           this.$store.dispatch("errorhandling", e);
         });
-      console.log(this.user.id);
       this.bioSaved = true;
       // this.$router.push('/berater/' + this.user.public.uid)
     },
     addStripe() {
       this.loading = true;
-      console.log(this.user.email);
+
+      this.$createStripeAcc().then((d)=>{
+        this.stripeRegisterURL = d.url;
+        this.loading = false;
+        this.disabled = true;
+      })
+
+
+      // moved to plugin
+      /*
       this.$axios
         .get(
           this.$config.strapi.url +
@@ -232,7 +237,7 @@ export default {
             .catch((e) => {
               this.$store.dispatch("errorhandling", e);
             });
-        });
+        });*/
     },
   },
 };

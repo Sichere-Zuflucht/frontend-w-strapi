@@ -112,7 +112,7 @@
         <v-stepper-content step="3">
           <div class="mb-4 d-flex flex-column align-center">
             <v-avatar v-if="avatar && !changeImg" size="200">
-              <v-img :src="imgUrl + avatar.url"
+              <v-img :src="avatar.url"
                 ><div
                   class="d-flex justify-center align-end pb-2"
                   style="width: 100%"
@@ -160,7 +160,7 @@
                 ref="cropper"
                 :aspect-ratio="1 / 1"
                 alt="Source Image"
-                :src="imgUrl + avatar.url"
+                :src="avatar.url"
                 :zoomable="false"
               ></vue-cropper>
               <div class="d-flex align-center">
@@ -266,7 +266,6 @@ export default {
   fetchOnServer: false,
   methods: {
     removeImage() {
-      console.log("avatar id", this.avatar.id);
       this.$strapi.$http.$delete("upload/files/" + this.avatar.id).then(() => {
         this.$store.dispatch("changeAvatar", null);
         this.$emit("changeAvatarPreview", null);
@@ -281,7 +280,6 @@ export default {
         4
       );
       this.$refs.cropper.getCroppedCanvas(this.cropData).toBlob((blob) => {
-        console.log("blob", blob);
         this.upload(blob, true);
       });
     },
@@ -294,12 +292,10 @@ export default {
         history: this.changeHistory,
         profession: this.changeProfession,
       };
-      console.log("data", data);
       this.$store.dispatch("changeData", data);
       this.$emit("selection", data);
     },
     upload(file, close = false) {
-      console.log("file", file);
       const form = new FormData();
       form.append("files", file);
       this.$strapi.$http.$post("upload", form).then((res) => {
@@ -307,17 +303,17 @@ export default {
           .update(this.info.id, {
             avatar: res[0],
           })
-          .then((r) => {
-            console.log("updated", r);
+          .then(() => {
+            this.$emit("changeAvatarPreview", res[0]);
+            this.isLoading = false;
+            this.changeImg = false;
+            this.overlay = !close;
           })
           .catch((e) => {
             this.$store.dispatch("errorhandling", e);
           });
         this.$store.dispatch("changeAvatar", res[0]);
-        this.$emit("changeAvatarPreview", res[0]);
-        this.isLoading = false;
-        this.changeImg = false;
-        this.overlay = !close;
+        
       });
     },
   },

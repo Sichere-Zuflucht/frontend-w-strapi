@@ -5,6 +5,9 @@ export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
 
+  // Trying to overcome the problem of regenerating each time, if a new content comes from strapi
+  mode: "spa",
+
   // Target: https://go.nuxtjs.dev/config-target
   target: 'static',
 
@@ -17,7 +20,7 @@ export default {
     titleTemplate: '%s - sicherezuflucht',
     title: 'sicherezuflucht',
     htmlAttrs: {
-      lang: 'en'
+      lang: 'de'
     },
     meta: [
       { charset: 'utf-8' },
@@ -50,6 +53,7 @@ export default {
   plugins: [
     "~/plugins/cropper",
     "~/plugins/filepond",
+    "~/plugins/functions",
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -67,7 +71,46 @@ export default {
     '@nuxtjs/strapi',
     '@nuxtjs/markdownit',
     'nuxt-stripe-module',
+    "@dansmaculotte/nuxt-security",
   ],
+
+  security: {
+    hsts: {
+      maxAge: 31536000,
+      includeSubDomains: true,
+      preload: true
+    },
+    referrer: 'same-origin',
+    csp: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'"],
+        objectSrc: ["'self'"],
+      },
+      reportOnly: false,
+    },
+    permissions: {
+      notifications: ['none']
+    },
+    securityFile: {
+      contacts: [
+        'mailto:support@sichere-zuflucht.de'
+      ],
+      // or contacts: 'mailto:security@example.com'
+      canonical: 'https://sichere-zuflucht.de/.well-know/security.txt',
+      preferredLanguages: 'de',
+      // or preferredLanguages: 'fr',
+      encryptions: ['https://sichere-zuflucht.de/pgp-key.txt'],
+      // or encryptions: 'https://example.com/pgp-key.txt',
+      //acknowledgments: ['https://sichere-zuflucht.de/hall-of-fame.html'],
+      // or acknowledgments: 'https://example.com/hall-of-fame.html',
+      policies: ['https://sichere-zuflucht.de/footer/impressum'],
+      // or policies: 'https://example.com/policy.html',
+      //hirings: ['https://sichere-zuflucht.de/jobs.html']
+      // or hirings: 'https://example.com/jobs.html'
+    },
+    additionalHeaders: true,
+  },
 
   axios: {
     //baseURL: process.env.STRAPI_URL, // || 'http://localhost:1337', // Used as fallback if no runtime config is provided
@@ -82,7 +125,7 @@ export default {
   strapi: {
     url: 'http://localhost:1337/api', // process.env.STRAPI_URL, //process.env.STRAPI_URL, //|| 'http://localhost:1337/api', // erased + '/api'
     entities: ['meetings', 'users', 'magazines', 'tags', 'faq'],
-    expires: '30d',
+    expires: '1d',
     cookie: {
       path: '/'
     }
@@ -96,12 +139,11 @@ export default {
     strapi: {
       url: process.env.STRAPI_URL,
     },
-    redAPI: process.env.RED_API,
-    test: process.env.TEST,
     stripe: {
       publishableKey:
         process.env.STRIPE_PK,
     },
+    status: process.env.NODE_ENV,
   },
 
   generate: {

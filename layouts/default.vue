@@ -171,6 +171,7 @@
               exact
               nuxt
               text
+              class="mr-1"
               >Einloggen</v-btn
             >
             <v-btn to="/registration/signup" color="accent" exact nuxt

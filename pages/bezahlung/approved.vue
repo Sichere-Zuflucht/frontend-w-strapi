@@ -24,17 +24,9 @@ export default {
   name: "Approved",
   mounted() {
     if (this.$store.getters["getActiveUser"].roleName != "woman") {
-      const id = this.$store.getters["getActiveUser"].stripe.id;
-      this.$axios
-        .get(this.$config.strapi.url + "/retrievestripe?acc=" + id, {
-          headers: {
-            Authorization:
-              "Bearer " +
-              JSON.parse(window.localStorage.getItem("strapi_jwt")).token,
-          },
-        })
+      this.$getStripeAccData()
         .then((body) => {
-          console.log(body.data);
+          this.$console(body.data);
           //just proof, if account is valid due to having content
           if (body.data.capabilities) {
             this.$strapi.$users
@@ -46,7 +38,7 @@ export default {
                 },
               })
               .then((newUser) => {
-                console.log(newUser);
+                this.$console(newUser);
                 this.$store.dispatch("changeData", newUser);
               });
           }
@@ -55,19 +47,7 @@ export default {
       const meetingID = window.localStorage.getItem("meetingID");
       const sessionID = window.localStorage.getItem("sessionID");
       if (!sessionID) return;
-      this.$axios
-        .$get(
-          this.$config.strapi.url +
-            "/retrievestripepaysession?paymentID=" +
-            sessionID,
-          {
-            headers: {
-              Authorization:
-                "Bearer " +
-                JSON.parse(window.localStorage.getItem("strapi_jwt")).token,
-            },
-          }
-        )
+      this.$getStripePaymentSession(sessionID)
         .then((sessionData) => {
           const data = {
             payed: sessionData.payment_status == "paid" ? true : false,

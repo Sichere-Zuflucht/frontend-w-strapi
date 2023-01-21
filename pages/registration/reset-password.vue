@@ -64,7 +64,7 @@
     <p class="text--secondary text-center mt-4 mb-0">
       Du kennst dein Passwort?
     </p>
-    <v-btn to="/registration/signup" exact nuxt text color="grey"
+    <v-btn to="/registration/signin" exact nuxt text color="grey"
       >Anmelden</v-btn
     >
   </v-container>
@@ -124,6 +124,7 @@ export default {
       ],
     };
   },
+
   methods: {
     resetPassword() {
       this.loading = true;

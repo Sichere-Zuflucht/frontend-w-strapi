@@ -1,5 +1,5 @@
 <template>
-  <UtilsSignupSignin title="Registrieren" />
+  <UtilsSignupSignin title="Registrieren, um Online-Beratung zu erhalten" />
 </template>
 
 <script>

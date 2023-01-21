@@ -129,34 +129,13 @@ export default {
     };
   },
   mounted() {
-    const id = this.$store.getters["getActiveUser"].stripe.id;
-    this.$axios
-      .get(this.$config.strapi.url + "/stripeloginlink?acc=" + id, {
-        headers: {
-          Authorization:
-            "Bearer " +
-            JSON.parse(window.localStorage.getItem("strapi_jwt")).token,
-        },
-      })
+    this.$loginStripeAccLink()
       .then((body) => {
         this.stripeLoginURL = body.data.url;
       });
 
-    this.$axios
-      .get(
-        this.$config.strapi.url +
-          "/retrievestripe?email=" +
-          this.$store.getters["getActiveUser"].email,
-        {
-          headers: {
-            Authorization:
-              "Bearer " +
-              JSON.parse(window.localStorage.getItem("strapi_jwt")).token,
-          },
-        }
-      )
+    this.$getStripeAccData()
       .then((body) => {
-        console.log(body.data);
         this.stripeData = body.data;
       });
   },
@@ -174,64 +153,13 @@ export default {
   },
   methods: {
     addStripe() {
-      console.log(this.user);
       this.loading = true;
-      this.$axios
-        .get(
-          this.$config.strapi.url +
-            "/createStripe?email=" +
-            this.user.email +
-            "&url=" +
-            window.location.origin,
-          {
-            headers: {
-              Authorization:
-                "Bearer " +
-                JSON.parse(window.localStorage.getItem("strapi_jwt")).token,
-            },
-          }
-        )
-        .then((body) => {
-          console.log(body.data);
-          this.$strapi.$users
-            .update(this.$strapi.user.id, {
-              stripe: {
-                payouts_enabled: false,
-                id: body.data.stripeId,
-              },
-            })
-            .then((r) => {
-              this.stripeRegisterURL = body.data.url;
-              this.loading = false;
-              this.disabled = true;
-              if (
-                confirm(
-                  "Sichere Zuflucht möchte Sie weiterleiten zu: " +
-                    body.data.url
-                )
-              ) {
-                location.replace(this.stripeRegisterURL);
-              }
-            })
-            .catch((e) => {
-              this.$store.dispatch("errorhandling", e);
-            });
-        });
-    },
-    getStripeLoginURL() {
-      const id = this.$store.getters["getActiveUser"].stripe.id;
-      this.$axios
-        .get(this.$config.strapi.url + "/stripeloginlink?acc=" + id, {
-          headers: {
-            Authorization:
-              "Bearer " +
-              JSON.parse(window.localStorage.getItem("strapi_jwt")).token,
-          },
-        })
-        .then((body) => {
-          console.log(body);
-          //this.stripeLoginURL = body.url
-        });
+
+      this.$createStripeAcc().then((d)=>{
+        this.stripeRegisterURL = d.url;
+        this.loading = false;
+        this.disabled = true;
+      })
     },
   },
 };

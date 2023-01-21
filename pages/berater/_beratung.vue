@@ -345,7 +345,6 @@ export default {
         }-${new Date().getTime()}`,
         informViaEmail: coach.email,
       };
-      console.log("data", data);
 
       this.$strapi.$meetings
         .create({ data })
