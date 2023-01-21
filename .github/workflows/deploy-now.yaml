@@ -41,9 +41,13 @@ jobs:
         name: Build Node assets Master
         env:
           CI: true
-          STRAPI_URL: ${{ secrets.STRAPI_URL_PROD }}
+          STRAPI_URL: ${{ secrets.PROD_STRAPI_URL }}
           STRIPE_PK: ${{ secrets.STRIPE_PK_LIVE }}
-          RED_API: ${{ secrets.RED_API }}
+          DONATION_1: ${{ secrets.PROD_DONATION_1 }}
+          DONATION_2: ${{ secrets.PROD_DONATION_2 }}
+          DONATION_3: ${{ secrets.PROD_DONATION_3 }}
+          DONATION_4: ${{ secrets.PROD_DONATION_4 }}
+          # RED_API: ${{ secrets.RED_API }}
         run: |
           npm install --global yarn
           yarn install --frozen-lockfile
@@ -54,9 +58,13 @@ jobs:
         name: Build Node assets Dev
         env:
           CI: true
-          STRAPI_URL: ${{ secrets.STRAPI_URL_DEV }}
-          STRIPE_PK: ${{ secrets.STRIPE_PK }}
-          RED_API: ${{ secrets.RED_API }}
+          STRAPI_URL: ${{ secrets.DEV_STRAPI_URL }}
+          STRIPE_PK: ${{ secrets.STRIPE_PK_TEST }}
+          DONATION_1: ${{ secrets.DEV_DONATION_1 }}
+          DONATION_2: ${{ secrets.DEV_DONATION_2 }}
+          DONATION_3: ${{ secrets.DEV_DONATION_3 }}
+          DONATION_4: ${{ secrets.DEV_DONATION_4 }}
+          # RED_API: ${{ secrets.RED_API }}
         run: |
           npm install --global yarn
           yarn install --frozen-lockfile

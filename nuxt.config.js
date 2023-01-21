@@ -143,6 +143,10 @@ export default {
       publishableKey:
         process.env.STRIPE_PK,
     },
+    donate1: process.env.DONATION_1,
+    donate2: process.env.DONATION_2,
+    donate3: process.env.DONATION_3,
+    donate4: process.env.DONATION_4,
     status: process.env.NODE_ENV,
   },
 

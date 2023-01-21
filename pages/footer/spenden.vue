@@ -182,26 +182,26 @@ export default {
           icon: "mdi-heart-circle",
           title: "ganze Beratung",
           value: "50",
-          link:"https://donate.stripe.com/test_7sI5nr6C20t97T29AI", //process.env.NODE_ENV == "development" doesnt make sense here. because i want both times the testing link
+          link: this.$config.donate1 //"https://donate.stripe.com/test_7sI5nr6C20t97T29AI", //process.env.NODE_ENV == "development" doesnt make sense here. because i want both times the testing link
         },
         {
           icon: "mdi-circle-slice-4",
           title: "1/2 Beratung",
           value: "25",
-          link: "https://donate.stripe.com/test_00g6rvaSigs71uEbIR",
+          link: this.$config.donate2,
         },
         {
           icon: "mdi-circle-slice-2",
           title: "1/4 Beratung",
           value: "17.50",
-          link: "https://donate.stripe.com/test_8wM3fj6C24Jp7T25ku",
+          link: this.$config.donate3,
         },
         {
           icon: "mdi-help-circle",
           title: "Freien Betrag",
           ownVal: true,
           value: "x",
-          link: "https://donate.stripe.com/test_28og255xY5Nta1a14f",
+          link: this.$config.donate4,
         },
       ],
       donationChosen: null,
