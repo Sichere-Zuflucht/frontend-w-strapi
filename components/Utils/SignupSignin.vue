@@ -378,7 +378,7 @@ export default {
             window.localStorage.setItem('emailForSignIn', this.email)
           
         })
-        .catch((e)=>{
+        .catch((err)=>{
           this.$store.dispatch("errorhandling", err);
         })
     },
