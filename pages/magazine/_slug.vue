@@ -26,6 +26,10 @@
         allowtransparency="true"
         allow="encrypted-media"
       ></iframe>
+      <div
+        v-if="article.attributes.iframe"
+        v-html="article.attributes.iframe"
+      ></div>
       <iframe
         v-if="article.attributes.youtubelink"
         width="100%"
@@ -71,7 +75,7 @@
     </v-container>
     <v-divider />
     <v-container>
-      <h2 class="text-h2 secondary--text mb-4 mt-12">Verwandte Einträge</h2>
+      <h2 class="text-h2 secondary--text mb-4 mt-12">Neueste Einträge</h2>
       <v-row v-if="relatedArticles" class="pt-8" style="z-index: 1">
         <v-col
           v-for="relatedArticle in relatedArticles.filter(
@@ -83,47 +87,38 @@
           md="4"
           class="pb-4"
         >
-          <MagazineTeaserBox :magazine-data="relatedArticle" /> </v-col
+          <MagazineTeaserBox :magazine-data="relatedArticle" /></v-col
       ></v-row>
     </v-container>
   </div>
-  <div v-else>user: {{article}}</div>
 </template>
 
 <script>
 export default {
-  async asyncData({params, $strapi}){
-    const article = await $strapi.$magazines
-      .find({
-        populate: '*',
-        "filters[slug]": params.slug
-      })
-      .then(({data}) => data[0])
-      
-    //if(article === undefined) window.location.replace('/')
-
-    const relatedArticles = await $strapi.$magazines
-      .find({
-        populate: '*',
-        "filters[slug][$ne]": params.slug,
-        "_limit": 3,
-      })
-      .then(({data}) => data)
-      /*{
-        return getRelatedArticles.data
-          .filter((art) => art.attributes.slug !== params.slug)
-          .slice(0, 2);
-      })*/
-    console.log(relatedArticles)
-    return { article, relatedArticles } //, relatedArticles }
-  },
   data() {
     return {
-      //article: null,
+      article: null,
       error: null,
-      //relatedArticles: null,
+      relatedArticles: null,
       slugpath: this.$route.params.slug,
     };
+  },
+  async mounted(){
+    this.article = await this.$strapi.$magazines
+      .find({
+        populate: '*',
+        "filters[slug]": this.slugpath
+      })
+      .then(({data}) => data[0])
+
+    this.relatedArticles = await this.$strapi.$magazines
+      .find({
+        populate: '*',
+        "filters[slug][$ne]": this.slugpath,
+        "pagination[start]":0,
+        "pagination[limit]":3,
+      })
+      .then(({data}) => data)
   },
   computed: {
     cssVars() {
@@ -133,31 +128,6 @@ export default {
       };
     },
   },
-  /*async mounted() {
-    console.log(this.$route.params.slug);
-    await this.$strapi.$magazines
-      .find({
-        populate: '*',
-        "filters[slug]": this.$route.params.slug
-      })
-      .then(({data}) => {
-        this.article = data[0];
-      });
-
-    await this.$strapi.$magazines
-      .find({
-        populate: "*",
-        _limit: 3,
-      })
-      .then((getRelatedArticles) => {
-        this.relatedArticles = getRelatedArticles.data
-          .filter((art) => art.attributes.slug !== this.$route.params.slug)
-          .slice(0, 2);
-      })
-      .catch((e) => {
-        this.$store.dispatch("errorhandling", e);
-      });
-  },*/
 };
 </script>
 
@@ -183,5 +153,15 @@ export default {
 .singleArticleText h5,
 .singleArticleText h6 {
   font-size: 1rem;
+}
+
+.singleArticleText ul {
+  margin-bottom: 60px;
+}
+.singleArticleText li {
+  margin-top: 5px;
+}
+.singleArticleText p {
+  line-height: 2em;
 }
 </style>

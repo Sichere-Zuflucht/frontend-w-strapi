@@ -34,7 +34,8 @@
       </v-sheet></v-col
     ><v-col cols="12" md="6" class="pa-0">
       <v-container style="max-width: 450px" class="ma-auto py-16">
-        <h1 class="text-h1 my-4 primary--text">{{ title }}</h1>
+        <h1 class="text-h1 mt-4 primary--text">{{ title }}</h1>
+        <v-btn text :ripple="false" plain color="primary" class="pl-0" :to="buttonLink">{{ buttonText }}</v-btn>
         <v-stepper v-model="step" :flat="true" style="box-shadow: none">
           <v-stepper-items>
             <v-stepper-content step="1" class="pa-0">
@@ -65,7 +66,7 @@
                 </div>
                 <p v-if="!makeLogin" class="caption mt-4">
                   Wir senden im nächsten Schritt eine E-Mail an die o.g.
-                  Adresse, um sie zu bestätigen.<br /><b
+                  Adresse, um sie zu bestätigen. <b
                     >Bitte auch im Spam-Ordner nachsehen.</b
                   >
                 </p>
@@ -143,7 +144,8 @@
                   <v-btn
                     v-if="emailExisting"
                     text
-                    to="/registration/reset-password"
+                    @click="sendResetPasswortCode"
+                    :loading="resetLoading"
                     color="grey"
                     >Passwort vergessen</v-btn
                   ><v-btn
@@ -156,6 +158,7 @@
                     >{{ emailExisting ? "Einloggen" : "Account erstellen" }}</v-btn
                   >
                 </div>
+                <v-alert v-if="codeSent.status" type="success" class="mt-2">{{ codeSent.message }}</v-alert>
               </v-form>
             </v-stepper-content>
             <v-stepper-content step="3" class="pa-0">
@@ -188,19 +191,20 @@
                 Sollte nichts angekommen sein, kannst du dir die E-mail noch
                 einmal zusenden lassen.
               </p>
-              <!--<v-btn
+              <v-btn
                 color="primary"
                 :loading="loading"
                 class="mb-4"
-                @click="resend"
+                @click="sendConfirmationAgain"
                 >Erneut senden</v-btn
-              >-->
+              >
             </v-stepper-content>
           </v-stepper-items>
         </v-stepper>
-        <v-alert v-if="error.status" color="error" class="white--text mt-4">{{
-          error.message
-        }}</v-alert>
+        <v-alert v-if="error.status" color="error" class="white--text mt-4" dismissible>
+          {{ error.message ? error.message : `Es wurde eine E-Mail inklusive einem Link an ${email} geschickt. Bitte folgen Sie den dort beschriebenen Anweisungen.` }}
+          
+        </v-alert>
       </v-container>
     </v-col></v-row
   >
@@ -217,6 +221,15 @@ export default {
       type: String,
       default: "",
     },
+    buttonText: {
+      type: String,
+      default: "Als Berater*in registrieren?",
+    },
+    buttonLink: {
+      type: String,
+      default: "/registration/signup-coach",
+      
+    }
   },
   data() {
     return {
@@ -280,6 +293,10 @@ export default {
         status: false,
         message: "",
       },
+      resetLoading: false,
+      codeSent: {
+        status: false,
+      }
     };
   },
   mounted() {
@@ -362,11 +379,27 @@ export default {
           
         })
         .catch((e)=>{
-          console.log('error:', e)
+          this.$store.dispatch("errorhandling", err);
         })
     },
-    resend(){
-      // somehow manage to be logged in to make a sendEmailConfirmation
+    sendConfirmationAgain(){
+      this.loading = true;
+      this.$strapi.sendEmailConfirmation({ email: this.email }).then(()=>{
+        this.loading = false;
+      })
+    },
+    sendResetPasswortCode(){
+      this.resetLoading = true
+      this.$strapi
+        .forgotPassword({ email: this.email })
+        .then(() => {
+          this.resetLoading = false;
+          this.codeSent.status = true;
+        })
+        .catch((error) => {
+          this.error.status = true;
+          this.error.message = error.code + ": " + error.message;
+        });
     }
   },
 };

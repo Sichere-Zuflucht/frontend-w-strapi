@@ -25,7 +25,7 @@
         ' !important'
       "
     >
-      <v-avatar v-if="coach.avatar" color="primary ma-5" size="35%">
+      <v-avatar v-if="coach.avatar" color="primary ma-5" size="15%" min-width="90" min-height="90">
         <v-img
           :lazy-src="
             (coach.avatar.url.includes('https')
@@ -316,17 +316,7 @@ export default {
       const informTo = this.coach.email
         ? this.coach.email
         : "nouser@sichere-zuflucht.de";
-      this.$axios
-        .get(
-          `${this.$config.strapi.url}/deletemeeting?email=${informTo}&id=${this.id}&acceptedDate=${doc.acceptedDate}`,
-          {
-            headers: {
-              Authorization:
-                "Bearer " +
-                JSON.parse(window.localStorage.getItem("strapi_jwt")).token,
-            },
-          }
-        )
+      this.$deleteMeeting(informTo, this.id, doc.acceptedDate)
         .then(() => {
           this.isDelete = false;
           this.eraseLoading = false;
@@ -337,10 +327,11 @@ export default {
           this.isDelete = false;
           this.eraseLoading = false;
           this.error = err;
-          console.log("delete error: ", err);
+          this.$store.dispatch("errorhandling", err);
         });
     },
-    async testRED() {
+    // RED is not implemented yet
+    /*async testRED() {
       const data = {
         method: "getEntryCodes",
         date: "2023-11-27",
@@ -358,7 +349,7 @@ export default {
       console.log("redReq", redReq);
       redReq.json().then((redRes) => {
         console.log("redRes", redRes);
-      });*/
+      });*//*
       this.$axios
         .$post("https://redclient.redmedical.de/service/video", {
           body: {
@@ -373,7 +364,7 @@ export default {
         .catch((err)=>{
           this.$store.dispatch("errorhandling", err);
         });
-    },
+    },*/
     async pay(dateInput) {
       this.btn.payButtonLoading = true;
       let redReq, data, video;
@@ -386,8 +377,8 @@ export default {
           date: "2023-11-27",
           token: this.$config.redAPI,
         };
-        console.log("data", data);
-        this.$axios
+        // RED is not implemented
+        /*this.$axios
           .$post("https://redclient.redmedical.de/service/video", {
             header: {
               "Content-Type": "application/json",
@@ -399,7 +390,7 @@ export default {
             if (!response.success) return (this.error = response.error);
             console.log("after error");
             this.redirectWarning = true;
-          });
+          });*/
         /*redReq = await fetch('https://redclient.redmedical.de/service/video', {
           method: 'POST',
           header: {
@@ -446,20 +437,8 @@ export default {
       }
     },
     standardPayment(v, dI) {
-      console.log("pay for: ", this.id, this.coach.stripe.id);
-      this.$axios
-        .$get(
-          `${this.$config.strapi.url}/paywithstripe?id=${this.id}&coachStripeId=${this.coach.stripe.id}&url=${window.location.origin}`,
-          {
-            headers: {
-              Authorization:
-                "Bearer " +
-                JSON.parse(window.localStorage.getItem("strapi_jwt")).token,
-            },
-          }
-        )
+      this.$stripePayment(this.id, this.coach.stripe.id)
         .then((paymentID) => {
-          console.log("paymentID", paymentID);
           const data = {
             acceptedDate: dI.date,
             videoCoach: v.codeArzt,
@@ -472,7 +451,6 @@ export default {
               data,
             })
             .then((r) => {
-              console.log("result", r);
               this.btn.payButtonLoading = false;
               this.btn.isDisabled = true;
               this.response.acceptedDate = dI;

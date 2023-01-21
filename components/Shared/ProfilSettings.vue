@@ -18,18 +18,11 @@
         }}
       </p>
 
-      <v-btn
-        :disabled="btn.disabled"
-        :loading="btn.loading"
-        color="secondary"
-        @click="resetPassword"
-        >Passwort ändern</v-btn
-      >
+      <v-btn :disabled="btn.disabled" :loading="btn.loading" color="secondary" @click="resetPassword">Passwort
+        ändern</v-btn>
       <div v-if="btn.success">
-        <v-alert type="success" color="success"
-          >Es wurde eine E-Mail an {{ pubData.email }} geschickt. Bitte folgen
-          Sie den dort beschriebenen Anweisungen.</v-alert
-        >
+        <v-alert type="success" color="success">Es wurde eine E-Mail an {{ pubData.email }} geschickt. Bitte folgen
+          Sie den dort beschriebenen Anweisungen.</v-alert>
       </div>
       <v-dialog v-model="overlay" width="300">
         <template #activator="{ on }">
@@ -50,46 +43,18 @@
               möchtest.
             </p>
           </v-card-text>
-          <v-card-actions
-            ><v-form
-              ref="deleteForm"
-              v-model="deleteVal"
-              @submit.prevent="deleteUser"
-            >
-              <v-text-field
-                v-model="userProvidedErase"
-                outlined
-                label="Löschen einfügen"
-                :rules="rules.delete"
-                color="grey"
-                required
-                placeholder="Löschen"
-              ></v-text-field>
-              <v-btn
-                color="error"
-                :disabled="!deleteVal"
-                :loading="deleteLoading"
-                type="submit"
-                >wirklich löschen</v-btn
-              >
-              <v-btn @click="overlay = !overlay">abbrechen</v-btn></v-form
-            ></v-card-actions
-          ></v-card
-        >
+          <v-card-actions><v-form ref="deleteForm" v-model="deleteVal" @submit.prevent="deleteUser">
+              <v-text-field v-model="userProvidedErase" outlined label='"Löschen" einfügen' :rules="rules.delete"
+                color="grey" required placeholder="Löschen"></v-text-field>
+              <v-btn color="error" :disabled="!deleteVal" :loading="deleteLoading" type="submit">wirklich
+                löschen</v-btn>
+              <v-btn @click="overlay = !overlay">abbrechen</v-btn></v-form></v-card-actions></v-card>
       </v-dialog>
-      <v-alert
-        v-if="err.status && !overlay"
-        type="error"
-        color="error"
-        class="mt-4"
-        >{{ err.msg }}</v-alert
-      >
+      <v-alert v-if="err.status && !overlay" type="error" color="error" class="mt-4">{{ err.msg }}</v-alert>
       <v-divider class="mt-8 pt-3"></v-divider>
       <p class="caption">
         Bei Änderungswünschen gerne eine E-Mail an
-        <a href="mailto:kontakt@sichere-zuflucht.de"
-          >kontakt@sichere-zuflucht.de</a
-        >
+        <a href="mailto:kontakt@sichere-zuflucht.de">kontakt@sichere-zuflucht.de</a>
       </p>
     </v-container>
   </div>
@@ -127,6 +92,7 @@ export default {
       },
     };
   },
+
   computed: {
     pubData() {
       return this.$store.getters["getActiveUser"];
@@ -150,21 +116,28 @@ export default {
     },
     async deleteUser() {
       this.deleteLoading = true;
-      console.log(this.$strapi.user.stripe.id)
-      if(!this.$strapi.user.stripe.id) return deleteSrapiUser()
-      this.$axios
-        .get(
-          `${this.$config.strapi.url}/deletestripeacc?acc=${this.$strapi.user.stripe.id}`,
-          {
-            headers: {
-              Authorization:
-                "Bearer " +
-                JSON.parse(window.localStorage.getItem("strapi_jwt")).token,
-            },
-          }
-        )
+      this.$strapi.$meetings.find({
+        "filters[users_permissions_users]": this.$strapi.user.id,
+      }).then(async (res) => {
+        const meetings = res.data.map(meeting => this.deleteMeeting(meeting));
+        Promise.all(meetings).then(() => {
+          if (this.$strapi.user.stripe.id) this.deleteStripeUser()
+          else this.deleteStrapiUser()
+        })
+      })
+    },
+    async deleteMeeting(doc) {
+      this.$deleteMeeting(this.$strapi.user.email, doc.id, doc.attributes.acceptedDate)
+        .then((r) => {
+          this.isDelete = false;
+          this.eraseLoading = false;
+          this.requests = this.requests.filter((request) => request.id !== r.data.data.id);
+        });
+    },
+    async deleteStripeUser() {
+      this.$deleteStripeAcc()
         .then(() => {
-          this.deleteSrapiUser()
+          this.deleteStrapiUser()
         })
         .catch((err) => {
           this.deleteLoading = false;
@@ -173,20 +146,20 @@ export default {
           this.overlay = false;
         });
     },
-    async deleteSrapiUser(){
+    async deleteStrapiUser() {
       this.$strapi.$users
-            .delete(this.$strapi.user.id)
-            .then((e) => {
-              //this.$router.push('/')
-              window.location.reload();
-              this.deleteLoading = false;
-            })
-            .catch((err) => {
-              this.deleteLoading = false;
-              this.err.status = true;
-              this.err.msg = "Falsches Passwort eingegeben.";
-              this.overlay = false;
-            });
+        .delete(this.$strapi.user.id)
+        .then((e) => {
+          //this.$router.push('/')
+          window.location.reload();
+          this.deleteLoading = false;
+        })
+        .catch((err) => {
+          this.deleteLoading = false;
+          this.err.status = true;
+          this.err.msg = "Falsches Passwort eingegeben.";
+          this.overlay = false;
+        });
     }
   },
 };

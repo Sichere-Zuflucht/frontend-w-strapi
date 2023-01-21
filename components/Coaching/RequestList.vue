@@ -98,12 +98,14 @@
                     </p></v-sheet
                   >
                   <div v-if="!item.attributes.coachAnswered" class="pt-4">
+                    
                     <v-select
                       v-model="selectedVideoType"
+                      :hint="selectedVideoType == 'normal' ? descrNormal : descrSecure"
                       :items="videoTypes"
                       outlined
-                      hide-details
                       label="Videoanbieter auswählen"
+                      persistent-hint
                       class="mb-4"
                     ></v-select>
                     <v-list>
@@ -131,7 +133,8 @@
                         </v-list-item>
                       </v-list-item-group>
                     </v-list>
-                    <UtilsDatePicker :item="item" />
+                    <v-alert v-if="selectedVideoType !== 'normal'" type="info" color="primary">Aktuell können wir noch keinen zertifizierten Anbieter zur Verfügung stellen. Wir arbeiten daran, dies bald zu möglich.</v-alert>
+                    <UtilsDatePicker v-if="selectedVideoType == 'normal'" :item="item" />
                     <p class="mt-2 mb-0 pa-2 caption">
                       Bitte füge mind. 3 Termine hinzu.
                     </p>
@@ -175,7 +178,7 @@
                       {{ formatTime(d.date) }} Uhr<br /><br
                     /></span> </v-banner
                 ></v-card-text>
-                <v-card-actions class="d-flex justify-end">
+                <v-card-actions v-if="selectedVideoType == 'normal'" class="d-flex justify-end">
                   <v-btn
                     v-if="!item.attributes.coachAnswered"
                     :loading="loading"
@@ -232,8 +235,7 @@
               >
                 <p
                   class="mb-0"
-                  style="
-                    position: absolute;
+                  style="position: absolute;
                     top: -50%;
                     font-size: 0.5em !important;
                   "
@@ -356,6 +358,8 @@ export default {
           value: "secure",
         },
       ],
+      descrNormal: 'Als sicheren Anbieter nutzen wir Jitsi. Viele Gespräche können hierüber abgewickelt werden, solange keine sensiblen Daten ausgetauscht werden.',
+      descrSecure: 'In seltenen Fällen lohnt es sich, unseren zertifizierten Anbieter RED zu nutzen. So zum Beispiel bei sensiblen ärztlichen Informationen.',
       loading: false,
       eraseLoading: false,
       isDelete: false,
@@ -376,20 +380,17 @@ export default {
       })
       .then((meetings) => {
         this.requests = meetings.data;
-        console.log(this.requests);
       });
   },
   methods: {
     addSuggestions(request) {
       this.loading = true;
-      console.log("request", request);
       const data = {
         coachAnswered: true,
         suggestions: request.attributes.suggestions,
         updatedAt: new Date().toISOString(),
         videoType: this.selectedVideoType,
       };
-      console.log("data", data);
       this.$strapi.$meetings
         .update(request.id, {
           data,
@@ -401,17 +402,8 @@ export default {
         });
     },
     cancel(doc) {
-      this.$axios
-        .get(
-          `${this.$config.strapi.url}/deletemeeting?email=${this.user.email}&id=${doc.id}&acceptedDate=${doc.attributes.acceptedDate}`,
-          {
-            headers: {
-              Authorization:
-                "Bearer " +
-                JSON.parse(window.localStorage.getItem("strapi_jwt")).token,
-            },
-          }
-        )
+      //this.$deleteMeeting(informTo, this.id, doc.acceptedDate)
+      this.$deleteMeeting(this.user.email, doc.id, doc.attributes.acceptedDate)
         .then((r) => {
           this.isDelete = false;
           this.eraseLoading = false;

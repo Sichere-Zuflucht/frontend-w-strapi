@@ -14,7 +14,6 @@ export const getters = {
 
 export const actions = {
   async checkAuth({ commit }){
-    console.log(this.$strapi.user)
     if (this.$strapi.user) commit('setUserData', this.$strapi.user)
     else commit('setUserData', null)
   },
@@ -32,6 +31,7 @@ export const actions = {
   },
   logout({ commit }) {
     this.$strapi.logout()
+    window.localStorage.removeItem("emailForSignIn");
     commit('setUserData', null)
     commit('setJWT', null)
   },

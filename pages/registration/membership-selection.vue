@@ -210,7 +210,6 @@ export default {
     };
   },
   async mounted() {
-    console.log("user?", this.$strapi.user);
     this.membership = this.memberships[0];
     this.email = window.localStorage.getItem("emailForSignIn");
 
@@ -241,34 +240,34 @@ export default {
           d.getMonth().toString() +
           d.getFullYear().toString().slice(2);
 
-      console.log("user?", this.$strapi.user);
-
       this.$strapi
         .count("users", {
           username: username,
         })
         .then((res) => {
-          console.log("amount username", res);
+          this.$console('res', res)
           username = res == 0 ? username : username + "-" + res++;
 
           const data = {
             role: this.roleTypes.find(
               (r) => r.type == this.membership.id.toLowerCase()
-            ),
+            ).id,
             roleName: this.membership.id.toLowerCase(),
             displayName: this.firstName+' '+this.lastName,
             username: username,
           };
-          console.log("data", data);
+
+          this.$console(this.roleTypes[0])
+
           this.$strapi.$users.update(this.$strapi.user.id, data)
             .then((newU) => {
-              console.log("newU", newU);
+              this.$console("newU", newU);
               this.alert.isActive = false;
               this.$store.dispatch("changeData",newU).then(() => {
                 window.localStorage.removeItem("emailForSignIn");
                 this.loading = false;
                 this.userdata = this.$store.getters["getActiveUser"];
-                console.log('new UserData', this.$strapi.user.roleName);
+                this.$console('new UserData', this.$strapi.user.roleName);
                 this.membership.id === "Coach"
                   ? this.stepper++
                   : this.$router.push("/frauen");

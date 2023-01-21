@@ -17,7 +17,6 @@ export default {
   async mounted() {
     const {data} = await this.$strapi.$meetings.find()
     this.meetings = data
-    console.log(data)
   },
 }
 </script>
