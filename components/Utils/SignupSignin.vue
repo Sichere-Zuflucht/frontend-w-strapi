@@ -35,7 +35,8 @@
     ><v-col cols="12" md="6" class="pa-0">
       <v-container style="max-width: 450px" class="ma-auto py-16">
         <h1 class="text-h1 mt-4 primary--text">{{ title }}</h1>
-        <v-btn text :ripple="false" plain color="primary" class="pl-0" :to="buttonLink">{{ buttonText }}</v-btn>
+        <v-btn text :ripple="false" plain color="primary" class="pl-0 my-2" :to="buttonLink">{{ buttonText }}</v-btn>
+        <p v-if="subtitle" class="caption">{{ subtitle }}</p>
         <v-stepper v-model="step" :flat="true" style="box-shadow: none">
           <v-stepper-items>
             <v-stepper-content step="1" class="pa-0">
@@ -175,16 +176,16 @@
                   >Profil erstellen</v-btn
                 >-->
               <h2 class="text-h1 primary--text mb-4">
-                Danke für deine Anmeldung!
+                Danke für die Anmeldung!
               </h2>
               <h3 class="text-h2 secondary--text mb-8">
-                Wir haben dir eine Bestätigungsmail gesendet.
+                Wir haben Ihnen eine Bestätigungsmail gesendet.
               </h3>
               <p>
                 <b>{{ email }}</b>
               </p>
               <p class="caption">
-                Bitte schau in dein Mail-Postfach. Kontrolliere ggf. auch den
+                Bitte schauen Sie in Ihr E-Mail-Postfach. Kontrolliere ggf. auch den
                 Spam Ordner.
               </p>
               <p class="caption">
@@ -193,6 +194,12 @@
               </p>
               <v-btn
                 color="primary"
+                class="mb-4"
+                href="/registration/signin"
+              >Einloggen</v-btn>
+              <v-btn
+                color="primary"
+                outlined
                 :loading="loading"
                 class="mb-4"
                 @click="sendConfirmationAgain"
@@ -221,10 +228,14 @@ export default {
       type: String,
       default: "",
     },
-    /*buttonText: {
+    subtitle: {
+      type: String,
+      default: null,
+    },
+    buttonText: {
       type: String,
       default: "Als Berater*in registrieren?",
-    },*/
+    },
     buttonLink: {
       type: String,
       default: "/registration/signup-coach",
@@ -288,7 +299,7 @@ export default {
       //showConfirmation: false,
       emailExisting: false,
       showRegister: false,
-      buttonText: "Registrieren",
+      //buttonText: "Registrieren",
       error: {
         status: false,
         message: "",
@@ -343,7 +354,7 @@ export default {
         .catch((err) => {
           this.loading = false;
           this.error.status = true;
-          this.error.message = err.response.data.error.message;
+          this.error.message = err.response.data.error.message.includes('Invalid identifier') ? 'Ungültige E-Mail-Adresse oder ungültiges Passwort' : err.response.data.error.message ;
           this.$store.dispatch("errorhandling", err);
         });
       

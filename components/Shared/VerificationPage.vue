@@ -3,10 +3,11 @@
     <div v-if="!success && userdata.verification == 'false'">
       <h2 class="text-h2 secondary--text pb-4">Verifizierung</h2>
       <p>
-        Sicherheit ist uns ein wichtiges Anliegen, deshalb nehmen wir in den nächsten Tagen Kontakt mit Ihnen auf, um
+        Da häusiche Gewalt ein sehr sensibles Thema ist, möchten wir Sie kennen lernen, 
+        um Sichere Zuflucht zu einem sicheren Raum zu machen. Deshalb nehmen wir in den 
+        nächsten Tagen über die unten angegebenen Informationen Kontakt mit Ihnen auf, um
         mehr über Sie zu erfahren und offene Fragen zu klären.
       </p>
-      <nuxt-link to="" target="_blank">Warum ist eine Verifizierung nötig?</nuxt-link>
       <v-form ref="verify" v-model="validRef" class="pt-8" autocomplete="on">
         <v-text-field v-model="verPhone" class="secondary--text font-weight-bold" :rules="rules.phone"
           label="Telefonnummer" type="tel" persistent-hint hint="Wir werden Sie telefonisch kontaktieren." name="mobile"

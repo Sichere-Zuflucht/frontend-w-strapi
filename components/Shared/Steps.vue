@@ -26,6 +26,12 @@
 
 <script>
 export default {
+  props: {
+    noButton: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
       steps: [
@@ -37,7 +43,7 @@ export default {
           btn: 'Registrieren',
           link: '/registration/signup',
           textStyle: false,
-          rule: !this.$store.getters['getActiveUser'],
+          rule: this.noButton ? false : !this.$store.getters['getActiveUser']
         },
         {
           icon: 'mdi-account-search',

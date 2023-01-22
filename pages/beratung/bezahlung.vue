@@ -6,7 +6,7 @@
         <h1 class="text-h1 primary--text mb-4">Bezahlung<br />verwalten</h1>
         <p>
           Sie erhalten für Ihre Beratungsleistung über unser Portal
-          <b>50€/Stunde</b>. Damit das Geld Sie auch umgehend erreicht, arbeiten
+          <b>40€/Stunde (50€ Beratungskosten minus 10€ Gebühr)</b>. Damit das Geld Sie auch umgehend erreicht, arbeiten
           wir mit dem <b>Zahlungssystem Stripe</b>.<br /><br />Legen Sie sich
           deshalb bitte ein Stripe-Konto an. Das geht schnell und ist für Sie
           <b>kostenlos</b>.<br /><br />Nach dieser Anmeldung und der
@@ -41,7 +41,7 @@
             </h3>
             <p>
               Aktuell können Sie keine Zahlungen entgegennehmen. Bitte
-              vervollständigen Sie die Stripe-Registrierung.
+              registrieren Sie sich bei Stripe.
             </p>
             <v-divider class="my-4 error" style="opacity: 0.22" />
             <v-btn
@@ -50,7 +50,7 @@
               color="white"
               target="_blank"
               @click="addStripe"
-              >Stripe-Konto vervollständigen
+              >Stripe-Konto anlegen
             </v-btn>
           </v-alert>
           <v-alert
@@ -106,11 +106,11 @@
         </v-card>-->
       </div>
 
-      <p v-if="stripeRegisterURL" class="caption">
+      <p v-if="stripeRegisterURL" color="secondary" class="caption" dark>
         Falls die Weiterleitung nicht funktioniert, kopiere und öffne bitte
-        folgende URL:
+        folgende URL:<br />
         <a :href="stripeRegisterURL" target="_blank">{{ stripeRegisterURL }}</a>
-      </p>
+        </p>
     </v-container>
   </div>
 </template>

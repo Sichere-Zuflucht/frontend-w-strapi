@@ -54,7 +54,7 @@
           v-if="showConfirmation"
           color="success"
           class="white--text mt-4"
-          >Sie haben Ihr Passwort erfolgreich zurückgesetzt.
+          >Sie haben Ihr Passwort erfolgreich zurückgesetzt. Schließen Sie nun dieses Fenster und loggen Sie sich über ihren Browser mit Ihrem neuen Passwort ein.
         </v-alert>
         <v-alert v-if="error.status" color="error" class="white--text mt-4"
           >{{ error.message }}
@@ -140,7 +140,7 @@ export default {
           this.buttonText = "Versendet";
           this.showConfirmation = true;
           this.valid = false;
-          window.location.replace('/')
+          //window.location.replace('/')
         })
         .catch((err) => {
           this.$store.dispatch("errorhandling", err);

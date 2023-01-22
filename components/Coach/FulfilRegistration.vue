@@ -1,69 +1,49 @@
 <template>
   <div class="pt-4">
     <client-only v-if="userData">
-      <v-alert v-if="!userData.topicArea" dark color="error">
-        <v-row align="center">
-          <v-col class="shrink">
-            <v-icon>mdi-account-question</v-icon>
-          </v-col>
-          <v-col class="grow"> Es existiert noch kein Profil von Ihnen. </v-col>
-          <v-col cols="12" sm="auto" class="shrink">
-            <v-btn to="edit-profil" append>Profil anlegen</v-btn>
-          </v-col>
-        </v-row></v-alert
-      >
-      <v-alert v-if="!userData.stripe.payouts_enabled" dark color="error"
-        ><v-row align="center">
-          <v-col class="shrink">
-            <v-icon>mdi-credit-card-off-outline</v-icon>
-          </v-col>
-          <v-col class="grow">
-            Es wurde noch kein Stripe Account eingerichtet.
-          </v-col>
-          <v-col cols="12" sm="auto" class="shrink">
-            <v-btn to="bezahlung" append>Stripe anlegen</v-btn>
-          </v-col>
-        </v-row></v-alert
-      >
-
-      <v-alert
-        v-if="userData.verification != 'done'"
-        dark
-        color="error"
-      >
-        <v-row align="center">
-          <v-col class="shrink">
-            <v-icon>mdi-account-clock</v-icon>
-          </v-col>
-          <v-col class="grow">
-            Sie wurden von uns noch nicht verifiziert.
-          </v-col>
-          <v-col cols="12" sm="auto" class="shrink">
-            <v-btn to="personenverifizierung" append
-              >Verifizierung ansehen</v-btn
-            >
-          </v-col>
-        </v-row></v-alert
-      >
-      <p
-        v-if="
-          !userData.topicArea && !userData.stripe.payouts_enabled && userData.verification != 'done'
-        "
-        class="caption"
-      >
-        Solange Sie nicht
-        {{
-          userData.verification != 'done'
-            ? 'von uns verifiziert wurden, '
-            : null
-        }}{{
-          !userData.stripe.payouts_enabled
-            ? 'Stripe eingerichtet haben, '
-            : null
-        }}
-        {{ !userData.info ? 'Profildaten eingerichtet haben, ' : null }}
-        ist Ihr Profil nicht öffentlich einsehbar und somit können auch keine
-        Anfragen an Sie gestellt werden.
+      <v-alert v-if="!userData.topicArea" color="secondary" icon="mdi-account-question" outlined text>
+        <h3 class="text-h3">
+          Profil erstellen.
+        </h3>
+        <p>
+          Aktuell existiert noch kein Profil von Ihnen. Bitte
+          erstellen Sie ein Profil.
+        </p>
+        <v-divider class="my-4 error" style="opacity: 0.22" />
+        <v-btn color="white" to="beratung/edit-profil">Profil erstellen
+        </v-btn>
+      </v-alert>
+      <v-alert v-if="!userData.stripe.payouts_enabled" color="secondary" icon="mdi-credit-card-off-outline" outlined
+        text>
+        <h3 class="text-h3">
+          Zahlung freischalten.
+        </h3>
+        <p>
+          Aktuell können Sie keine Zahlungen entgegennehmen. Bitte
+          registrieren Sie sich bei Stripe.
+        </p>
+        <v-divider class="my-4 error" style="opacity: 0.22" />
+        <v-btn color="white" to="beratung/bezahlung">Stripe-Konto anlegen
+        </v-btn>
+      </v-alert>
+      <v-alert v-if="userData.verification != 'done'" color="secondary" icon="mdi-account-clock" outlined text>
+        <h3 class="text-h3">
+          Verifizierung noch nicht abgeschlossen.
+        </h3>
+        <p>
+          Aktuell ist ihr Profil nicht öffentlich einsehbar, da Sie
+          von uns noch nicht freigeschaltet wurden. Sie können
+          sich Ihren aktuellen Status ansehen.
+        </p>
+        <v-divider class="my-4 error" style="opacity: 0.22" />
+        <v-btn color="white" to="beratung/personenverifizierung">Status ansehen
+        </v-btn>
+      </v-alert>
+      <p v-if="
+        !userData.topicArea || !userData.stripe.payouts_enabled || userData.verification != 'done'
+      " class="caption">
+        Solange die oben angezeigte Warnungen existieren, ist Ihr Profil nicht öffentlich einsehbar und Sie können keine
+        Anfragen erhalten.
       </p>
     </client-only>
   </div>

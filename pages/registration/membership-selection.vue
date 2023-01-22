@@ -55,7 +55,7 @@
               <p class="caption">Bitte wähle zwischen</p>
               <v-item-group mandatory v-model="membership">
                 <v-row>
-                  <v-col v-for="(n, i) in memberships" :key="i" cols="6">
+                  <v-col v-for="(n, i) in memberships" :key="i" cols="12" sm="6">
                     <v-item v-slot="{ active, toggle }" :value="n">
                       <v-card
                         :color="active ? 'primary' : 'grey'"

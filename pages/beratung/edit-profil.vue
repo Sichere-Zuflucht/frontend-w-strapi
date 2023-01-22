@@ -68,7 +68,7 @@
               <p>
                 Sie können sich Ihr Profil ansehen{{
                   !user.stripe.payouts_enabled
-                    ? "oder direkt weiter zur Zahlungsanbindung gehen."
+                    ? " oder direkt weiter zur Zahlungsanbindung gehen."
                     : "."
                 }}
               </p>
@@ -93,7 +93,7 @@
               <h2 class="text-h2 secondary--text pb-4">Bezahlungssystem</h2>
               <p>
                 Sie erhalten pro Beratungseinheit (50 Min.) über unser Portal
-                <b>50€</b>. Damit das Geld Sie auch umgehend erreicht, arbeiten
+                <b>40€</b> (50€ minus 10€ Gebühren an Sichere Zuflucht). Damit das Geld Sie auch umgehend erreicht, arbeiten
                 wir mit dem <b>Zahlungssystem Stripe.</b>
               </p>
               <p>
@@ -127,10 +127,10 @@
               <v-alert v-if="error" color="error" dark>
                 {{ error }}
               </v-alert>
-              <h2 class="text-h2 secondary--text pb-4 pt-12">HÄUFIGE FRAGEN</h2>
-              <nuxt-link to="/footer/faq">
+              <!--<h2 class="text-h2 secondary--text pb-4 pt-12">HÄUFIGE FRAGEN</h2>-->
+              <!--<nuxt-link to="/footer/faq">
                 Wie erstelle ich ein Konto bei Stripe?
-              </nuxt-link>
+              </nuxt-link>-->
             </v-stepper-content></v-stepper-items
           ></v-stepper
         >

@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="inner-steps">
     <v-expand-transition>
-      <v-stepper v-model="e6" vertical class="mx-auto" elevation="0">
+      <v-stepper v-model="e6" vertical="false" class="mx-auto" elevation="0">
         <v-stepper-step
           :complete="e6 > 1"
           :editable="e6 > 1"
@@ -319,8 +319,17 @@ export default {
   },
 };
 </script>
-<style scoped>
+<style>
 .v-expansion-panel-content__wrap {
   padding: 0;
+}
+.inner-steps .v-stepper__step {
+  display: flex !important;
+}
+.inner-steps .v-stepper__step__step {
+  margin-right: 12px !important;
+}
+.inner-steps .v-stepper__label {
+  display: block !important;
 }
 </style>
