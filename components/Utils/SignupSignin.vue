@@ -221,10 +221,10 @@ export default {
       type: String,
       default: "",
     },
-    buttonText: {
+    /*buttonText: {
       type: String,
       default: "Als Berater*in registrieren?",
-    },
+    },*/
     buttonLink: {
       type: String,
       default: "/registration/signup-coach",
@@ -370,7 +370,6 @@ export default {
           }
         })
         .then(() => {
-          this.buttonText = 'Gesendet'
             this.valid = false
             this.loading = false
             this.showConfirmation = true

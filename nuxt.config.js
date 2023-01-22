@@ -3,7 +3,7 @@ import axios from 'axios'
 
 export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
-  ssr: false,
+  ssr: true,
 
   // Trying to overcome the problem of regenerating each time, if a new content comes from strapi
   mode: "spa",
