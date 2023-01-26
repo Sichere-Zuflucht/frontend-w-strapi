@@ -3,7 +3,7 @@
     <div v-if="!success && userdata.verification == 'false'">
       <h2 class="text-h2 secondary--text pb-4">Verifizierung</h2>
       <p>
-        Da häusiche Gewalt ein sehr sensibles Thema ist, möchten wir Sie kennen lernen, 
+        Da häusliche Gewalt ein sehr sensibles Thema ist, möchten wir Sie kennen lernen, 
         um Sichere Zuflucht zu einem sicheren Raum zu machen. Deshalb nehmen wir in den 
         nächsten Tagen über die unten angegebenen Informationen Kontakt mit Ihnen auf, um
         mehr über Sie zu erfahren und offene Fragen zu klären.
