@@ -121,7 +121,7 @@ export default {
       }).then(async (res) => {
         const meetings = res.data.map(meeting => this.deleteMeeting(meeting));
         Promise.all(meetings).then(() => {
-          if (this.$strapi.user.stripe.id) this.deleteStripeUser()
+          if (this.$strapi.user.stripeID) this.deleteStripeUser()
           else this.deleteStrapiUser()
         })
       })

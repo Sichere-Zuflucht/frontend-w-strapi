@@ -19,7 +19,7 @@ export default ({ app }, inject) => {
   //********* Stripe */
   inject('loginStripeAccLink', () => {
     return app.$axios
-      .get(app.$config.strapi.url + "/stripeloginlink?acc=" + app.store.getters["getActiveUser"].stripe.id, {
+      .get(app.$config.strapi.url + "/stripeloginlink?acc=" + app.store.getters["getActiveUser"].stripeID, {
         headers: {
           Authorization: "Bearer "+ JSON.parse(localStorage.getItem("strapi_jwt")).token
         },
@@ -43,12 +43,10 @@ export default ({ app }, inject) => {
         }
       )
       .then((body) => {
+        console.log('body createStripeAcc', body)
         return app.$strapi.$users
           .update(app.$strapi.user.id, {
-            stripe: {
-              payouts_enabled: false, //why is it false here??? shouldn't it be true?
-              id: body.data.stripeId,
-            },
+            stripeID: body.data.stripeId,
           })
           .then((r) => {
             if (
@@ -73,7 +71,7 @@ export default ({ app }, inject) => {
   inject('deleteStripeAcc', () => {
     app.$axios
       .get(
-        `${app.$config.strapi.url}/deletestripeacc?acc=${app.$strapi.user.stripe.id}`,
+        `${app.$config.strapi.url}/deletestripeacc?acc=${app.$strapi.user.stripeID}`,
         {
           headers: {
             Authorization: "Bearer "+ JSON.parse(localStorage.getItem("strapi_jwt")).token
@@ -107,7 +105,7 @@ export default ({ app }, inject) => {
       .get(
         app.$config.strapi.url +
         "/retrievestripe?email=" +
-        app.store.getters["getActiveUser"].stripe.id,
+        app.store.getters["getActiveUser"].stripeID,
         {
           headers: {
             Authorization: "Bearer "+ JSON.parse(localStorage.getItem("strapi_jwt")).token

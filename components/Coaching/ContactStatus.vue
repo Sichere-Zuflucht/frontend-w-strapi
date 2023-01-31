@@ -437,7 +437,7 @@ export default {
       }
     },
     standardPayment(v, dI) {
-      this.$stripePayment(this.id, this.coach.stripe.id)
+      this.$stripePayment(this.id, this.coach.stripeID)
         .then((paymentID) => {
           console.log(paymentID)
           const data = {

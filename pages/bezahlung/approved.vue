@@ -26,14 +26,14 @@ export default {
     if (this.$store.getters["getActiveUser"].roleName != "woman") {
       this.$getStripeAccData()
         .then((body) => {
-          this.$console(body.data);
+          this.$console(body);
           //just proof, if account is valid due to having content
           if (body.data.capabilities) {
             this.$strapi.$users
               .update(this.$strapi.user.id, {
                 stripe: {
                   payouts_enabled: body.data.payouts_enabled,
-                  id: body.data.id,
+                  //id: body.data.id,
                   charges_enabled: body.data.charges_enabled,
                 },
               })
