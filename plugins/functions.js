@@ -93,6 +93,10 @@ export default ({ app }, inject) => {
             Authorization: "Bearer "+ JSON.parse(localStorage.getItem("strapi_jwt")).token
           },
         }
+      ).then((res) => {
+        console.log(res)
+        return res
+      }
       ).catch((e) => {
         app.store.dispatch("errorhandling", e);
       });
