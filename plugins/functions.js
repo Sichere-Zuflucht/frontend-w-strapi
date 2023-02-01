@@ -69,7 +69,7 @@ export default ({ app }, inject) => {
   })
 
   inject('deleteStripeAcc', () => {
-    app.$axios
+    return app.$axios
       .get(
         `${app.$config.strapi.url}/deletestripeacc?acc=${app.$strapi.user.stripeID}`,
         {

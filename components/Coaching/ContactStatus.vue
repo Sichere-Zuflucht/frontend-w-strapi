@@ -439,7 +439,6 @@ export default {
     standardPayment(v, dI) {
       this.$stripePayment(this.id, this.coach.stripeID)
         .then((paymentID) => {
-          console.log(paymentID)
           const data = {
             acceptedDate: dI.date,
             videoCoach: v.codeArzt,
