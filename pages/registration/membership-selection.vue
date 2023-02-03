@@ -232,7 +232,7 @@ export default {
       const d = new Date();
 
       var username = this.firstName
-        ? this.firstName.toLowerCase() + "-" + this.lastName.toLowerCase()
+        ? this.firstName.toLowerCase().replace(' ','-') + "-" + this.lastName.toLowerCase().replace(' ','-')
         : "FR-" +
           d.getMilliseconds().toString().slice(0, 1) +
           d.getSeconds().toString() +
