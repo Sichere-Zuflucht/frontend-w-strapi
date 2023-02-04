@@ -10,7 +10,7 @@
     <div
       v-if="
         user.topicArea &&
-        user.stripe.payouts_enabled &&
+        stripeEnabled &&
         user.verification == 'done'
       "
     >
@@ -24,6 +24,9 @@
       </div>
       <CoachingRequestList :user="user" :oldlist="true" :showold="showOld" />
     </div>
+    <div v-else><v-skeleton-loader
+          type="article"
+    ></v-skeleton-loader></div>
   </v-container>
 </template>
 
@@ -33,7 +36,11 @@ export default {
   data() {
     return {
       showOld: false,
+      stripeEnabled: null,
     };
+  },
+  async mounted(){
+    this.stripeEnabled = (await this.$getStripeAccData()).data.payouts_enabled
   },
   computed: {
     user() {

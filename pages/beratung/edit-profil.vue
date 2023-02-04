@@ -26,9 +26,9 @@
             >
               Profil
             </v-stepper-step>
-            <v-divider v-if="!user.stripe.payouts_enabled"></v-divider>
+            <v-divider v-if="!user.stripeID"></v-divider>
             <v-stepper-step
-              v-if="!user.stripe.payouts_enabled"
+              v-if="!user.stripeID"
               step="2"
               editable
             >
@@ -53,11 +53,11 @@
               />
               <v-btn
                 text
-                :to="user.stripe.payouts_enabled ? '/berater/' + user.username : null"
+                :to="user.stripeID ? '/berater/' + user.username : null"
                 color="grey"
-                @click="!user.stripe.payouts_enabled ? stepper++ : null"
+                @click="!user.stripeID ? stepper++ : null"
                 >{{
-                  !user.stripe.payouts_enabled
+                  !user.stripeID
                     ? "Später"
                     : "Weiter ohne Speichern"
                 }}</v-btn
@@ -67,7 +67,7 @@
               <h2 class="text-h2 secondary--text pb-4">PROFIL erstellt</h2>
               <p>
                 Sie können sich Ihr Profil ansehen{{
-                  !user.stripe.payouts_enabled
+                  !user.stripeID
                     ? " oder direkt weiter zur Zahlungsanbindung gehen."
                     : "."
                 }}
@@ -81,7 +81,7 @@
                   :to="'/berater/' + user.username"
                   >Profil ansehen</v-btn
                 ><v-btn
-                  v-if="!user.stripe.payouts_enabled"
+                  v-if="!user.stripeID"
                   color="secondary"
                   class="mt-4"
                   @click="stepper++"

@@ -43,7 +43,6 @@ export default ({ app }, inject) => {
         }
       )
       .then((body) => {
-        console.log('body createStripeAcc', body)
         return app.$strapi.$users
           .update(app.$strapi.user.id, {
             stripeID: body.data.stripeId,
@@ -92,7 +91,6 @@ export default ({ app }, inject) => {
           },
         }
       ).then((res) => {
-        console.log(res)
         return res
       }
       ).catch((e) => {

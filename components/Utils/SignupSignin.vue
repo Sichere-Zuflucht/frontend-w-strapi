@@ -376,9 +376,6 @@ export default {
           username: username, 
           email: this.email, 
           password: this.password,
-          stripe: {
-            payouts_enabled: false,
-          }
         })
         .then(() => {
             this.valid = false

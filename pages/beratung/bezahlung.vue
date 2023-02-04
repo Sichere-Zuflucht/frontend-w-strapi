@@ -2,7 +2,12 @@
   <div>
     <UtilsBanner icon="mdi-credit-card-plus-outline" />
     <v-container>
-      <div v-if="!stripe || !stripe.charges_enabled">
+      <div v-if="stripe === null">
+        <v-skeleton-loader
+          type="article"
+        ></v-skeleton-loader>
+      </div>
+      <div v-else-if="!stripe || !stripe.charges_enabled">
         <h1 class="text-h1 primary--text mb-4">Bezahlung<br />verwalten</h1>
         <p>
           Sie erhalten für Ihre Beratungsleistung über unser Portal
@@ -82,16 +87,16 @@
       <div v-else>
         <h2 class="text-h2 primary--text">Stripe Übersicht</h2>
         <v-btn
-          :href="stripeLoginURL"
           target="_blank"
           color="secondary"
           class="mt-4"
+          @click="stripeLogin"
           >Zum Stripe Dashboard</v-btn
         >
-        <!--<div v-if="stripeData">
+        <!--<div v-if="stripeSession">
           <p>Kartenzahlung:</p>
         </div>
-        <v-card v-for="(item, i) of stripeData" :key="i">
+        <v-card v-for="(item, i) of stripeSession" :key="i">
           <v-card-text>
             <p>
               Betrag: {{ item.amount }} {{ item.currency.toUpperCase() }}<br />
@@ -121,34 +126,19 @@ export default {
   data() {
     return {
       stripeRegisterURL: null,
-      stripeLoginURL: null,
 
       loading: false,
       disabled: false,
-      stripeData: null,
+
+      stripe: null,
     };
   },
-  mounted() {
-    this.$loginStripeAccLink()
-      .then((body) => {
-        this.stripeLoginURL = body.data.url;
-      });
-
-    this.$getStripeAccData()
-      .then((body) => {
-        this.stripeData = body.data;
-      });
+  async mounted() {
+    this.stripe = (await this.$getStripeAccData()).data
   },
   computed: {
     user() {
       return this.$store.getters["getActiveUser"];
-    },
-    stripe() {
-      try {
-        return this.$store.getters["getActiveUser"].stripe;
-      } catch (TypeError) {
-        return "type error";
-      }
     },
   },
   methods: {
@@ -161,6 +151,12 @@ export default {
         this.disabled = true;
       })
     },
+    stripeLogin() {
+      this.$loginStripeAccLink()
+        .then((body) => {
+          window.open(body.data.url, '_blank');
+        });
+    }
   },
 };
 </script>
