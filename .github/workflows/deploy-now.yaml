@@ -4,9 +4,6 @@ on:
   - push #: 
       # branches: [master, ionos_test_environment]
   - workflow_dispatch
-  - repository_dispatch:
-      types: [run-redeploy]
-  
 
 jobs:
   deploy-now:
