@@ -1,0 +1,21 @@
+name: Ping
+
+env:
+  owner: Sichere-Zuflucht
+  repo: frontend-w-strapi
+
+on:
+  repository_dispatch:
+    types: [run-ping]
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch project data
+        uses: ionos-deploy-now/retrieve-project-info-action@v1
+        id: project
+        with:
+          api-key: ${{ secrets.IONOS_API_KEY }}
+          project: ${{ secrets.IONOS_PROJECT_ID }}
+          service-host: api-eu.ionos.space
