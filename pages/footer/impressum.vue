@@ -21,8 +21,8 @@
           <br />
           kontakt@sichere-zuflucht.de
           <br /><br />
-          <b>Handelsregister-Nr.:</b> xxxxx<br />
-          <b>Steuernummer:</b> xxxxx<br />
+          <b>Handelsregister-Nr.:</b> HRB 16147 Amtsgericht Kempten (Allgäu)<br />
+          <b>Steuernummer:</b> 127/147/07017<br />
           <b>Umsatzsteuer-ID:</b> xxxxx<br /><br />
           <b>Inhaltlich Verantwortliche*r gemäß §18 Abs. 1 MStV</b> &<br />
           <b>Redaktionell Verantwortliche*r gemäß §18 Abs. 1 MStV</b><br />
