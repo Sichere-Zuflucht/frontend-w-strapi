@@ -22,7 +22,7 @@
 <script>
 export default {
   name: "Approved",
-  mounted() {
+  /*mounted() {
     if (this.$store.getters["getActiveUser"].roleName == "woman") {
       const meetingID = window.localStorage.getItem("meetingID");
       const sessionID = window.localStorage.getItem("sessionID");
@@ -42,6 +42,6 @@ export default {
             });
         });
     }
-  },
+  },*/
 };
 </script>

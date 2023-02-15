@@ -52,6 +52,7 @@ export const actions = {
       console.log('Error', error.message);
     }
     console.log("error config:",error.config);
+    error.location ? console.log("location", error.location) : null
   }
 }
 

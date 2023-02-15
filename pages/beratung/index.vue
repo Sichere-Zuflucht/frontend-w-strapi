@@ -7,26 +7,25 @@
       </h1>
     </client-only>
     <CoachFulfilRegistration />
-    <div
-      v-if="
-        user.topicArea &&
-        stripeEnabled &&
-        user.verification == 'done'
-      "
-    >
+    <div v-if="
+      user.topicArea &&
+      stripeEnabled &&
+      user.verification == 'done'
+    ">
       <h2 class="primary--text mb-2">Anfragen</h2>
+      <v-btn outlined color="primary" class="mb-4" @click="loadMeetings"><v-icon small class="mr-1">mdi-update</v-icon>Nach Updates
+        suchen</v-btn>
 
-      <CoachingRequestList :user="user" />
+
+      <CoachingRequestList :list="requests"/>
       <div class="my-8 d-flex justify-center">
-        <v-btn text color="grey" @click="showOld = !showOld"
-          >vergangene Termine {{ showOld ? "verbergen" : "anzeigen" }}</v-btn
-        >
+        <v-btn text color="grey" @click="showOld = !showOld">vergangene Termine {{
+          showOld? "verbergen": "anzeigen"
+        }}</v-btn>
       </div>
-      <CoachingRequestList :user="user" :oldlist="true" :showold="showOld" />
+      <CoachingRequestList :list="requests" oldlist :showold="showOld" />
     </div>
-    <div v-else><v-skeleton-loader
-          type="article"
-    ></v-skeleton-loader></div>
+    <div v-else><v-skeleton-loader type="article"></v-skeleton-loader></div>
   </v-container>
 </template>
 
@@ -37,15 +36,30 @@ export default {
     return {
       showOld: false,
       stripeEnabled: null,
+      requests: null,
     };
   },
-  async mounted(){
+  async mounted() {
     this.stripeEnabled = (await this.$getStripeAccData()).data.payouts_enabled
+    this.loadMeetings()
   },
   computed: {
     user() {
       return this.$store.getters["getActiveUser"];
     },
   },
+  methods: {
+    loadMeetings() {
+      this.requests = null
+      this.$strapi.$meetings
+        .find({
+          populate: "*",
+          "filters[users_permissions_users]": this.$strapi.user.id,
+        })
+        .then((meetings) => {
+          this.requests = meetings.data;
+        });
+    }
+  }
 };
 </script>

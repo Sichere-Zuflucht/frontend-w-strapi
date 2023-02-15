@@ -1,7 +1,7 @@
 <template>
   <v-dialog ref="dialog" v-model="modal" :return-value.sync="date" persistent width="290px">
     <template #activator="{ on, attrs }">
-      <v-btn v-bind="attrs" :color="item.attributes.suggestions.length < 3 ? 'success' : null"
+      <v-btn v-bind="attrs" :color="item.suggestions.length < 3 ? 'success' : null"
         prepend-icon="mdi-calendar" v-on="on">Datum/Uhrzeit auswählen</v-btn>
     </template>
     <v-date-picker v-if="isSelectDate" v-model="date" :min="today.toISOString().substr(0, 10)" scrollable locale="de-de"
@@ -45,7 +45,7 @@
         ">
           Abbrechen
         </v-btn>
-        <v-btn :disabled="!time" color="primary" @click="addDates(item.attributes.suggestions)">
+        <v-btn :disabled="!time" color="primary" @click="addDates(item.suggestions)">
           Fertig
         </v-btn>
       </div>
@@ -63,7 +63,7 @@ export default {
   },
   data() {
     return {
-      hourRate: ['07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19'],
+      //hourRate: () => return for(var i=0, i<=24, i++) return //['07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19'],
       minuteRate: ['00', '15', '30', '45'],
       selHour: '07',
       selMin: '00',
@@ -98,6 +98,14 @@ export default {
     },
     time(){
       return this.selHour + ':' + this.selMin
+    },
+    hourRate(){
+      const h = []
+      for (var i=6; i<=22; i++ ){
+        const string = `${i}`.length == 1 ? '0'+i.toString() : i.toString()
+        h.push(string)
+      }
+      return h
     }
   },
   methods: {

@@ -67,6 +67,7 @@ export default ({ app }, inject) => {
       });
   })
 
+
   inject('deleteStripeAcc', () => {
     return app.$axios
       .get(
@@ -81,6 +82,47 @@ export default ({ app }, inject) => {
       });
   })
 
+  inject('retrieveStripePaymentSetup', (checkoutSession) => {
+    
+    return app.$axios
+      .get(
+        `${app.$config.strapi.url}/retrievestripepaymentsetup?checkoutSession=${checkoutSession}`,
+        {
+          headers: {
+            Authorization: "Bearer "+ JSON.parse(localStorage.getItem("strapi_jwt")).token
+          },
+        }
+      )
+      .catch((e) => {
+        const err = {
+          ...e,
+          location: 'functions.js retrieveStripePaymentSetup'
+        }
+        app.store.dispatch("errorhandling", err);
+      });
+  })
+
+  inject('stopStripePaymentSetup', (checkoutSession) => {
+    
+    return app.$axios
+      .get(
+        `${app.$config.strapi.url}/stopstripepaymentsetup?checkoutSession=${checkoutSession}`,
+        {
+          headers: {
+            Authorization: "Bearer "+ JSON.parse(localStorage.getItem("strapi_jwt")).token
+          },
+        }
+      )
+      .catch((e) => {
+        const err = {
+          ...e,
+          location: 'functions.js stopStripePaymentSetup'
+        }
+        app.store.dispatch("errorhandling", err);
+      });
+  })
+
+  //old -> a new version above is creating a delayed charge
   inject('stripePayment', (stripeId, coachId) => {
     return app.$axios
       .$get(
@@ -132,7 +174,7 @@ export default ({ app }, inject) => {
 
 
   //********* Meeting */
-  inject('deleteMeeting', (email, id, acceptedDate) => {
+  inject('deleteMeeting', (email, id, acceptedDate, paymentID) => {
     return app.$axios
       .get(
         `${app.$config.strapi.url}/deletemeeting?email=${email}&id=${id}&acceptedDate=${acceptedDate}`,
@@ -141,8 +183,14 @@ export default ({ app }, inject) => {
             Authorization: "Bearer "+ JSON.parse(localStorage.getItem("strapi_jwt")).token
           },
         }
-      ).catch((e) => {
-        app.store.dispatch("errorhandling", e);
+      ).then(()=>{
+        this.$stopStripePaymentSetup(paymentID)
+      }).catch((e) => {
+        const err = {
+          ...e,
+          location: 'functions.js deleteMeeting'
+        }
+        app.store.dispatch("errorhandling", err);
       });
   })
 
