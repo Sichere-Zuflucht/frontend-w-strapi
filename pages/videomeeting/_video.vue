@@ -6,7 +6,7 @@
       :src="videoUrl"
       style="height: calc(100vh - 56px); width: 100vw; border: 0px"
     ></iframe>
-    <div
+    <div v-else
       style="height: calc(100vh - 56px); width: 100vw"
       class="d-flex align-center justify-center"
     >
@@ -36,6 +36,7 @@ export default {
   async fetch() {
     this.$getVideoMeeting(this.$route.params.video)
       .then((vData) => {
+        console.log(vData.data.length)
         if (vData.data.length == 0) return (this.error404 = true);
         this.videoUrl = vData.data[0].attributes.videoCoach;
       });

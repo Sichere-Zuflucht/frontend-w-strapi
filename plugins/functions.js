@@ -83,7 +83,6 @@ export default ({ app }, inject) => {
   })
 
   inject('retrieveStripePaymentSetup', (checkoutSession) => {
-    
     return app.$axios
       .get(
         `${app.$config.strapi.url}/retrievestripepaymentsetup?checkoutSession=${checkoutSession}`,
@@ -101,7 +100,7 @@ export default ({ app }, inject) => {
         app.store.dispatch("errorhandling", err);
       });
   })
-
+  // not in use... maybe it will be needed once ?!
   inject('stopStripePaymentSetup', (checkoutSession) => {
     
     return app.$axios
@@ -123,18 +122,16 @@ export default ({ app }, inject) => {
   })
 
   //old -> a new version above is creating a delayed charge
-  inject('stripePayment', (stripeId, coachId) => {
+  inject('stripePayment', (coachStripeId) => {
+    const user = app.store.getters['getActiveUser']
     return app.$axios
       .$get(
-        `${app.$config.strapi.url}/paywithstripe?id=${stripeId}&coachStripeId=${coachId}&url=${location.origin}`,
+        `${app.$config.strapi.url}/paywithstripe?coachStripeId=${coachStripeId}&name=${user.username}&email=${user.email}&url=${location.origin}`,
         {
           headers: {
             Authorization: "Bearer "+ JSON.parse(localStorage.getItem("strapi_jwt")).token
           },
         }
-      ).then((res) => {
-        return res
-      }
       ).catch((e) => {
         app.store.dispatch("errorhandling", e);
       });
@@ -144,7 +141,7 @@ export default ({ app }, inject) => {
     return app.$axios
       .get(
         app.$config.strapi.url +
-        "/retrievestripe?email=" +
+        "/retrievestripe?stripeID=" +
         app.store.getters["getActiveUser"].stripeID,
         {
           headers: {

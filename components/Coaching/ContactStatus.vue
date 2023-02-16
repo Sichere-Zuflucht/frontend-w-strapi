@@ -75,8 +75,8 @@
             </v-col>
           </v-row>
         </div>
-        <div v-else>
-          <div v-if="payment">
+        <div v-else-if="payment != null">
+          <div v-if="payment.status == 'complete'">
             <v-btn class="my-2" color="success" target="_blank" :disabled="!videoStatus.ready" @click="startPaySession"
               :href="
                 response.videoType === 'normal'
@@ -93,10 +93,13 @@
             <p class="caption">Der Zugang zum Videocall wird <b>15min vor Beginn</b> freigeschaltet. Bitte laden Sie
               kurz vor Beginn die Seite nochmal neu, um den Button zu aktivieren. <a @click="reload">neu laden</a></p>
           </div>
-          <div v-else-if="payment == false">
+          <div v-else-if="payment == false || payment.status == 'open'">
             <v-alert dark color="error" type="error">
               <p>
-                Es liegt keine Bezahlung vor. Es könnte sein, dass etwas schief gelaufen ist. Wenn notwendig,
+                Es liegt keine Bezahlung vor. Es könnte sein, dass etwas schief gelaufen ist. 
+              </p>
+              <v-btn v-if="response.acceptedDate" @click="pay(response.acceptedDate)" class="mb-2">Zahlung erneut probieren</v-btn>
+              <p class="caption">Wenn notwendig,
                 kontaktieren Sie uns unter:
                 <a href="mailto:support@sichere-zuflucht.de" class="white--text">
                   support@sichere-zuflucht.de</a>
@@ -226,7 +229,7 @@ export default {
       },
       redirectWarning: false,
       error: null,
-      payment: null
+      payment: null,
     };
   },
   computed: {
@@ -260,6 +263,7 @@ export default {
   },
   async mounted() {
     this.payment = await this.$getStripePaymentSession(this.response.paymentID)
+    console.log(this.payment)
   },
   methods: {
     cancel(doc) {
@@ -282,7 +286,7 @@ export default {
         });
     },
     startPaySession() {
-      this.$retrieveStripePaymentSetup(payment.id)
+      this.$retrieveStripePaymentSetup(this.payment.id)
     },
     // RED is not implemented yet
     /*async testRED() {
@@ -391,7 +395,7 @@ this.$axios
       }
     },
     standardPayment(v, dI) {
-      this.$stripePayment(this.id, this.coach.stripeID)
+      this.$stripePayment(this.coach.stripeID)
         .then((paymentID) => {
           const data = {
             acceptedDate: dI.date,

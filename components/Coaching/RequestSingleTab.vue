@@ -279,7 +279,8 @@ export default {
     },
     cancel(doc) {
       //this.$deleteMeeting(informTo, this.id, doc.acceptedDate)
-      this.$deleteMeeting(this.user.email, this.id, doc.acceptedDate, doc.paymentID)
+      console.log(this.$store.getters['getActiveUser'].email, this.id, doc.acceptedDate, doc.paymentID)
+      this.$deleteMeeting(this.$store.getters['getActiveUser'].email, this.id, doc.acceptedDate, doc.paymentID)
         .then((r) => {
           this.isDelete = false;
           this.eraseLoading = false;

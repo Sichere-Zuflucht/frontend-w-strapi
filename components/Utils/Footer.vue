@@ -61,7 +61,6 @@
       <span class="mt-0 caption">&copy; {{ new Date().getFullYear() }} Sichere Zuflucht gemeinnützige
         GmbH</span>
     </v-row>
-    {{ aktiveCookieBanner }} {{ typeof aktiveCookieBanner }}
     <v-banner v-if="!aktiveCookieBanner" color="primary" class="white--text" rounded style="position: fixed; bottom: 10px;">
         <v-avatar slot="icon" size="40">
           <v-icon icon="mdi-lock" color="white">
@@ -69,7 +68,7 @@
           </v-icon>
         </v-avatar>
 
-        {{aktiveCookieBanner}} Wir nutzen ausschließlich funktionale Cookies.
+        Wir nutzen ausschließlich funktionale Cookies.
 
         
           <v-btn class="mx-4" @click="closeCookieBanner">
