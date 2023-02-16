@@ -153,20 +153,23 @@ export default ({ app }, inject) => {
       });
   })
 
-  inject('getStripePaymentSession', (sessionID) => {
-    return app.$axios
-      .$get(
-        app.$config.strapi.url +
-        "/retrievestripepaysession?paymentID=" +
-        sessionID,
-        {
-          headers: {
-            Authorization: "Bearer "+ JSON.parse(localStorage.getItem("strapi_jwt")).token
-          },
-        }
-      ).catch((e) => {
-        app.store.dispatch("errorhandling", e);
-      });
+  inject('getStripePaymentSession', (sessionID, meetingID) => {
+    if(sessionID){
+      return app.$axios
+        .$get(
+          `${app.$config.strapi.url}/retrievestripepaysession?paymentID=${sessionID}&meetingID=${meetingID}`,
+          {
+            headers: {
+              Authorization: "Bearer "+ JSON.parse(localStorage.getItem("strapi_jwt")).token
+            },
+          }
+        ).catch((e) => {
+          app.store.dispatch("errorhandling", e);
+        });
+      }
+    return {
+      status: false
+    }
   })
 
 

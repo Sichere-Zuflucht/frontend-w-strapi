@@ -66,11 +66,6 @@ export default {
   },
   data() {
     return {
-      acceptText: this.response
-        ? this.response.payed
-          ? 'Bezahlt'
-          : 'Bezahlen'
-        : null,
       acceptLoading: false,
       acceptDisable: true,
       date: null,

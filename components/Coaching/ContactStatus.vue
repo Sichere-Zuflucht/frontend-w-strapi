@@ -1,5 +1,156 @@
 <template>
-  <div v-if="!coach.noCoach">
+  <v-card elevation="2" nuxt outlined width="100%" class="ma-2" :max-width="width" :style="
+    'border: 1px solid ' +
+    (videoStatus.ready
+      ? $vuetify.theme.themes.light.success
+      : videoStatus.done
+        ? 'grey'
+        : $vuetify.theme.themes.light.primary)
+  ">
+
+    <nuxt-link :to="'/berater/' + coach.username" style="text-decoration: none;" class="d-flex" :style="
+      'border-bottom: 1px solid ' +
+      (videoStatus.ready
+        ? $vuetify.theme.themes.light.success
+        : videoStatus.done
+          ? 'grey'
+          : $vuetify.theme.themes.light.primary) +
+      ' !important'
+    ">
+      <v-avatar v-if="coach.avatar" color="primary ma-5" size="15%" contain min-width="90" min-height="90">
+        <v-img :lazy-src="
+          (coach.avatar.url.includes('https')
+            ? ''
+            : 'http://localhost:1337') + coach.avatar.url
+        " :src="(coach.avatar.url.includes('https')
+  ? ''
+  : 'http://localhost:1337') + coach.avatar.url
+" />
+      </v-avatar>
+      <div class="ma-5 ml-2 d-flex flex-column justify-center">
+        <h2 class="secondary--text text-h2">
+          {{ coach.displayName }}
+        </h2>
+        <h3 class="mt-2 text-h5">
+          {{ coach.profession }}
+        </h3>
+      </div>
+    </nuxt-link>
+    <v-card-text>
+      <div v-if="response.status == 'newRequest'">
+        Der Coach hat auf deine Anfrage noch nicht reagiert.
+      </div>
+      <div v-else-if="response.status == 'chooseDate'">
+        <p class="text-uppercase font-weight-bold mb-1 mt-2 caption">
+          Vorschläge für einen Online-Beratungstermin
+        </p>
+        <v-row>
+          <v-col cols="12">
+            <v-select v-model="selectedDate" :items="response.suggestions" outlined dense hide-details color="primary"
+              label="Bitte wählen" class="my-2">
+              <template #item="{ item, on }">
+                <v-list-item v-on="on">
+                  <v-list-item-content>
+                    <v-list-item-title class="font-weight-bold mb-0">
+                      {{ formatDate(item.date) }}
+                    </v-list-item-title>
+                    <div class="caption">{{ formatTime(item.date) }} Uhr</div>
+                  </v-list-item-content>
+                </v-list-item>
+              </template>
+              <template #selection="{ item }">{{ formatDate(item.date) }} | {{ formatTime(item.date) }}
+              </template>
+            </v-select>
+            <p class="font-weight-bold mb-0 my-4">Preis: 50€</p>
+            <v-btn color="success" :loading="btn.payButtonLoading" :disabled="!selectedDate || btn.isDisabled" block
+              @click="pay(selectedDate)">{{ btn.acceptText }}
+            </v-btn>
+            <v-alert v-if="btn.error" type="error">{{ btn.errorMsg }}</v-alert>
+            <p class="caption">
+              Nach der Terminbestätigung wirst du direkt zu unserem
+              Zahlungsanbieter „stripe“ weitergeleitet. Wir belasten dein
+              Konto erst zu Beginn des Videocalls.
+            </p>
+          </v-col>
+        </v-row>
+      </div>
+      <div v-else-if="response.status == 'deleted'">
+        <p class="text-uppercase font-weight-bold mb-1 mt-2 caption">
+          Termin abgesagt
+        </p>
+        <v-alert dark text dense color="primary">Der Termin {{
+          response.acceptedDate ? `für
+                  ${formatDate(response.acceptedDate)} um
+                  ${formatTime(response.acceptedDate)}` : ''
+        }} wurde abgesagt.
+        </v-alert>
+      </div>
+      <div v-else-if="videoStatus.done">
+        <p class="text-uppercase font-weight-bold mb-1 mt-2 caption">
+          Vergangener Termin
+        </p>
+        <v-alert dark text dense color="grey">Das Meeting hatte am {{
+          formatDate(response.acceptedDate)
+        }} um
+          {{ formatTime(response.acceptedDate) }} stattgefunden.
+        </v-alert>
+      </div>
+      <div v-else-if="payment ? payment.status == 'complete' : false">
+        <v-btn class="my-2" color="success" target="_blank" :disabled="!videoStatus.ready"
+          :href="response.videoType === 'normal' ? jitsiWithWomanName : response.videoWoman"
+          @click="startPaySession">zum Videocall
+        </v-btn>
+        <v-btn v-if="response.videoType === 'normal'" class="my-2" color="secondary" outlined target="_blank"
+          :href="`https://meet.jit.si/test-${id}-${new Date().getTime()}`">Video testen
+        </v-btn>
+        <v-alert dark text dense color="success">Zugesagt für {{ formatDate(response.acceptedDate) }} um
+          {{ formatTime(response.acceptedDate) }}
+        </v-alert>
+        <p class="caption">Der Zugang zum Videocall wird <b>15min vor Beginn</b> freigeschaltet. Bitte lade
+          kurz vor Beginn die Seite nochmal neu, um den Button zu aktivieren. <a @click="reload">neu laden</a></p>
+      </div>
+      <div v-else-if="payment == false || payment ? payment.status  == 'open' : false">
+        <v-alert dark color="error" type="error">
+          <p>
+            Es liegt keine Bezahlung vor. Es könnte sein, dass etwas schief gelaufen ist.
+          </p>
+          <v-btn v-if="response.acceptedDate" @click="pay(response.acceptedDate)" class="mb-2">Zahlung erneut
+            probieren</v-btn>
+          <p class="caption">Wenn notwendig,
+            kontaktieren Sie uns unter:
+            <a href="mailto:support@sichere-zuflucht.de" class="white--text">
+              support@sichere-zuflucht.de</a>
+          </p>
+        </v-alert>
+      </div>
+    </v-card-text>
+    <v-card-actions>
+      <v-dialog v-if="response.status != 'deleted' && !oldlist" v-model="isDelete" persistent max-width="290">
+        <template #activator="{ on, attrs }">
+          <v-btn small text color="primary" v-bind="attrs" v-on="on">Termin absagen
+          </v-btn>
+        </template>
+        <v-alert type="error" color="error" class="mt-2 ma-2">
+          <p>Wirklich absagen?</p>
+          <v-btn light class="mr-1" :loading="eraseLoading" @click="cancel(response)">Ja, absagen
+          </v-btn>
+          <v-btn light @click="isDelete = false"> nein</v-btn>
+        </v-alert>
+      </v-dialog>
+      <v-btn v-else-if="response.status == 'deleted' || oldlist" small color="primary" outlined nuxt
+        :to="'/berater/' + coach.username">Neue Anfrage stellen
+      </v-btn>
+    </v-card-actions>
+    <v-card-actions v-if="error">
+      <v-alert  type="error" color="error">{{ error }}</v-alert>
+    </v-card-actions>
+    <v-overlay :value="redirectWarning" color="black" opacity="0.8">
+      <p>
+        Weiterleitung zu Stripe. Dies kann ein bisschen dauern. Bitte warten...
+      </p>
+    </v-overlay>
+  </v-card>
+  <!--
     <v-card elevation="2" nuxt outlined width="100%" class="ma-2" :max-width="width" :style="
       'border: 1px solid ' +
       (videoStatus.ready
@@ -22,11 +173,10 @@
             (coach.avatar.url.includes('https')
               ? ''
               : 'http://localhost:1337') + coach.avatar.url
-          " :src="
-  (coach.avatar.url.includes('https')
-    ? ''
-    : 'http://localhost:1337') + coach.avatar.url
-" />
+              " :src="(coach.avatar.url.includes('https')
+                ? ''
+                  : 'http://localhost:1337') + coach.avatar.url
+        " />
         </v-avatar>
         <div class="ma-5 ml-2 d-flex flex-column justify-center">
           <h2 class="secondary--text text-h2">
@@ -41,10 +191,10 @@
         <p class="text-uppercase font-weight-bold mb-1 mt-2 caption">
           Vorschläge für einen Online-Beratungstermin
         </p>
-        <div v-if="!response.coachAnswered">
+        <div v-if="!response.coachAnswered && !response.deleted">
           Der Coach hat auf deine Anfrage noch nicht reagiert.
         </div>
-        <div v-else-if="!response.acceptedDate">
+        <div v-else-if="!response.acceptedDate && !response.deleted">
           <v-row>
             <v-col cols="12">
               <v-select v-model="selectedDate" :items="response.suggestions" outlined dense hide-details color="primary"
@@ -75,14 +225,11 @@
             </v-col>
           </v-row>
         </div>
-        <div v-else-if="payment != null">
+        <div v-else-if="payment != null && !response.deleted">
           <div v-if="payment.status == 'complete'">
-            <v-btn class="my-2" color="success" target="_blank" :disabled="!videoStatus.ready" @click="startPaySession"
-              :href="
-                response.videoType === 'normal'
-                  ? response.videoCoach
-                  : response.videoWoman
-              ">zum Videocall
+            <v-btn class="my-2" color="success" target="_blank" :disabled="!videoStatus.ready"
+              :href="response.videoType === 'normal' ? jitsiWithWomanName : response.videoWoman"
+              @click="startPaySession">zum Videocall
             </v-btn>
             <v-btn v-if="response.videoType === 'normal'" class="my-2" color="secondary" outlined target="_blank"
               :href="`https://meet.jit.si/test-${id}-${new Date().getTime()}`">Video testen
@@ -96,9 +243,10 @@
           <div v-else-if="payment == false || payment.status == 'open'">
             <v-alert dark color="error" type="error">
               <p>
-                Es liegt keine Bezahlung vor. Es könnte sein, dass etwas schief gelaufen ist. 
+                Es liegt keine Bezahlung vor. Es könnte sein, dass etwas schief gelaufen ist.
               </p>
-              <v-btn v-if="response.acceptedDate" @click="pay(response.acceptedDate)" class="mb-2">Zahlung erneut probieren</v-btn>
+              <v-btn v-if="response.acceptedDate" @click="pay(response.acceptedDate)" class="mb-2">Zahlung erneut
+                probieren</v-btn>
               <p class="caption">Wenn notwendig,
                 kontaktieren Sie uns unter:
                 <a href="mailto:support@sichere-zuflucht.de" class="white--text">
@@ -112,11 +260,21 @@
         <p class="text-uppercase font-weight-bold mb-1 mt-2 caption">
           Vergangener Termin
         </p>
-        <v-alert dark text dense color="grey">Das Meeting hatte am {{ formatDate(response.acceptedDate) }} um
+        <v-alert v-if="!response.deleted" dark text dense color="grey">Das Meeting hatte am {{ formatDate(response.acceptedDate) }} um
           {{ formatTime(response.acceptedDate) }} stattgefunden.
         </v-alert>
       </v-card-text>
-      <v-card-actions v-if="!oldlist" style="border-top: 1px solid lightgrey" class="align-stretch pa-4">
+      <v-card-text v-if="response.deleted">
+        <v-alert color="primary" dark>
+          <b>
+            Termin abgesagt
+          </b>
+          <p>Dieser Termin wurde abgesagt.</p>
+          <v-btn small color="white" outlined nuxt :to="'/berater/' + coach.username">Neue Anfrage stellen
+        </v-btn>
+        </v-alert>
+      </v-card-text>
+      <v-card-actions v-if="!oldlist && !response.deleted" style="border-top: 1px solid lightgrey" class="align-stretch pa-4">
         <v-dialog v-model="isDelete" persistent max-width="290">
           <template #activator="{ on, attrs }">
             <v-btn small text color="primary" v-bind="attrs" v-on="on">Termin absagen
@@ -124,7 +282,6 @@
           </template>
           <v-alert type="error" color="error" class="mt-2 ma-2">
             <p>Wirklich absagen?</p>
-
             <v-btn light class="mr-1" :loading="eraseLoading" @click="cancel(response)">Ja, absagen
             </v-btn>
             <v-btn light @click="isDelete = false"> nein</v-btn>
@@ -156,30 +313,7 @@
           Weiterleitung zu Stripe. Dies kann ein bisschen dauern. Bitte warten...
         </p>
       </v-overlay>
-    </v-card>
-  </div>
-  <v-card v-else elevation="2" nuxt outlined style="border: 1px solid grey">
-    <v-sheet class="d-flex" style="border-bottom: 1px solid grey !important">
-      <v-card-title class="ma-5 ml-2 d-flex flex-column justify-center">Coach existiert nicht mehr.
-      </v-card-title>
-    </v-sheet>
-    <v-card-actions style="border-top: 1px solid lightgrey" class="align-stretch pa-4">
-      <v-dialog v-model="isDelete" persistent max-width="290">
-        <template #activator="{ on, attrs }">
-          <v-btn small text color="primary" v-bind="attrs" v-on="on">Termin löschen
-          </v-btn>
-        </template>
-        <v-alert type="error" color="error" class="mt-2 ma-2">
-          <p>Wirklich löschen?</p>
-
-          <v-btn light class="mr-1" :loading="eraseLoading" @click="cancel(response)">Ja, löschen
-          </v-btn>
-          <v-btn light @click="isDelete = false"> nein</v-btn>
-        </v-alert>
-      </v-dialog>
-      <v-alert v-if="error" type="error" color="error">{{ error }}</v-alert>
-    </v-card-actions>
-  </v-card>
+    </v-card>-->
 </template>
 
 <script>
@@ -233,14 +367,14 @@ export default {
     };
   },
   computed: {
-    coachingLiesInPast() {
-      const acceptedDate = new Date(this.response.acceptedDate?.date || "");
-      acceptedDate.setDate(acceptedDate.getDate() + 1);
-      return !!this.response.acceptedDate && acceptedDate <= new Date();
+    jitsiWithWomanName() {
+      const name = this.$store.getters['getActiveUser'].username
+      return `${this.response.videoCoach}#userInfo.displayName="${name}"`
     },
     videoStatus() {
       let b = true
       let r = false
+      let d = false
 
       if (this.response.acceptedDate) {
         const startTime = new Date(this.response.acceptedDate)
@@ -253,17 +387,18 @@ export default {
 
         b = now < preTime
         r = overTime >= now && now >= preTime
+        d = overTime < now
       }
 
       return {
         before: b,
         ready: r,
+        done: d,
       }
     }
   },
   async mounted() {
     this.payment = await this.$getStripePaymentSession(this.response.paymentID)
-    console.log(this.payment)
   },
   methods: {
     cancel(doc) {
@@ -286,7 +421,7 @@ export default {
         });
     },
     startPaySession() {
-      this.$retrieveStripePaymentSetup(this.payment.id)
+      this.$retrieveStripePaymentSetup(this.payment.id, id)
     },
     // RED is not implemented yet
     /*async testRED() {
@@ -309,19 +444,19 @@ export default {
         console.log("redRes", redRes);
       });*//*
 this.$axios
-  .$post("https://redclient.redmedical.de/service/video", {
-    body: {
-      method: "getEntryCodes",
-      date: "2023-11-27",
-      token: this.$config.redAPI,
-    },
-  })
-  .then((response) => {
-    console.log('res', response);
-  })
-  .catch((err)=>{
-    this.$store.dispatch("errorhandling", err);
-  });
+.$post("https://redclient.redmedical.de/service/video", {
+body: {
+method: "getEntryCodes",
+date: "2023-11-27",
+token: this.$config.redAPI,
+},
+})
+.then((response) => {
+console.log('res', response);
+})
+.catch((err)=>{
+this.$store.dispatch("errorhandling", err);
+});
 },*/
     async pay(dateInput) {
       this.btn.payButtonLoading = true;

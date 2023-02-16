@@ -1,9 +1,11 @@
 <template>
   <div v-if="list != null">
     <v-expansion-panels v-if="list.length != 0">
-      <v-expansion-panel v-for="(item, i) in list" :key="i">
+      <v-expansion-panel v-for="(item, i) in upcomingResponses" :key="i">
           <CoachingRequestSingleTab v-if="!oldlist" :item="item.attributes" :id="item.id"/>
-          <CoachingRequestSingleTab v-else-if="oldlist && showold" :item="item.attributes" postponed/>
+      </v-expansion-panel>
+      <v-expansion-panel v-for="(item, i) in oldResponses" :key="i">
+          <CoachingRequestSingleTab v-if="oldlist && showold" :item="item.attributes" oldlist/>
       </v-expansion-panel>
     </v-expansion-panels>
     <p v-else-if="list.length == 0 && !oldlist" class="caption">
@@ -40,6 +42,30 @@ export default {
     return {
       roleTypes: [],
     };
+  },
+  computed: {
+    upcomingResponses(){
+      return this.list.filter(r => {
+        if (r.attributes.acceptedDate){
+          const startTime = new Date(r.attributes.acceptedDate)
+          const endTime = (new Date).setTime(startTime.getTime() + 60*60*1000);
+          const now = new Date
+          return now < endTime
+        }
+        return true
+      })
+    },
+    oldResponses(){
+      return this.list.filter(r => {
+        if (r.attributes.acceptedDate){
+          const startTime = new Date(r.attributes.acceptedDate)
+          const endTime = (new Date).setTime(startTime.getTime() + 60*60*1000);
+          const now = new Date
+          return now >= endTime
+        }
+        return false
+      })
+    },
   },
   async mounted() {
     const res = (await this.$strapi.find("users-permissions/roles")).roles;
