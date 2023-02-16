@@ -10,7 +10,7 @@
       <div v-else-if="!stripe || !stripe.charges_enabled">
         <h1 class="text-h1 primary--text mb-4">Bezahlung<br />verwalten</h1>
         <p>
-          Sie erhalten für Ihre Beratungsleistung über unser Portal
+          Sie erhalten von der Frau für Ihre Beratungsleistung über unser Portal
           <b>40€/Stunde (50€ Beratungskosten minus 10€ Gebühr)</b>. Damit das Geld Sie auch umgehend erreicht, arbeiten
           wir mit dem <b>Zahlungssystem Stripe</b>.<br /><br />Legen Sie sich
           deshalb bitte ein Stripe-Konto an. Das geht schnell und ist für Sie

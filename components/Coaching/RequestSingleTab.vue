@@ -86,10 +86,10 @@
             </b>
             <v-divider></v-divider>
             <v-btn class="my-2" color="success" target="_blank" :disabled="!activateVideoLink.ready" :href="
-              item.videoType === 'normal'
-                ? getCodeQuery(item.videoCoach)
-                : item.videoCoach
-            ">zum Videocall
+                response.videoType === 'normal'
+                  ? response.videoCoach
+                  : response.videoWoman
+              ">zum Videocall
             </v-btn>
             <v-btn v-if="item.videoType === 'normal'" class="my-2" color="secondary" outlined target="_blank"
               :href="`https://meet.jit.si/coachtest-${id}-${new Date().getTime()}`">Video testen

@@ -7,7 +7,7 @@
       </v-expansion-panel>
     </v-expansion-panels>
     <p v-else-if="list.length == 0 && !oldlist" class="caption">
-      <b>Noch keine existierenden Anfragen.</b><br />
+      <b>Noch existieren keine Anfragen.</b><br />
       Sobald eine Frau eine Anfrage an Sie stellt, wird diese hier angezeigt.
     </p>
   </div>

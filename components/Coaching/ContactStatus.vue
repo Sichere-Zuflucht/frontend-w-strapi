@@ -90,7 +90,7 @@
             <v-alert dark text dense color="success">Zugesagt für {{ formatDate(response.acceptedDate) }} um
               {{ formatTime(response.acceptedDate) }}
             </v-alert>
-            <p class="caption">Der Zugang zum Videocall wird <b>15min vor Beginn</b> freigeschaltet. Bitte laden Sie
+            <p class="caption">Der Zugang zum Videocall wird <b>15min vor Beginn</b> freigeschaltet. Bitte lade
               kurz vor Beginn die Seite nochmal neu, um den Button zu aktivieren. <a @click="reload">neu laden</a></p>
           </div>
           <div v-else-if="payment == false || payment.status == 'open'">

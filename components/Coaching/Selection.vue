@@ -178,7 +178,7 @@
                   class="my-2 mx-1 ml-auto"
                   @click="cropImage"
                   ><v-icon small class="mr-1">mdi-crop</v-icon
-                  >Beschneiden</v-btn
+                  >Zuschneiden</v-btn
                 >
               </div>
             </v-card>

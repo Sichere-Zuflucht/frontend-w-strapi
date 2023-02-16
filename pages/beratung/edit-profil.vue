@@ -92,7 +92,7 @@
             <v-stepper-content step="2">
               <h2 class="text-h2 secondary--text pb-4">Bezahlungssystem</h2>
               <p>
-                Sie erhalten pro Beratungseinheit (50 Min.) über unser Portal
+                Sie erhalten von der Frau pro Beratungseinheit (50 Min.) über unser Portal
                 <b>40€</b> (50€ minus 10€ Gebühren an Sichere Zuflucht). Damit das Geld Sie auch umgehend erreicht, arbeiten
                 wir mit dem <b>Zahlungssystem Stripe.</b>
               </p>

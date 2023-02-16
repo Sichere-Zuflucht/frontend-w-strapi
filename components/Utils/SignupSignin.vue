@@ -34,11 +34,51 @@
       </v-sheet></v-col
     ><v-col cols="12" md="6" class="pa-0">
       <v-container style="max-width: 450px" class="ma-auto py-16">
-        <h1 class="text-h1 mt-4 primary--text">{{ title }}</h1>
-        <v-btn text :ripple="false" plain color="primary" class="pl-0 my-2" :to="buttonLink">{{ buttonText }}</v-btn>
-        <p v-if="subtitle" class="caption">{{ subtitle }}</p>
+        <h1 class="text-h1 my-4 primary--text">Registrieren</h1>
         <v-stepper v-model="step" :flat="true" style="box-shadow: none">
           <v-stepper-items>
+            <v-stepper-content step="0" class="pa-0">
+              <v-form v-model="valid.email" style="width: 100%" class="mb-4" autocomplete="on">
+                <p class="caption">Bitte wähle zwischen</p>
+              <v-item-group v-model="membership">
+                <v-row>
+                  <v-col v-for="(n, i) in memberships" :key="i" cols="12" sm="6">
+                    <v-hover v-slot="{ hover }">
+                      {{ active }}, {{ hover }}, 
+                    <v-item v-slot="{ active, toggle }" :value="n">
+                      <v-card
+                        :color="hover ? 'primary' : 'grey' || active ? 'primary' : 'grey'"
+                        class="
+                          d-flex
+                          flex-column
+                          justify-center
+                          align-center
+                          pa-8
+                        "
+                        dark
+                        height="200"
+                        @click="toggle"
+                      >
+                        <v-icon large class="pr-2">{{ n.icon }}</v-icon>
+                        <p class="ma-0 text-center" style="padding-top: 2px">
+                          {{ n.description }}
+                        </p>
+                      </v-card></v-item
+                    ></v-hover></v-col
+                  ></v-row
+                ></v-item-group
+              >
+                <div class="d-flex justify-end pt-6">
+                  <v-btn
+                    color="primary"
+                    :loading="loading"
+                    :disabled="!valid.email"
+                    @click="next"
+                    >Weiter ></v-btn
+                  >
+                </div>
+              </v-form>
+            </v-stepper-content>
             <v-stepper-content step="1" class="pa-0">
               <v-form v-model="valid.email" style="width: 100%" class="mb-4" autocomplete="on">
                 <v-text-field
@@ -50,11 +90,6 @@
                   persistent-hint
                   name="email"
                   autocomplete="email"
-                  :hint="
-                    makeLogin
-                      ? ''
-                      : 'Per E-Mail senden wir eine Benachrichtigung, sobald eine Anfrage vorliegt. Zudem kann per E-Mail das Passwort zurückgesetzt werden.'
-                  "
                 ></v-text-field>
                 <div class="d-flex justify-end pt-6">
                   <v-btn
@@ -244,7 +279,7 @@ export default {
   },
   data() {
     return {
-      step: 1,
+      step: 0,
       valid: {
         email: false,
         password: false,
@@ -307,7 +342,22 @@ export default {
       resetLoading: false,
       codeSent: {
         status: false,
-      }
+      },
+      memberships: [
+        {
+          description: "Ich suche Beratung",
+          icon: "mdi-face-woman",
+          id: "Woman",
+          name: "Frau",
+        },
+        {
+          description: "Ich möchte Beratung anbieten",
+          icon: "mdi-message",
+          id: "Coach",
+          name: "Beratung",
+        },
+      ],
+      membership: null,
     };
   },
   mounted() {
