@@ -148,7 +148,12 @@
           </div>
           
         </v-card-text>
+
         <v-card-actions class="d-flex justify-end">
+          <v-btn v-if="selectedVideoType == 'normal' && !item.coachAnswered" :loading="loading"
+            :disabled="item.suggestions.length < 3" color="success" @click="addSuggestions(item)">Termine
+            vorschlagen
+          </v-btn>
           <v-dialog v-if="item.status != 'deleted' && !oldlist" v-model="isDelete" persistent max-width="290">
             <template #activator="{ on, attrs }">
               <v-btn small text color="grey" v-bind="attrs" v-on="on">Termin absagen
@@ -162,6 +167,7 @@
             </v-alert>
           </v-dialog>
         </v-card-actions>
+        
       </v-card>
     </v-expansion-panel-content>
   </div>
