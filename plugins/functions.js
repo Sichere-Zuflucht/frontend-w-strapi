@@ -122,11 +122,11 @@ export default ({ app }, inject) => {
   })
 
   //old -> a new version above is creating a delayed charge
-  inject('stripePayment', (coachStripeId) => {
+  inject('stripePayment', (coachStripeId, meetingID) => {
     const user = app.store.getters['getActiveUser']
     return app.$axios
       .$get(
-        `${app.$config.strapi.url}/paywithstripe?coachStripeId=${coachStripeId}&name=${user.username}&email=${user.email}&url=${location.origin}`,
+        `${app.$config.strapi.url}/paywithstripe?coachStripeId=${coachStripeId}&name=${user.username}&email=${user.email}&url=${location.origin}&meetingID=${meetingID}`,
         {
           headers: {
             Authorization: "Bearer "+ JSON.parse(localStorage.getItem("strapi_jwt")).token
@@ -153,11 +153,11 @@ export default ({ app }, inject) => {
       });
   })
 
-  inject('getStripePaymentSession', (sessionID, meetingID) => {
+  inject('getStripePaymentSession', (sessionID) => {
     if(sessionID){
       return app.$axios
         .$get(
-          `${app.$config.strapi.url}/retrievestripepaysession?paymentID=${sessionID}&meetingID=${meetingID}`,
+          `${app.$config.strapi.url}/retrievestripepaysession?paymentID=${sessionID}`,
           {
             headers: {
               Authorization: "Bearer "+ JSON.parse(localStorage.getItem("strapi_jwt")).token

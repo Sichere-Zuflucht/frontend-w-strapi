@@ -63,13 +63,14 @@
             </v-select>
             <p class="font-weight-bold mb-0 my-4">Preis: 50€</p>
             <v-btn color="success" :loading="btn.payButtonLoading" :disabled="!selectedDate || btn.isDisabled" block
-              @click="pay(selectedDate)">{{ btn.acceptText }}
+              @click="pay(selectedDate)">Termin verbindlich buchen <v-icon small class="ml-1">mdi-open-in-new</v-icon>
             </v-btn>
             <v-alert v-if="btn.error" type="error">{{ btn.errorMsg }}</v-alert>
             <p class="caption">
-              Nach der Terminbestätigung wirst du direkt zu unserem
-              Zahlungsanbieter „stripe“ weitergeleitet. Wir belasten dein
-              Konto erst zu Beginn des Videocalls.
+              Um den Termin verbindlich zu buchen, wirst du unserem 
+              Zahlungsanbieter stripe weitergeleitet. Dort kannst du 
+              deine Zahlungsdaten hinterlegen. WICHTIG! Wir belasten 
+              dein Konto erst zu Beginn des Beratungsgespräches.
             </p>
           </v-col>
         </v-row>
@@ -89,7 +90,7 @@
         <p class="text-uppercase font-weight-bold mb-1 mt-2 caption">
           Vergangener Termin
         </p>
-        <v-alert dark text dense color="grey">Das Meeting hatte am {{
+        <v-alert dark text dense color="grey">Das Meeting hat am {{
           formatDate(response.acceptedDate)
         }} um
           {{ formatTime(response.acceptedDate) }} stattgefunden.
@@ -107,7 +108,7 @@
           {{ formatTime(response.acceptedDate) }}
         </v-alert>
         <p class="caption">Der Zugang zum Videocall wird <b>15min vor Beginn</b> freigeschaltet. Bitte lade
-          kurz vor Beginn die Seite nochmal neu, um den Button zu aktivieren. <a @click="reload">neu laden</a></p>
+          kurz vor Beginn die Seite nochmal neu, um den Videocall-Button zu aktivieren. <a @click="reload">neu laden</a></p>
       </div>
       <div v-else-if="payment == false || payment ? payment.status  == 'open' : false">
         <v-alert dark color="error" type="error">
@@ -353,11 +354,6 @@ export default {
       btn: {
         error: false,
         errorMsg: "",
-        acceptText: this.response
-          ? this.response.acceptedDate
-            ? "Bezahlt"
-            : "Termin verbindlich buchen"
-          : null,
         isDisabled: false,
         payButtonLoading: false,
       },
@@ -530,7 +526,7 @@ this.$store.dispatch("errorhandling", err);
       }
     },
     standardPayment(v, dI) {
-      this.$stripePayment(this.coach.stripeID)
+      this.$stripePayment(this.coach.stripeID, this.id)
         .then((paymentID) => {
           const data = {
             acceptedDate: dI.date,

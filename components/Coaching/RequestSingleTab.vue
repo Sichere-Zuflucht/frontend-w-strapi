@@ -63,31 +63,7 @@
             }} wurde abgesagt.
             </v-alert>
           </div>
-          <div v-else-if="payment ? payment.status == 'complete' : false">
-            <p class="caption">Bestätigter Termin</p>
-            <b>{{ formatDate(item.acceptedDate) }} |
-              {{ formatTime(item.acceptedDate) }}
-              <span class="caption">(50min)</span>
-            </b>
-            <v-divider></v-divider>
-            <v-btn class="my-2" color="success" target="_blank" :disabled="!videoStatus.ready" :href="
-              item.videoType === 'normal'
-                ? item.videoCoach
-                : item.videoWoman
-            ">zum Videocall
-            </v-btn>
-            <v-btn v-if="item.videoType === 'normal'" class="my-2" color="secondary" outlined target="_blank"
-              :href="`https://meet.jit.si/coachtest-${id}-${new Date().getTime()}`">Video testen
-            </v-btn>
-            ({{
-              item.videoType == "normal"
-                ? "standard Videoanbieter "
-                : "zertifizierter Videoanbieter"
-            }})
-            <p class="caption">Der Zugang zum Videocall wird <b>15min vor Beginn</b> freigeschaltet. Bitte laden Sie
-              kurz
-              vor Beginn die Seite nochmal neu, um den Button zu aktivieren. <a @click="reload">neu laden</a></p>
-          </div>
+          
           <div v-else-if="payment == false || payment ? payment.status == 'open' : false">
             <p class="caption">Bezahlung noch nicht eingerichtet</p>
             <v-alert dark text dense color="primary">Die Frau hat noch keine Bezahlung für den Termin {{
@@ -135,6 +111,31 @@
             <p class="mt-2 mb-0 pa-2 caption">
               Bitte füge mind. 3 Termine hinzu.
             </p>
+          </div>
+          <div v-else-if="payment ? payment.status == 'complete' : false">
+            <p class="caption">Bestätigter Termin</p>
+            <b>{{ formatDate(item.acceptedDate) }} |
+              {{ formatTime(item.acceptedDate) }}
+              <span class="caption">(50min)</span>
+            </b>
+            <v-divider></v-divider>
+            <v-btn class="my-2" color="success" target="_blank" :disabled="!videoStatus.ready" :href="
+              item.videoType === 'normal'
+                ? item.videoCoach
+                : item.videoWoman
+            ">zum Videocall
+            </v-btn>
+            <v-btn v-if="item.videoType === 'normal'" class="my-2" color="secondary" outlined target="_blank"
+              :href="`https://meet.jit.si/coachtest-${id}-${new Date().getTime()}`">Video testen
+            </v-btn>
+            ({{
+              item.videoType == "normal"
+                ? "standard Videoanbieter "
+                : "zertifizierter Videoanbieter"
+            }})
+            <p class="caption">Der Zugang zum Videocall wird <b>15min vor Beginn</b> freigeschaltet. Bitte laden Sie
+              kurz
+              vor Beginn die Seite nochmal neu, um den Videocall-Button zu aktivieren. <a @click="reload">neu laden</a></p>
           </div>
           <div v-else-if="item.status == 'chooseDate'">
             <v-banner>
