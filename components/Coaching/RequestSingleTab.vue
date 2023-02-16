@@ -86,9 +86,9 @@
             </b>
             <v-divider></v-divider>
             <v-btn class="my-2" color="success" target="_blank" :disabled="!activateVideoLink.ready" :href="
-                response.videoType === 'normal'
-                  ? response.videoCoach
-                  : response.videoWoman
+                item.videoType === 'normal'
+                  ? item.videoCoach
+                  : item.videoWoman
               ">zum Videocall
             </v-btn>
             <v-btn v-if="item.videoType === 'normal'" class="my-2" color="secondary" outlined target="_blank"
