@@ -11,8 +11,8 @@
       </v-sheet></v-col
     ><v-col cols="12" md="6" class="pa-0">
       <v-container style="max-width: 450px" class="ma-auto py-16">
-        <h1 class="text-h1 mt-4 primary--text">Email erfolgreich bestätigt!</h1>
-        
+        <h1 class="text-h1 my-4 primary--text">Email erfolgreich bestätigt!</h1>
+        <v-btn target="_blank" to="/" color="primary">Logge dich ein</v-btn>
       </v-container>
     </v-col></v-row
   >
