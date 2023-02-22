@@ -36,14 +36,14 @@
             </v-stepper-step>
           </v-stepper-header>
           <v-stepper-items class="pb-4">
-            <v-stepper-content v-if="!bioSaved" step="1">
+            <v-stepper-content v-if="!bioSaved" step="1" class="px-0">
               <h2 class="text-h2 secondary--text pb-4">
                 IHR ÖFFENTLICHES PROFIL
               </h2>
               <p>
                 Erstellen Sie ein sympathisches, fachlich ansprechendes Profil
-                von Ihnen und Ihrem Angebot. Dann können die Frauen besser
-                abwägen, an wen Sie sich wenden wollen.
+                von sich und Ihrem Angebot. Dann können die Frauen besser
+                abwägen, an wen sie sich wenden wollen.
               </p>
               <CoachingSelection
                 :info="user"

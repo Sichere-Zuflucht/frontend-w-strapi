@@ -8,7 +8,9 @@
           <p class="text-center">Partner</p>
           <v-row><v-col class="d-flex flex-column align-center"><v-img contain max-width="100"
                 src="/partner/project-together-logo.png" /></v-col><v-col class="d-flex flex-column align-center"><v-img
-                contain max-width="100" src="/partner/solution-enabler.png" /></v-col></v-row>
+                contain max-width="100" src="/partner/solution-enabler.png" /></v-col><v-col
+              class="d-flex flex-column align-center"><v-img contain max-width="100"
+                src="/partner/mompreneurs-logo.png" /></v-col></v-row>
         </div>
       </v-col>
       <v-col class="mt-6 d-flex align-center justify-center" cols="12" md="4">
@@ -61,20 +63,21 @@
       <span class="mt-0 caption">&copy; {{ new Date().getFullYear() }} Sichere Zuflucht gemeinnützige
         GmbH</span>
     </v-row>
-    <v-banner v-if="!aktiveCookieBanner" color="primary" class="white--text" rounded style="position: fixed; bottom: 10px;">
-        <v-avatar slot="icon" size="40">
-          <v-icon icon="mdi-lock" color="white">
-            mdi-cookie
-          </v-icon>
-        </v-avatar>
+    <v-banner v-if="!aktiveCookieBanner" color="primary" class="white--text" rounded
+      style="position: fixed; bottom: 10px;">
+      <v-avatar slot="icon" size="40">
+        <v-icon icon="mdi-lock" color="white">
+          mdi-cookie
+        </v-icon>
+      </v-avatar>
 
-        Wir nutzen ausschließlich funktionale Cookies.
+      Wir nutzen ausschließlich funktionale Cookies.
 
-        
-          <v-btn class="mx-4" @click="closeCookieBanner">
-            Verstanden
-          </v-btn>
-      </v-banner>
+
+      <v-btn class="mx-4" @click="closeCookieBanner">
+        Verstanden
+      </v-btn>
+    </v-banner>
   </v-footer>
 </template>
 
@@ -123,14 +126,14 @@ export default {
       aktiveCookieBanner: true
     };
   },
-  mounted(){
+  mounted() {
     this.aktiveCookieBanner = (this.getCookieBanner('cookiebanner') === "true")
   },
   methods: {
-    closeCookieBanner(){
+    closeCookieBanner() {
       const d = new Date();
-      d.setTime(d.getTime() + (14*24*60*60*1000));
-      let expires = "expires="+ d.toUTCString();
+      d.setTime(d.getTime() + (14 * 24 * 60 * 60 * 1000));
+      let expires = "expires=" + d.toUTCString();
       document.cookie = 'cookiebanner=true;' + expires + ";path=/";
       this.aktiveCookieBanner = true
     },
@@ -138,7 +141,7 @@ export default {
       let name = cname + "=";
       let decodedCookie = decodeURIComponent(document.cookie);
       let ca = decodedCookie.split(';');
-      for(let i = 0; i <ca.length; i++) {
+      for (let i = 0; i < ca.length; i++) {
         let c = ca[i];
         while (c.charAt(0) == ' ') {
           c = c.substring(1);

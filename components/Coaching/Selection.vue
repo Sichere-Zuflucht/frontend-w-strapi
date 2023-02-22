@@ -1,6 +1,6 @@
 <template>
   <div class="inner-steps">
-    <v-expand-transition>
+    <v-expand-transition class="px-0">
       <v-stepper v-model="e6" vertical="false" class="mx-auto" elevation="0">
         <v-stepper-step
           :complete="e6 > 1"
@@ -210,7 +210,7 @@ export default {
       coach: {
         helpTitle: "Ihre Fachgebiete",
         helpSubtitle:
-          "Bitte wählen Sie die Fachgebiete aus, zu denen Sie Beratung anbieten möchten.",
+          "Bitte wählen Sie ein Fachgebiet aus, zu dem Sie Beratung anbieten möchten.",
         picTitle: "Foto",
         picSubtitle: "Sammeln Sie Sympathiepunkte",
         bioTitle: "Kurzbeschreibung",

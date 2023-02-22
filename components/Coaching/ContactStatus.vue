@@ -1,5 +1,5 @@
 <template>
-  <v-card elevation="2" nuxt outlined width="100%" class="ma-2" :max-width="width" :style="
+  <v-card elevation="2" nuxt outlined width="100%" class="ma-2 d-flex flex-column" :max-width="width" :style="
     'border: 1px solid ' +
     (videoStatus.ready
       ? $vuetify.theme.themes.light.success
@@ -17,7 +17,7 @@
           : $vuetify.theme.themes.light.primary) +
       ' !important'
     ">
-      <v-avatar v-if="coach.avatar" color="primary ma-5" size="15%" contain min-width="90" min-height="90">
+      <v-avatar v-if="coach.avatar" color="primary ma-5" size="90" contain>
         <v-img :lazy-src="
           (coach.avatar.url.includes('https')
             ? ''
@@ -36,9 +36,12 @@
         </h3>
       </div>
     </nuxt-link>
-    <v-card-text>
+    <v-card-text class="flex-grow-1">
       <div v-if="response.status == 'newRequest'">
-        Der Coach hat auf deine Anfrage noch nicht reagiert.
+        <p class="text-uppercase font-weight-bold mb-1 mt-2 caption">
+          Der Coach hat auf deine Anfrage noch nicht reagiert.
+        </p>
+        Bitte habe ein wenig Gedult. Der*die Berater*in sollte sich innerhalb von 24h bei dir melden. 
       </div>
       <div v-else-if="response.status == 'chooseDate'">
         <p class="text-uppercase font-weight-bold mb-1 mt-2 caption">
@@ -97,6 +100,9 @@
         </v-alert>
       </div>
       <div v-else-if="payment ? payment.status == 'complete' : false">
+        <p class="text-uppercase font-weight-bold mb-1 mt-2 caption">
+          Dein Online-Beratungstermin ist eingerichtet und startbereit.
+        </p>
         <v-btn class="my-2" color="success" target="_blank" :disabled="!videoStatus.ready"
           :href="response.videoType === 'normal' ? jitsiWithWomanName : response.videoWoman"
           @click="startPaySession">zum Videocall
@@ -126,7 +132,7 @@
       </div>
     </v-card-text>
     <v-card-actions>
-      <v-dialog v-if="response.status != 'deleted' && !oldlist" v-model="isDelete" persistent max-width="290">
+      <v-dialog v-if="response.status != 'deleted' && !oldlist && videoStatus.before" v-model="isDelete" persistent max-width="290">
         <template #activator="{ on, attrs }">
           <v-btn small text color="primary" v-bind="attrs" v-on="on">Termin absagen
           </v-btn>
