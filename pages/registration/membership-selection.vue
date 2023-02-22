@@ -16,91 +16,26 @@
       ></v-col
     ><v-col cols="12" md="6" class="pa-0">
       <v-container>
-        <v-stepper v-if="memberships" v-model="stepper" elevation="0">
+        <v-stepper v-model="stepper" elevation="0">
           <v-stepper-header style="box-shadow: none">
             <v-stepper-step
               step="1"
               :complete="stepper > 1"
-              :editable="stepper > 1 && stepper < 3"
+              :editable="stepper > 1 && stepper < 2"
               :color="stepper > 1 ? 'success' : 'primary'"
-            >
-              Anliegen
-            </v-stepper-step>
-            <v-divider
-              v-if="membership ? membership.id === 'Coach' : false"
-            ></v-divider>
-            <v-stepper-step
-              v-if="membership ? membership.id === 'Coach' : false"
-              step="2"
-              :complete="stepper > 2"
-              :editable="stepper > 2 && stepper < 3"
-              :color="stepper > 2 ? 'success' : 'primary'"
             >
               Benutzername
             </v-stepper-step>
-            <v-divider
-              v-if="membership ? membership.id === 'Coach' : false"
-            ></v-divider>
+            <v-divider />
             <v-stepper-step
-              v-if="membership ? membership.id === 'Coach' : false"
-              step="3"
-              :complete="stepper > 3"
+              step="2"
+              :complete="stepper > 2"
             >
               Verifizierung
             </v-stepper-step>
           </v-stepper-header>
-          <v-stepper-items class="pb-4">
-            <v-stepper-content step="1">
-              <h2 class="text-h2 secondary--text pb-4">Dein/Ihr Anliegen</h2>
-              <p class="caption">Bitte wähle zwischen</p>
-              <v-item-group mandatory v-model="membership">
-                <v-row>
-                  <v-col v-for="(n, i) in memberships" :key="i" cols="12" sm="6">
-                    <v-item v-slot="{ active, toggle }" :value="n">
-                      <v-card
-                        :color="active ? 'primary' : 'grey'"
-                        class="
-                          d-flex
-                          flex-column
-                          justify-center
-                          align-center
-                          pa-8
-                        "
-                        dark
-                        height="200"
-                        @click="toggle"
-                      >
-                        <v-icon large class="pr-2">{{ n.icon }}</v-icon>
-                        <p class="ma-0 text-center" style="padding-top: 2px">
-                          {{ n.description }}
-                        </p>
-                      </v-card></v-item
-                    ></v-col
-                  ></v-row
-                ></v-item-group
-              >
-              <v-btn
-                v-if="membership ? membership.id === 'Coach' : false"
-                color="secondary"
-                class="mt-4"
-                style="float: right"
-                @click="stepper++"
-                >Weiter</v-btn
-              >
-              <v-btn
-                v-else
-                color="secondary"
-                class="mt-4"
-                style="float: right"
-                :loading="loading"
-                exact
-                @click="updateProfile"
-                >Fertig</v-btn
-              >
-            </v-stepper-content>
-          </v-stepper-items>
           <v-stepper-items>
-            <v-stepper-content step="2">
+            <v-stepper-content step="1">
               <h2 class="text-h2 secondary--text pb-4">Anmeldung</h2>
               <p>
                 Ihr Vor- und Nachname werden in Ihrem Profil öffentlich sichtbar
@@ -138,7 +73,7 @@
             </v-stepper-content></v-stepper-items
           >
           <v-stepper-items>
-            <v-stepper-content step="3">
+            <v-stepper-content step="2">
               <SharedVerificationPage
                 editprofile
                 :userdata="userdata"
@@ -187,21 +122,6 @@ export default {
       showError: false,
       loading: false,
       roleTypes: [],
-      memberships: [
-        {
-          description: "Ich suche Beratung",
-          icon: "mdi-face-woman",
-          id: "Woman",
-          name: "Frau",
-        },
-        {
-          description: "Ich möchte Beratung anbieten",
-          icon: "mdi-message",
-          id: "Coach",
-          name: "Beratung",
-        },
-      ],
-      membership: null,
       userdata: null,
       alert: {
         isActive: false,
@@ -210,20 +130,12 @@ export default {
     };
   },
   async mounted() {
-    this.membership = this.memberships[0];
     this.email = window.localStorage.getItem("emailForSignIn");
-
-    const res = (await this.$strapi.find("users-permissions/roles")).roles;
-    res.forEach((role) => {
-      if (role.type == "coach") this.roleTypes.push(role);
-      if (role.type == "woman") this.roleTypes.push(role);
-    });
     // on the register function its not possible (any more?!) to add the variable roleName -> maybe change to role: authenticated
-    if (this.$strapi.user.roleName != "authenticated") {
+    if (this.$strapi.user.roleName != "coach") {
       if (this.$strapi.user.roleName == "woman") this.$router.push("/frauen");
       this.userdata = this.$store.getters["getActiveUser"];
-      this.membership = this.memberships[1];
-      this.stepper = 3;
+      this.stepper = 2;
     }
   },
   methods: {
@@ -231,33 +143,26 @@ export default {
       this.loading = true;
       const d = new Date();
 
-      var username = this.firstName
-        ? this.firstName.toLowerCase().replace(' ','-') + "-" + this.lastName.toLowerCase().replace(' ','-')
-        : "FR-" +
-          d.getMilliseconds().toString().slice(0, 1) +
-          d.getSeconds().toString() +
-          d.getDay().toString() +
-          d.getMonth().toString() +
-          d.getFullYear().toString().slice(2);
-
+      var username = this.firstName.toLowerCase().replace(' ','-') + "-" + this.lastName.toLowerCase().replace(' ','-')
       this.$strapi
         .count("users", {
           username: username,
         })
-        .then((res) => {
+        .then(async (res) => {
           this.$console('res', res)
           username = res == 0 ? username : username + "-" + res++;
 
+          var getCoach = null
+          const roles = (await this.$strapi.find("users-permissions/roles")).roles;
+          roles.forEach((role) => {
+            if (role.type == "coach") getCoach = role;
+          });
+
           const data = {
-            role: this.roleTypes.find(
-              (r) => r.type == this.membership.id.toLowerCase()
-            ).id,
-            roleName: this.membership.id.toLowerCase(),
+            role: getCoach.id,
             displayName: this.firstName+' '+this.lastName,
             username: username,
           };
-
-          this.$console(this.roleTypes[0])
 
           this.$strapi.$users.update(this.$strapi.user.id, data)
             .then((newU) => {
@@ -267,10 +172,7 @@ export default {
                 window.localStorage.removeItem("emailForSignIn");
                 this.loading = false;
                 this.userdata = this.$store.getters["getActiveUser"];
-                this.$console('new UserData', this.$strapi.user.roleName);
-                this.membership.id === "Coach"
-                  ? this.stepper++
-                  : this.$router.push("/frauen");
+                this.stepper++
               });
             })
             .catch((err) => {

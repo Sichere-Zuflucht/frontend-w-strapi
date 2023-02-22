@@ -3,7 +3,7 @@ export default function ({ redirect, $strapi, route }) {
         window.localStorage.setItem('redirectBackTo', route.fullPath)
         redirect('/registration/signin')
     } else {
-        if($strapi.user.roleName == 'authenticated'){
+        if($strapi.user.roleName == 'coach'){
             redirect('/registration/membership-selection')
         }
         else if($strapi.user.roleName != 'woman') {

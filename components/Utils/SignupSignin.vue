@@ -31,133 +31,88 @@
             </v-list-item>
           </v-list>
         </v-container>
-      </v-sheet></v-col
-    ><v-col cols="12" md="6" class="pa-0">
+      </v-sheet></v-col><v-col cols="12" md="6" class="pa-0">
       <v-container style="max-width: 450px" class="ma-auto py-16">
         <h1 class="text-h1 mt-4 primary--text">{{ title }}</h1>
-        <v-btn text :ripple="false" plain color="primary" class="pl-0 my-2" :to="buttonLink">{{ buttonText }}</v-btn>
         <p v-if="subtitle" class="caption">{{ subtitle }}</p>
         <v-stepper v-model="step" :flat="true" style="box-shadow: none">
           <v-stepper-items>
-            <v-stepper-content step="1" class="pa-0">
+            <v-stepper-content v-if="!makeLogin" step="0" class="pa-0 mt-4">
+              <p class="caption mt-4">Bitte wähle dein Anliegen aus:</p>
+              <v-item-group v-model="membership" class="mt-2">
+                <v-row>
+                  <v-col v-for="(n, i) in memberships" :key="i" cols="12" sm="6">
+                    <v-item v-slot="{ active, toggle }" :value="n">
+                      <v-card 
+                        :color="active ? 'primary' : 'blue-grey lighten-5'" 
+                        class="d-flex flex-column justify-center align-center pa-8" 
+                        :dark="active" height="200" 
+                        @click="toggle"
+                      >
+                        <v-icon large class="pr-2">{{ n.icon }}</v-icon>
+                        <p class="ma-0 text-center" style="padding-top: 2px">
+                          {{ n.description }}
+                        </p>
+                      </v-card></v-item></v-col></v-row></v-item-group>
+              <div class="d-flex justify-end pt-6">
+                <v-btn color="primary" :loading="loading" :disabled="!membership" @click="next">Weiter ></v-btn>
+              </div>
+            </v-stepper-content>
+            <v-stepper-content step="1" class="pa-0 mt-4">
               <v-form v-model="valid.email" style="width: 100%" class="mb-4" autocomplete="on">
-                <v-text-field
-                  v-model="email"
-                  type="email"
-                  :rules="rules.email"
-                  label="E-mail-Adresse"
-                  required
-                  persistent-hint
-                  name="email"
-                  autocomplete="email"
-                  :hint="
-                    makeLogin
-                      ? ''
-                      : 'Per E-Mail senden wir eine Benachrichtigung, sobald eine Anfrage vorliegt. Zudem kann per E-Mail das Passwort zurückgesetzt werden.'
-                  "
-                ></v-text-field>
-                <div class="d-flex justify-end pt-6">
-                  <v-btn
-                    color="primary"
-                    :loading="loading"
-                    :disabled="!valid.email"
-                    @click="next"
-                    >Weiter ></v-btn
-                  >
-                </div>
-                <p v-if="!makeLogin" class="caption mt-4">
+                <v-text-field v-model="email" type="email" :rules="rules.email" label="E-mail-Adresse" required
+                  name="email" autocomplete="email" ></v-text-field>
+                <div class="d-flex justify-end pt-0">
+                  <p v-if="!makeLogin" class="caption">
                   Wir senden im nächsten Schritt eine E-Mail an die o.g.
-                  Adresse, um sie zu bestätigen. <b
-                    >Bitte auch im Spam-Ordner nachsehen.</b
-                  >
-                </p>
+                  Adresse, um sie zu bestätigen. <b>Bitte auch im Spam-Ordner nachsehen.</b>
+                </p><v-btn color="primary" :loading="loading" :disabled="!valid.email" @click="next">Weiter ></v-btn>
+                </div>
+                
               </v-form>
             </v-stepper-content>
             <v-stepper-content step="2" class="pa-0">
               <v-form v-model="valid.password" style="width: 100%" class="mb-8" autocomplete="on">
-                <v-alert
-                  v-if="emailExisting && !makeLogin"
-                  type="info"
-                  color="secondary"
-                  class="my-4"
-                >
+                <v-alert v-if="emailExisting && !makeLogin" type="info" color="secondary" class="my-4">
                   Es existiert bereits ein Konto mit der E-Mail-Adresse
-                  <b>{{ email }}</b
-                  >. Logge dich ein oder klicke "Passwort vergessen", solltest
+                  <b>{{ email }}</b>. Logge dich ein oder klicke "Passwort vergessen", solltest
                   du dein Passwort vergessen haben.
                 </v-alert>
-                <v-alert
-                  v-if="!emailExisting && makeLogin"
-                  type="info"
-                  color="secondary"
-                  class="my-4"
-                >
+                <v-alert v-if="!emailExisting && makeLogin" type="info" color="secondary" class="my-4">
                   Es existiert kein Konto mit der E-Mail-Adresse
                   {{ email }}. Willst du dich mit der E-Mail
                   <b>{{ email }}</b> bei Sichere Zuflucht registrieren?
                 </v-alert>
                 <h2 v-if="!emailExisting" class="text-h3 secondary--text">Account erstellen</h2>
-                <v-text-field type="email" disabled name="username" autocomplete="off" v-model="email" class="mt-0 pt-0"/>
+                <v-text-field type="email" disabled name="username" autocomplete="off" v-model="email"
+                  class="mt-0 pt-0" />
                 <!--<p class="grey--text">für {{email}}</p>-->
-                
-                <v-text-field
-                  v-model="password"
-                  label="Passwort"
-                  :rules="emailExisting ? [] : rules.passwordRules"
-                  :type="hidePassword ? 'password' : 'text'"
-                  :append-icon="hidePassword ? 'mdi-eye' : 'mdi-eye-off'"
+
+                <v-text-field v-model="password" label="Passwort" :rules="emailExisting ? [] : rules.passwordRules"
+                  :type="hidePassword ? 'password' : 'text'" :append-icon="hidePassword ? 'mdi-eye' : 'mdi-eye-off'"
                   :name="emailExisting ? 'current-password' : 'new-password'"
-                  :autocomplete="emailExisting ? 'current-password' : 'new-password'"
-                  :hint="
+                  :autocomplete="emailExisting ? 'current-password' : 'new-password'" :hint="
                     emailExisting
                       ? ''
                       : 'Bitte beachten Sie folgende Passwortvorgaben'
-                  "
-                  persistent-hint
-                  @click:append="() => (hidePassword = !hidePassword)"
-                ></v-text-field>
+                  " persistent-hint @click:append="() => (hidePassword = !hidePassword)"></v-text-field>
                 <div v-if="!emailExisting">
-                  <v-chip 
-                    v-for="(n,i) in chips" 
-                    :key="i"
-                    :color="
-                      n.rule(password) ? 'success' : 'grey'
-                    "
-                    dark
-                    class="mt-1 mr-1"
-                    small
-                    filter
-                  >
-                    {{n.title}}
+                  <v-chip v-for="(n, i) in chips" :key="i" :color="
+                    n.rule(password) ? 'success' : 'grey'
+                  " dark class="mt-1 mr-1" small filter>
+                    {{ n.title }}
                   </v-chip>
-                  <v-text-field
-                    v-model="password2"
-                    :rules="rules.passwordRules2"
-                    label="Passwort wiederholen"
-                    type="password"
-                    name="new-password"
-                    autocomplete="off"
-                    class="mt-6"
-                  ></v-text-field>
+                  <v-text-field v-model="password2" :rules="rules.passwordRules2" label="Passwort wiederholen"
+                    type="password" name="new-password" autocomplete="off" class="mt-6"></v-text-field>
                 </div>
                 <div class="d-flex justify-end">
                   <v-btn text color="grey" @click="back()"> Zurück </v-btn>
-                  <v-btn
-                    v-if="emailExisting"
-                    text
-                    @click="sendResetPasswortCode"
-                    :loading="resetLoading"
-                    color="grey"
-                    >Passwort vergessen</v-btn
-                  ><v-btn
-                    class="inline"
-                    color="success"
-                    :loading="loading"
-                    :disabled="!valid.password"
-                    nuxt
-                    @click="emailExisting ? login() : register()"
-                    >{{ emailExisting ? "Einloggen" : "Account erstellen" }}</v-btn
-                  >
+                  <v-btn v-if="emailExisting" text @click="sendResetPasswortCode" :loading="resetLoading"
+                    color="grey">Passwort vergessen</v-btn><v-btn class="inline" color="success" :loading="loading"
+                    :disabled="!valid.password" nuxt @click="emailExisting ? login() : register()">{{
+                      emailExisting?
+                                        "Einloggen": "Account erstellen"
+                    }}</v-btn>
                 </div>
                 <v-alert v-if="codeSent.status" type="success" class="mt-2">{{ codeSent.message }}</v-alert>
               </v-form>
@@ -192,29 +147,20 @@
                 Sollte nichts angekommen sein, kannst du dir die E-mail noch
                 einmal zusenden lassen.
               </p>
-              <v-btn
-                color="primary"
-                class="mb-4"
-                href="/registration/signin"
-              >Einloggen</v-btn>
-              <v-btn
-                color="primary"
-                outlined
-                :loading="loading"
-                class="mb-4"
-                @click="sendConfirmationAgain"
-                >Erneut senden</v-btn
-              >
+              <v-btn color="primary" class="mb-4" href="/registration/signin">Einloggen</v-btn>
+              <v-btn color="primary" outlined :loading="loading" class="mb-4" @click="sendConfirmationAgain">Erneut
+                senden</v-btn>
             </v-stepper-content>
           </v-stepper-items>
         </v-stepper>
         <v-alert v-if="error.status" color="error" class="white--text mt-4" dismissible>
-          {{ error.message ? error.message : `Es wurde eine E-Mail inklusive einem Link an ${email} geschickt. Bitte folgen Sie den dort beschriebenen Anweisungen.` }}
-          
+          {{
+  error.message ? error.message : `Es wurde eine E-Mail inklusive einem Link an ${email} geschickt. Bitte
+          folgen Sie den dort beschriebenen Anweisungen.` }}
+
         </v-alert>
       </v-container>
-    </v-col></v-row
-  >
+    </v-col></v-row>
 </template>
 
 <script>
@@ -239,15 +185,16 @@ export default {
     buttonLink: {
       type: String,
       default: "/registration/signup-coach",
-      
+
     }
   },
   data() {
     return {
-      step: 1,
+      step: this.makeLogin ? 1 : 0,
       valid: {
         email: false,
         password: false,
+        membership: false,
       },
       email: "",
       password: "",
@@ -293,7 +240,7 @@ export default {
           title: "mind. 8 Zeichen",
           rule: (v) => /^.{8,}$/.test(v),
         },
-        
+
       ],
       loading: false,
       //showConfirmation: false,
@@ -307,10 +254,26 @@ export default {
       resetLoading: false,
       codeSent: {
         status: false,
-      }
+      },
+      memberships: [
+        {
+          description: "Ich suche Beratung",
+          icon: "mdi-face-woman",
+          id: "Woman",
+          name: "Frau",
+        },
+        {
+          description: "Ich möchte Beratung anbieten",
+          icon: "mdi-message",
+          id: "Coach",
+          name: "Beratung",
+        },
+      ],
+      membership: null,
     };
   },
   mounted() {
+    console.log(this.strapi)
     const email = window.localStorage.getItem("emailForSignIn");
     if (email) {
       this.email = email
@@ -320,7 +283,7 @@ export default {
     }
   },
   methods: {
-    back(){
+    back() {
       this.step--
     },
     next() {
@@ -354,12 +317,12 @@ export default {
         .catch((err) => {
           this.loading = false;
           this.error.status = true;
-          this.error.message = err.response.data.error.message.includes('Invalid identifier') ? 'Ungültige E-Mail-Adresse oder ungültiges Passwort' : err.response.data.error.message ;
+          this.error.message = err.response.data.error.message.includes('Invalid identifier') ? 'Ungültige E-Mail-Adresse oder ungültiges Passwort' : err.response.data.error.message;
           this.$store.dispatch("errorhandling", err);
         });
-      
+
     },
-    register() {
+    async register() {
       this.loading = true
       const d = new Date();
       const username =
@@ -369,33 +332,44 @@ export default {
         d.getDay().toString() +
         d.getMonth().toString() +
         d.getFullYear().toString().slice(2);
-      
+
+      const roleTypes = []
+      const res = (await this.$strapi.find("users-permissions/roles")).roles;
+      res.forEach((role) => {
+        if (role.type == "coach") roleTypes.push(role);
+        if (role.type == "woman") roleTypes.push(role);
+      });
+
       // Ist nodemailer aktiviert, damit die Registrierung via localhost funktioniert?
       this.$strapi
-        .register({ 
-          username: username, 
-          email: this.email, 
+        .register({
+          username: username,
+          email: this.email,
           password: this.password,
+          role: roleTypes.find(
+              (r) => r.type == this.membership.id.toLowerCase()
+            ).id,
+          roleName: this.membership.id.toLowerCase(),
         })
         .then(() => {
-            this.valid = false
-            this.loading = false
-            this.showConfirmation = true
-            this.step++
-            window.localStorage.setItem('emailForSignIn', this.email)
-          
+          this.valid = false
+          this.loading = false
+          this.showConfirmation = true
+          this.step++
+          window.localStorage.setItem('emailForSignIn', this.email)
+
         })
-        .catch((err)=>{
+        .catch((err) => {
           this.$store.dispatch("errorhandling", err);
         })
     },
-    sendConfirmationAgain(){
+    sendConfirmationAgain() {
       this.loading = true;
-      this.$strapi.sendEmailConfirmation({ email: this.email }).then(()=>{
+      this.$strapi.sendEmailConfirmation({ email: this.email }).then(() => {
         this.loading = false;
       })
     },
-    sendResetPasswortCode(){
+    sendResetPasswortCode() {
       this.resetLoading = true
       this.$strapi
         .forgotPassword({ email: this.email })
