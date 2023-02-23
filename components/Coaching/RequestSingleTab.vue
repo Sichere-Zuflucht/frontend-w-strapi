@@ -46,7 +46,9 @@
     <v-expansion-panel-content>
       <v-card elevation="0">
         <v-card-text>
-          <v-sheet v-if="item.message" color="grey lighten-5 pa-3 my-4">
+          <v-row>
+            <v-col cols="9" sm="10" md="11">
+              <v-sheet v-if="item.message" color="grey lighten-5 pa-3 my-4">
             <p class="caption ma-0 grey--text" style="transform: translateY(-22px); position: absolute">
               Nachricht
             </p>
@@ -54,6 +56,19 @@
               {{ item.message }}
             </p>
           </v-sheet>
+            </v-col>
+            <v-col cols="3" sm="2" md="1">
+              <v-sheet v-if="id" color="grey lighten-5 pa-3 my-4">
+            <p class="caption ma-0 grey--text" style="transform: translateY(-22px); position: absolute">
+              ID
+            </p>
+            <p class="mb-0">
+              {{ id }}
+            </p>
+          </v-sheet>
+            </v-col>
+          </v-row>
+          
           <div v-if="item.status == 'deleted'">
             <p class="caption">Termin abgesagt</p>
             <v-alert dark text dense color="primary">Der Termin {{

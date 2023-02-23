@@ -35,13 +35,14 @@
           {{ coach.profession }}
         </h3>
       </div>
+      
     </nuxt-link>
-    <v-card-text class="flex-grow-1">
+    <v-card-text class="flex-grow-1 relative">
       <div v-if="response.status == 'newRequest'">
         <p class="text-uppercase font-weight-bold mb-1 mt-2 caption">
           Der Coach hat auf deine Anfrage noch nicht reagiert.
         </p>
-        Bitte habe ein wenig Gedult. Der*die Berater*in sollte sich innerhalb von 24h bei dir melden. 
+        <p>Bitte habe ein wenig Gedult. Der*die Berater*in sollte sich innerhalb von 24h bei dir melden.</p>
       </div>
       <div v-else-if="response.status == 'chooseDate'">
         <p class="text-uppercase font-weight-bold mb-1 mt-2 caption">
@@ -131,7 +132,7 @@
         </v-alert>
       </div>
     </v-card-text>
-    <v-card-actions>
+    <v-card-actions style="position: relative">
       <v-dialog v-if="response.status != 'deleted' && !oldlist && videoStatus.before" v-model="isDelete" persistent max-width="290">
         <template #activator="{ on, attrs }">
           <v-btn small text color="primary" v-bind="attrs" v-on="on">Termin absagen
@@ -147,6 +148,7 @@
       <v-btn v-else-if="response.status == 'deleted' || oldlist" small color="primary" outlined nuxt
         :to="'/berater/' + coach.username">Neue Anfrage stellen
       </v-btn>
+      <p class="caption grey--text mb-0" style="position: absolute; bottom:2px; right: 3px">ID: {{ id }}</p>
     </v-card-actions>
     <v-card-actions v-if="error">
       <v-alert  type="error" color="error">{{ error }}</v-alert>
@@ -156,6 +158,7 @@
         Weiterleitung zu Stripe. Dies kann ein bisschen dauern. Bitte warten...
       </p>
     </v-overlay>
+    
   </v-card>
   <!--
     <v-card elevation="2" nuxt outlined width="100%" class="ma-2" :max-width="width" :style="
