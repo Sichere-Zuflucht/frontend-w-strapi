@@ -132,7 +132,7 @@ export default {
   async mounted() {
     this.email = window.localStorage.getItem("emailForSignIn");
     // on the register function its not possible (any more?!) to add the variable roleName -> maybe change to role: authenticated
-    if (this.$strapi.user.roleName != "coach") {
+    if (this.$strapi.user.roleName != "authenticated") {
       if (this.$strapi.user.roleName == "woman") this.$router.push("/frauen");
       this.userdata = this.$store.getters["getActiveUser"];
       this.stepper = 2;
@@ -159,6 +159,7 @@ export default {
           });
 
           const data = {
+            roleName: 'coach',
             role: getCoach.id,
             displayName: this.firstName+' '+this.lastName,
             username: username,
