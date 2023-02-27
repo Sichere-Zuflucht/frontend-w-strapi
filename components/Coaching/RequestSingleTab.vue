@@ -105,27 +105,27 @@
                 <v-icon>mdi-information-variant</v-icon>
               </v-btn>
             </div>
-            <v-overlay :value="sheet" absolute="true">
-              <v-sheet class="text-center pa-6" light color="white">
+            <v-overlay :value="sheet">
+              <div class="pa-1">
+              <v-sheet class="text-center pa-6" light color="white" max-width="450">
 
                 <div class="my-3">
-                  <p><b>Sicherer Anbieter Jitsi Meet:</b><br />
-                    ist <b>vollständig verschlüsselt</b>. <br/>
-                    Es werden keine personenbezogenen Daten erhoben, da kein Account für die Nutzung 
-                    notwendig ist.
+                  <p><b class="secondary--text">Sicherer Anbieter Jitsi Meet:</b><br />
+                    ist <b>vollständig verschlüsselt</b>. Es werden keine personenbezogenen 
+                    Daten erhoben, da kein Account für die Nutzung notwendig ist.
                     <br /><br />
-                    <b>Zertifizierter Anbieter RED connect:</b><br />
-                    ist mit dem <b>ips-Gütesiegel</b> ausgezeichnet. <br /> 
-                    Es hat in der Vergangenheit als <b>einziges System</b> in Deutschland das 
-                    <b>Datenschutz-Gütesiegel des ULD </b>erhalten. RED connect ist von der 
-                    kassenärztlichen Bundesvereinigung (KBV) als zertifizierter Videodienstanbieter 
-                    gelistet.
+                    <b class="secondary--text">Zertifizierter Anbieter RED connect:</b><br />
+                    ist mit dem <b>ips-Gütesiegel</b> ausgezeichnet. Es hat in der Vergangenheit 
+                    als <b>einziges System</b> in Deutschland das <b>Datenschutz-Gütesiegel des 
+                    ULD </b>erhalten. RED connect ist von der kassenärztlichen Bundesvereinigung 
+                    (KBV) als zertifizierter Videodienstanbieter gelistet.
                   </p>
                 </div>
-                <v-btn class="mt-6" text color="secondary" @click="sheet = !sheet">
+                <v-btn class="mt-6" color="primary" @click="sheet = !sheet">
                   Schließen
                 </v-btn>
               </v-sheet>
+            </div>
             </v-overlay>
             <v-list>
               <v-list-item-group>
@@ -304,6 +304,7 @@ export default {
         .then(() => {
           request.coachAnswered = true;
           request.updatedAt = new Date();
+          request.status = "chooseDate";
           this.loading = false;
         });
     },

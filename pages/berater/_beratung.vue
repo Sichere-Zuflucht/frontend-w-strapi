@@ -120,8 +120,9 @@
                     </li>
                   </ol>
                   <p class="caption">
-                    <nuxt-link to="">Wie läuft das Beratungsgespräch ab?</nuxt-link><br /><nuxt-link to="">
-                      Infos zur Termineinhaltung </nuxt-link><br /><nuxt-link to=""> zu Preisen</nuxt-link>
+                    <nuxt-link target="_blank" to="/footer/faq">Wie läuft das Beratungsgespräch ab?</nuxt-link><br />
+                    <nuxt-link target="_blank" to="/footer/faq">Infos zur Termineinhaltung </nuxt-link><br />
+                    <nuxt-link target="_blank" to="/footer/faq"> zu Preisen</nuxt-link>
                   </p>
                 </v-col><v-col cols="12" md="4">
                   <div class="d-flex flex-row-reverse mb-4">
@@ -135,8 +136,8 @@
             <v-alert v-else color="success" dark icon="mdi-check" class="mt-4 d-flex flex-column justify-center">
               <p class="mb-0">
                 Fertig! Deine Anfrage wurde gesendet, {{ pubData.displayName }} wird sich
-                in den nächsten Tagen bei dir melden. <br />Sieh bitte auch in
-                deinem Spam-Ordner nach.
+                in den nächsten Tagen bei dir melden. <br />Suche bitte regelmäßig nach 
+                Updates unter <nuxt-link to="/beratung">Mein Bereich > Beratung</nuxt-link>
               </p>
             </v-alert>
             <v-alert v-if="error.status" color="error" class="white--text mt-4">{{ error.message }}
