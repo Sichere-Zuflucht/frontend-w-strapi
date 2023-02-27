@@ -26,9 +26,9 @@
             >
               Profil
             </v-stepper-step>
-            <v-divider v-if="!user.stripe.payouts_enabled"></v-divider>
+            <v-divider v-if="!user.stripeID"></v-divider>
             <v-stepper-step
-              v-if="!user.stripe.payouts_enabled"
+              v-if="!user.stripeID"
               step="2"
               editable
             >
@@ -36,14 +36,14 @@
             </v-stepper-step>
           </v-stepper-header>
           <v-stepper-items class="pb-4">
-            <v-stepper-content v-if="!bioSaved" step="1">
+            <v-stepper-content v-if="!bioSaved" step="1" class="px-0">
               <h2 class="text-h2 secondary--text pb-4">
                 IHR ÖFFENTLICHES PROFIL
               </h2>
               <p>
                 Erstellen Sie ein sympathisches, fachlich ansprechendes Profil
-                von Ihnen und Ihrem Angebot. Dann können die Frauen besser
-                abwägen, an wen Sie sich wenden wollen.
+                von sich und Ihrem Angebot. Dann können die Frauen besser
+                abwägen, an wen sie sich wenden wollen.
               </p>
               <CoachingSelection
                 :info="user"
@@ -53,11 +53,11 @@
               />
               <v-btn
                 text
-                :to="user.stripe.payouts_enabled ? '/berater/' + user.username : null"
+                :to="user.stripeID ? '/berater/' + user.username : null"
                 color="grey"
-                @click="!user.stripe.payouts_enabled ? stepper++ : null"
+                @click="!user.stripeID ? stepper++ : null"
                 >{{
-                  !user.stripe.payouts_enabled
+                  !user.stripeID
                     ? "Später"
                     : "Weiter ohne Speichern"
                 }}</v-btn
@@ -67,7 +67,7 @@
               <h2 class="text-h2 secondary--text pb-4">PROFIL erstellt</h2>
               <p>
                 Sie können sich Ihr Profil ansehen{{
-                  !user.stripe.payouts_enabled
+                  !user.stripeID
                     ? " oder direkt weiter zur Zahlungsanbindung gehen."
                     : "."
                 }}
@@ -81,7 +81,7 @@
                   :to="'/berater/' + user.username"
                   >Profil ansehen</v-btn
                 ><v-btn
-                  v-if="!user.stripe.payouts_enabled"
+                  v-if="!user.stripeID"
                   color="secondary"
                   class="mt-4"
                   @click="stepper++"
@@ -92,8 +92,8 @@
             <v-stepper-content step="2">
               <h2 class="text-h2 secondary--text pb-4">Bezahlungssystem</h2>
               <p>
-                Sie erhalten pro Beratungseinheit (50 Min.) über unser Portal
-                <b>40€</b> (50€ minus 10€ Gebühren an Sichere Zuflucht). Damit das Geld Sie auch umgehend erreicht, arbeiten
+                Sie erhalten von der Frau pro Beratungseinheit (50 Min.) über unser Portal
+                <b>40€</b> (50€ Beratungskosten minus 10€ zur Deckung der laufenden Kosten dieser Plattform.). Damit das Geld Sie auch umgehend erreicht, arbeiten
                 wir mit dem <b>Zahlungssystem Stripe.</b>
               </p>
               <p>

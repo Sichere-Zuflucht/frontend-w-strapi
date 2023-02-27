@@ -43,7 +43,6 @@ export default ({ app }, inject) => {
         }
       )
       .then((body) => {
-        console.log('body createStripeAcc', body)
         return app.$strapi.$users
           .update(app.$strapi.user.id, {
             stripeID: body.data.stripeId,
@@ -68,6 +67,7 @@ export default ({ app }, inject) => {
       });
   })
 
+
   inject('deleteStripeAcc', () => {
     return app.$axios
       .get(
@@ -82,19 +82,56 @@ export default ({ app }, inject) => {
       });
   })
 
-  inject('stripePayment', (stripeId, coachId) => {
+  inject('retrieveStripePaymentSetup', (checkoutSession) => {
     return app.$axios
-      .$get(
-        `${app.$config.strapi.url}/paywithstripe?id=${stripeId}&coachStripeId=${coachId}&url=${location.origin}`,
+      .get(
+        `${app.$config.strapi.url}/retrievestripepaymentsetup?checkoutSession=${checkoutSession}`,
         {
           headers: {
             Authorization: "Bearer "+ JSON.parse(localStorage.getItem("strapi_jwt")).token
           },
         }
-      ).then((res) => {
-        console.log(res)
-        return res
-      }
+      )
+      .catch((e) => {
+        const err = {
+          ...e,
+          location: 'functions.js retrieveStripePaymentSetup'
+        }
+        app.store.dispatch("errorhandling", err);
+      });
+  })
+  // not in use... maybe it will be needed once ?!
+  inject('stopStripePaymentSetup', (checkoutSession) => {
+    
+    return app.$axios
+      .get(
+        `${app.$config.strapi.url}/stopstripepaymentsetup?checkoutSession=${checkoutSession}`,
+        {
+          headers: {
+            Authorization: "Bearer "+ JSON.parse(localStorage.getItem("strapi_jwt")).token
+          },
+        }
+      )
+      .catch((e) => {
+        const err = {
+          ...e,
+          location: 'functions.js stopStripePaymentSetup'
+        }
+        app.store.dispatch("errorhandling", err);
+      });
+  })
+
+  //old -> a new version above is creating a delayed charge
+  inject('stripePayment', (coachStripeId, meetingID) => {
+    const user = app.store.getters['getActiveUser']
+    return app.$axios
+      .$get(
+        `${app.$config.strapi.url}/paywithstripe?coachStripeId=${coachStripeId}&name=${user.username}&email=${user.email}&url=${location.origin}&meetingID=${meetingID}`,
+        {
+          headers: {
+            Authorization: "Bearer "+ JSON.parse(localStorage.getItem("strapi_jwt")).token
+          },
+        }
       ).catch((e) => {
         app.store.dispatch("errorhandling", e);
       });
@@ -104,7 +141,7 @@ export default ({ app }, inject) => {
     return app.$axios
       .get(
         app.$config.strapi.url +
-        "/retrievestripe?email=" +
+        "/retrievestripe?stripeID=" +
         app.store.getters["getActiveUser"].stripeID,
         {
           headers: {
@@ -117,24 +154,27 @@ export default ({ app }, inject) => {
   })
 
   inject('getStripePaymentSession', (sessionID) => {
-    return app.$axios
-      .$get(
-        app.$config.strapi.url +
-        "/retrievestripepaysession?paymentID=" +
-        sessionID,
-        {
-          headers: {
-            Authorization: "Bearer "+ JSON.parse(localStorage.getItem("strapi_jwt")).token
-          },
-        }
-      ).catch((e) => {
-        app.store.dispatch("errorhandling", e);
-      });
+    if(sessionID){
+      return app.$axios
+        .$get(
+          `${app.$config.strapi.url}/retrievestripepaysession?paymentID=${sessionID}`,
+          {
+            headers: {
+              Authorization: "Bearer "+ JSON.parse(localStorage.getItem("strapi_jwt")).token
+            },
+          }
+        ).catch((e) => {
+          app.store.dispatch("errorhandling", e);
+        });
+      }
+    return {
+      status: false
+    }
   })
 
 
   //********* Meeting */
-  inject('deleteMeeting', (email, id, acceptedDate) => {
+  inject('deleteMeeting', (email, id, acceptedDate, paymentID) => {
     return app.$axios
       .get(
         `${app.$config.strapi.url}/deletemeeting?email=${email}&id=${id}&acceptedDate=${acceptedDate}`,
@@ -143,8 +183,14 @@ export default ({ app }, inject) => {
             Authorization: "Bearer "+ JSON.parse(localStorage.getItem("strapi_jwt")).token
           },
         }
-      ).catch((e) => {
-        app.store.dispatch("errorhandling", e);
+      ).then(()=>{
+        this.$stopStripePaymentSetup(paymentID)
+      }).catch((e) => {
+        const err = {
+          ...e,
+          location: 'functions.js deleteMeeting'
+        }
+        app.store.dispatch("errorhandling", err);
       });
   })
 

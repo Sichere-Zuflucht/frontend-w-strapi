@@ -5,6 +5,7 @@
         <h3 class="text-h3">
           Profil erstellen.
         </h3>
+        
         <p>
           Aktuell existiert noch kein Profil von Ihnen. Bitte
           erstellen Sie ein Profil.
@@ -13,7 +14,7 @@
         <v-btn color="white" to="beratung/edit-profil">Profil erstellen
         </v-btn>
       </v-alert>
-      <v-alert v-if="!userData.stripe.payouts_enabled" color="secondary" icon="mdi-credit-card-off-outline" outlined
+      <v-alert v-if="!stripeEnabled" color="secondary" icon="mdi-credit-card-off-outline" outlined
         text>
         <h3 class="text-h3">
           Zahlung freischalten.
@@ -40,7 +41,7 @@
         </v-btn>
       </v-alert>
       <p v-if="
-        !userData.topicArea || !userData.stripe.payouts_enabled || userData.verification != 'done'
+        !userData.topicArea || !stripeEnabled || userData.verification != 'done'
       " class="caption">
         Solange die oben angezeigte Warnungen existieren, ist Ihr Profil nicht öffentlich einsehbar und Sie können keine
         Anfragen erhalten.
@@ -51,6 +52,14 @@
 
 <script>
 export default {
+  data(){
+    return {
+      stripeEnabled: true,
+    }
+  },
+  async mounted(){
+    this.stripeEnabled = (await this.$getStripeAccData()).data.payouts_enabled
+  },
   computed: {
     userData() {
       return this.$store.getters['getActiveUser']

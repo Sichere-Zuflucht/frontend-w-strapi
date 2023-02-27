@@ -22,28 +22,8 @@
 <script>
 export default {
   name: "Approved",
-  mounted() {
-    if (this.$store.getters["getActiveUser"].roleName != "woman") {
-      this.$getStripeAccData()
-        .then((body) => {
-          this.$console(body);
-          //just proof, if account is valid due to having content
-          if (body.data.capabilities) {
-            this.$strapi.$users
-              .update(this.$strapi.user.id, {
-                stripe: {
-                  payouts_enabled: body.data.payouts_enabled,
-                  //id: body.data.id,
-                  charges_enabled: body.data.charges_enabled,
-                },
-              })
-              .then((newUser) => {
-                this.$console(newUser);
-                this.$store.dispatch("changeData", newUser);
-              });
-          }
-        });
-    } else {
+  /*mounted() {
+    if (this.$store.getters["getActiveUser"].roleName == "woman") {
       const meetingID = window.localStorage.getItem("meetingID");
       const sessionID = window.localStorage.getItem("sessionID");
       if (!sessionID) return;
@@ -62,6 +42,6 @@ export default {
             });
         });
     }
-  },
+  },*/
 };
 </script>

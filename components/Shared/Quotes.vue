@@ -5,7 +5,7 @@
         Stimmen zu diesem Projekt
       </h2>
     </v-container>
-    <v-carousel hide-delimiters height="auto" class="pb-12">
+    <v-carousel hide-delimiters height="auto" class="pb-12" :show-arrows="quotes.length > 1">
       <v-carousel-item v-for="(quote, n) in quotes" :key="n" class="px-4"
         ><v-row
           class="fill-height py-5 px-16 text-center black--text"
@@ -29,16 +29,8 @@ export default {
     return {
       quotes: [
         {
-          text: 'Wenn ich damals die Möglichkeiten gehabt hätte, die diese Plattform bietet, hätte ich den Schritt aus meiner Beziehung nicht erst dann gewagt, als es um mein Leben ging!',
-          by: 'Jessica V.',
-        },
-        {
-          text: 'Wenn ich damals die Möglichkeiten gehabt hätte, asdf fasdfasdgaksölkfäaö asdfklams asdfläk die diese Plattform bietet, hätte ich den Schritt aus meiner Beziehung nicht erst dann gewagt, als es um mein Leben ging!',
-          by: 'Maria M.',
-        },
-        {
-          text: 'Wenn ich damals die Möglichkeiten gehabt hätte, die diese Plattform bietet, hätte ich den Schritt aus meiner Beziehung nicht erst dann gewagt, als es um mein Leben ging!',
-          by: 'Sarah R.',
+          text: 'Ein Projekt wie dieses hätte mir geholfen, mich schneller aus der schwersten Zeit meines Lebens zu befreien. Es ist unbedingt notwendig, dass ein Anker wie dieser geschaffen wird!',
+          by: 'Jessica Verfürth | Bosslady Consulting',
         },
       ],
     }
