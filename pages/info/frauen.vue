@@ -68,15 +68,22 @@
           >Betroffenen fällt es oft nicht leicht die Gewalt zu erkennen.<br />
           Sie fängt häufig schleichend an.</b
         >
-        <br />
-        Erklärtext, damit sich die Frauen einsortieren können. Lorem ipsum dolor
-        sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
-        invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At
-        vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd
-        gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem
-        ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
-        eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam
-        voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+        <br /><br />
+        Häusliche Gewalt kann viele Formen annehmen. Neben körperlicher und sexualisierter 
+        Gewalt, die absolut eindeutiges Fehlverhalten sind, solltest du auch auf subtilere 
+        Anzeigen achten:
+        </p>
+        <ul>
+          <li><b>Psychologische Gewalt: </b>z.B. ständige Kritik, Demütigung, Einschüchterung, 
+            Bedrohung oder Isolation. Wenn du ständig kritisiert oder abgewertet wirst.</li>
+          <li><b>Kontrollverhalten: </b>dein Partner greift in deine Entscheidungen ein, er 
+            überwacht deine Aktivitäten,  verhindert Kontakte mit Freunden oder Familie oder 
+            er schränkt deine finanziellen Mittel ein.</li>
+        </ul>
+        <p>
+          <br />
+        Wichtig ist, sobald du in deiner Beziehung ständigem Druck ausgesetzt wirst, solltest 
+        du diese hinterfragen.
       </p>
       <p>
         Weitere Erfahrungen findest du in unserem
