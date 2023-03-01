@@ -133,7 +133,7 @@
             <file-pond
               v-else-if="!avatar || changeImg"
               v-model="imageFile"
-              labelIdle="Ziehe eine Datei per Drag & Drop hierher oder <span class='filepond--label-action'> durchsuche den Computer </span>"
+              labelIdle="<span class='filepond--label-action'>Tippe hier</span> oder ziehe ein Foto einfach in den Kreis."
               :server="imgServerUrl + '/imgapi'"
               :src="avatar ? imgUrl + avatar.url : null"
               imagePreviewHeight="200"
