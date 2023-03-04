@@ -12,7 +12,7 @@ export default ({ app }, inject) => {
       body: data,
     }).then(()=>{
       
-      if (process.env.NODE_ENV != 'production') return
+      //if (process.env.NODE_ENV != 'production') return
       const { tel, altEmail, www, name } = data
       const slack = {"text":`*Neue Anmeldung* :rocket: 
 
@@ -23,8 +23,8 @@ ${ tel ? '- :telephone_receiver: : ' + tel : '' }
 ${ altEmail ? '- :email: : ' + altEmail : '' }
 ${ www ? '- :globe_with_meridians: : ' + www : '' }`
       }
-        
-      fetch('https://hooks.slack.com/services/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', {
+             
+      fetch(process.env.SLACK_WEBHOOK, {
         method: "POST", // *GET, POST, PUT, DELETE, etc.
         mode: "cors", // no-cors, *cors, same-origin
         cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
