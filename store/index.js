@@ -31,7 +31,6 @@ export const actions = {
   },
   logout({ commit }) {
     this.$strapi.logout()
-    window.localStorage.removeItem("emailForSignIn");
     commit('setUserData', null)
     commit('setJWT', null)
   },

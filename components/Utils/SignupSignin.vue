@@ -276,15 +276,6 @@ export default {
       membership: null,
     };
   },
-  mounted() {
-    const email = window.localStorage.getItem("emailForSignIn");
-    if (email) {
-      this.email = email
-      this.next()
-      //this.step++
-      //this.showConfirmation = true;
-    }
-  },
   methods: {
     back() {
       this.step--
@@ -361,7 +352,6 @@ export default {
           this.loading = false
           this.showConfirmation = true
           this.step++
-          window.localStorage.setItem('emailForSignIn', this.email)
 
         })
         .catch((err) => {
