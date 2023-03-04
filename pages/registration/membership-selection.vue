@@ -136,7 +136,7 @@ export default {
       this.userdata = this.$store.getters["getActiveUser"];
       this.stepper = 2;
     }
-    this.email = this.$store.getters[getActiveUser].email
+    this.email = this.$store.getters["getActiveUser"].email
   },
   methods: {
     updateProfile() {

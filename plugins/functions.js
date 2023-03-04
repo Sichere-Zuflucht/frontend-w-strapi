@@ -12,7 +12,7 @@ export default ({ app }, inject) => {
       body: data,
     }).then(()=>{
       
-      //if (process.env.NODE_ENV != 'production') return
+      if (app.$config.status != 'production') return
       const { tel, altEmail, www, name } = data
       const slack = {"text":`*Neue Anmeldung* :rocket: 
 
