@@ -46,9 +46,9 @@
           <v-card-actions><v-form ref="deleteForm" v-model="deleteVal" @submit.prevent="deleteUser">
               <v-text-field v-model="userProvidedErase" outlined label='"Löschen" einfügen' :rules="rules.delete"
                 color="grey" required placeholder="Löschen"></v-text-field>
-              <v-btn color="error" :disabled="!deleteVal" :loading="deleteLoading" type="submit">wirklich
+              <v-btn color="error" :disabled="!deleteVal" :loading="deleteLoading" type="submit">Wirklich
                 löschen</v-btn>
-              <v-btn @click="overlay = !overlay">abbrechen</v-btn></v-form></v-card-actions></v-card>
+              <v-btn @click="overlay = !overlay">Abbrechen</v-btn></v-form></v-card-actions></v-card>
       </v-dialog>
       <v-alert v-if="err.status && !overlay" type="error" color="error" class="mt-4">{{ err.msg }}</v-alert>
       <v-divider class="mt-8 pt-3"></v-divider>

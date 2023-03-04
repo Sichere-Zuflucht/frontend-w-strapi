@@ -10,6 +10,32 @@ export default ({ app }, inject) => {
         Authorization: "Bearer "+ JSON.parse(localStorage.getItem("strapi_jwt")).token
       },
       body: data,
+    }).then(()=>{
+      
+      if (process.env.NODE_ENV != 'production') return
+      const { tel, altEmail, www, name } = data
+      const slack = {"text":`*Neue Anmeldung* :rocket: 
+
+Die Person *${name}* möchte über unsere Plattform Beratung anbieten. <@U01F8C7HESU> wird den Kontakt aufnehmen. 
+
+*Weitere Details:*
+${ tel ? '- :telephone_receiver: : ' + tel : '' }
+${ altEmail ? '- :email: : ' + altEmail : '' }
+${ www ? '- :globe_with_meridians: : ' + www : '' }`
+      }
+        
+      fetch('https://hooks.slack.com/services/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', {
+        method: "POST", // *GET, POST, PUT, DELETE, etc.
+        mode: "cors", // no-cors, *cors, same-origin
+        cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+        credentials: "same-origin", // include, *same-origin, omit
+        redirect: "follow", // manual, *follow, error
+        referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+        body: JSON.stringify(slack), // body data type must match "Content-Type" header
+      }).catch((err)=>{
+        console.log('error slack', err)
+      })
+
     }).catch((e) => {
       app.store.dispatch("errorhandling", e);
     });

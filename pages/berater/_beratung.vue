@@ -136,9 +136,9 @@
             <v-alert v-else color="success" dark icon="mdi-check" class="mt-4 d-flex flex-column justify-center">
               <p class="mb-0">
                 Fertig! Deine Anfrage wurde gesendet, {{ pubData.displayName }} wird sich
-                in den nächsten Tagen bei dir melden. <br />Suche bitte regelmäßig nach 
-                Updates unter <nuxt-link to="/beratung">Mein Bereich > Beratung</nuxt-link>
-              </p>
+                in den nächsten Tagen bei dir melden. Suche daher bitte regelmäßig nach 
+                Updates.</p>
+                <v-btn to="/beratung" class="mt-2" color="secondary">Mein Bereich</v-btn >
             </v-alert>
             <v-alert v-if="error.status" color="error" class="white--text mt-4">{{ error.message }}
             </v-alert>
