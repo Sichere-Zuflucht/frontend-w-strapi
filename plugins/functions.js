@@ -24,7 +24,7 @@ ${ altEmail ? '- :email: : ' + altEmail : '' }
 ${ www ? '- :globe_with_meridians: : ' + www : '' }`
       }
              
-      fetch(process.env.SLACK_WEBHOOK, {
+      fetch(app.$config.slackUrl, {
         method: "POST", // *GET, POST, PUT, DELETE, etc.
         mode: "cors", // no-cors, *cors, same-origin
         cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached

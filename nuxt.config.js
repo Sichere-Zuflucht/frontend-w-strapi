@@ -143,6 +143,7 @@ export default {
       publishableKey:
         process.env.STRIPE_PK,
     },
+    slackUrl: process.env.SLACK_WEBHOOK,
     donate1: process.env.DONATION_1,
     donate2: process.env.DONATION_2,
     donate3: process.env.DONATION_3,
