@@ -104,7 +104,7 @@
                       {{ n.title }}
                     </v-chip>
                     <v-text-field v-model="password2" :rules="rules.passwordRules2" label="Passwort wiederholen"
-                      type="password" name="new-password" autocomplete="off" class="mt-6"></v-text-field>
+                    :type="hidePassword2 ? 'password' : 'text'" :append-icon="hidePassword2 ? 'mdi-eye' : 'mdi-eye-off'" @click:append="() => (hidePassword2 = !hidePassword2)" name="new-password" autocomplete="off" class="mt-6"></v-text-field>
                   </div>
                   <div class="d-flex justify-end">
                     <v-btn text color="grey" @click="back()"> Zurück </v-btn>
@@ -202,6 +202,7 @@ export default {
       password: "",
       password2: "",
       hidePassword: true,
+      hidePassword2: true,
       rules: {
         passwordRules: [
           (v) =>
