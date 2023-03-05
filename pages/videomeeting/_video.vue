@@ -36,7 +36,6 @@ export default {
   async fetch() {
     this.$getVideoMeeting(this.$route.params.video)
       .then((vData) => {
-        console.log(vData.data.length)
         if (vData.data.length == 0) return (this.error404 = true);
         this.videoUrl = vData.data[0].attributes.videoCoach;
       });

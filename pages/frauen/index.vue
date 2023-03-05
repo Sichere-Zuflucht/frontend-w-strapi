@@ -21,7 +21,8 @@
           </v-slide-item>
         </v-slide-group>
         <div v-if="oldResponses.length > 0" class="d-flex align-center">
-          <v-btn text class="mx-auto" @click="showOld = !showOld">Alte Anfragen {{ !showOld ? 'anzeigen': 'verbergen' }}</v-btn>
+          <v-btn text class="mx-auto" @click="showOld = !showOld">Alte Anfragen {{ !showOld ? 'anzeigen' : 'verbergen'
+          }}</v-btn>
         </div>
 
         <v-slide-group v-if="showOld" :show-arrows="responses.length > 1" class="px-1 pb-4">
@@ -83,22 +84,22 @@ export default {
     window.localStorage.removeItem("newWoman");
   },
   computed: {
-    upcomingResponses(){
+    upcomingResponses() {
       return this.responses.filter(r => {
-        if (r.attributes.acceptedDate){
+        if (r.attributes.acceptedDate) {
           const startTime = new Date(r.attributes.acceptedDate)
-          const endTime = (new Date).setTime(startTime.getTime() + 60*60*1000);
+          const endTime = (new Date).setTime(startTime.getTime() + 60 * 60 * 1000);
           const now = new Date
           return now < endTime
         }
         return true
       })
     },
-    oldResponses(){
+    oldResponses() {
       return this.responses.filter(r => {
-        if (r.attributes.acceptedDate){
+        if (r.attributes.acceptedDate) {
           const startTime = new Date(r.attributes.acceptedDate)
-          const endTime = (new Date).setTime(startTime.getTime() + 60*60*1000);
+          const endTime = (new Date).setTime(startTime.getTime() + 60 * 60 * 1000);
           const now = new Date
           return now >= endTime
         }
@@ -119,7 +120,7 @@ export default {
         })
         .then(async (res) => {
           //if Coach still existed and didn't deleted the account, search for coach
-          const collection = []
+          var collection = []
           res.data.forEach((response) => {
             if (!response.attributes.users_permissions_users.data[1])
               return collection.push({
@@ -138,12 +139,13 @@ export default {
                   coach,
                   ...response,
                 });
+                collection.sort((a,b) => {
+                  return b.id - a.id
+                })
               });
           });
-          const oldCollection = collection;
-          this.responses = oldCollection.sort((a, b) => {
-            return a.createdAt._seconds - b.createdAt._seconds;
-          });
+          this.responses = collection
+          
         });
     }
   },

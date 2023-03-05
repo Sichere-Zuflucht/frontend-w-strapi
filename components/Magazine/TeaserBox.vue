@@ -38,7 +38,7 @@
     >
     <v-card-actions class="pt-4"
       ><v-btn
-        :to="(changeUrl ? 'magazine/' : '') + magazineData.attributes.slug"
+        :to="(changeUrl ? '/magazine/' : '') + magazineData.attributes.slug"
         :append="appendUrl"
         outlined
         color="primary"

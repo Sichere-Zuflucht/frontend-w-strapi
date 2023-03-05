@@ -130,13 +130,13 @@ export default {
     };
   },
   async mounted() {
-    this.email = window.localStorage.getItem("emailForSignIn");
     // on the register function its not possible (any more?!) to add the variable roleName -> maybe change to role: authenticated
     if (this.$strapi.user.roleName != "authenticated") {
       if (this.$strapi.user.roleName == "woman") this.$router.push("/frauen");
       this.userdata = this.$store.getters["getActiveUser"];
       this.stepper = 2;
     }
+    this.email = this.$store.getters["getActiveUser"].email
   },
   methods: {
     updateProfile() {
@@ -170,7 +170,6 @@ export default {
               this.$console("newU", newU);
               this.alert.isActive = false;
               this.$store.dispatch("changeData",newU).then(() => {
-                window.localStorage.removeItem("emailForSignIn");
                 this.loading = false;
                 this.userdata = this.$store.getters["getActiveUser"];
                 this.stepper++
