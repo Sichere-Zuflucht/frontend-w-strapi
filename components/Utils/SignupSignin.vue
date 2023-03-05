@@ -277,16 +277,6 @@ export default {
       membership: null,
     };
   },
-  mounted() {
-    console.log(this.strapi)
-    const email = window.localStorage.getItem("emailForSignIn");
-    if (email) {
-      this.email = email
-      this.next()
-      //this.step++
-      //this.showConfirmation = true;
-    }
-  },
   methods: {
     back() {
       this.step--
@@ -342,7 +332,6 @@ export default {
 
       const roleTypes = []
       const res = (await this.$strapi.find("users-permissions/roles")).roles;
-      console.log('res', res)
       res.forEach((role) => {
         if (role.type == "coach") roleTypes.push(role);
         if (role.type == "woman") roleTypes.push(role);
@@ -364,7 +353,6 @@ export default {
           this.loading = false
           this.showConfirmation = true
           this.step++
-          window.localStorage.setItem('emailForSignIn', this.email)
 
         })
         .catch((err) => {

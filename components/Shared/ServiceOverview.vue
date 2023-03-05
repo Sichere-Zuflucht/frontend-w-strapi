@@ -10,13 +10,13 @@
       >
         <v-card style="overflow: hidden"
           ><v-row
-            ><v-col cols="4" class="pa-0"
+            ><v-col cols="12" sm="4" class="pa-0"
               ><v-img
                 :src="offer.img"
                 width="100%"
                 height="100%"
                 cover /></v-col
-            ><v-col cols="8" class="py-8 px-10"
+            ><v-col cols="12" sm="8" class="py-8 px-10"
               ><h3 class="text-h5 primary--text pb-4">{{ offer.title }}</h3>
               <p v-if="$strapi.user.roleName == 'coach'" class="caption pr-0">{{ offer.text }}</p>
               <p v-else class="caption pr-0">{{ offer.alternativText }}</p>
@@ -46,7 +46,7 @@ export default {
           title: 'Sichere Zuflucht-Magazin',
           text: 'Hier sammeln wir Erfahrungsberichte und Geschichten von betroffenen Frauen, um anderen Frauen Mut zu machen. Außerdem finden Sie hier Videos und Podcasts zum Thema häusliche Gewalt.',
           alternativText: 'Hier sammeln wir Erfahrungsberichte und Geschichten von betroffenen Frauen, um dir Mut zu machen. Außerdem findest du hier Videos und Podcasts zum Thema häusliche Gewalt.',
-          img: '/le-buzz-tVnm9I9jb8I-unsplash.jpg',
+          img: '/cute-woman-with-tablet-bed.jpg',
           link: '/magazine',
           btntext: 'Zum Magazin',
         },

@@ -3,30 +3,30 @@
     <UtilsBanner icon="mdi-credit-card-plus-outline" />
     <v-container>
       <div v-if="stripe === null">
-        <v-skeleton-loader
-          type="article"
-        ></v-skeleton-loader>
+        <v-skeleton-loader type="article"></v-skeleton-loader>
       </div>
       <div v-else-if="!stripe || !stripe.charges_enabled">
         <h1 class="text-h1 primary--text mb-4">Bezahlung<br />verwalten</h1>
+
         <p>
-          Sie erhalten von der Frau für Ihre Beratungsleistung über unser Portal
-          <b>40€/Stunde (50€ Beratungskosten minus 10€ zur Deckung der laufenden Kosten dieser Plattform.)</b>. Damit das Geld Sie auch umgehend erreicht, arbeiten
-          wir mit dem <b>Zahlungssystem Stripe</b>.<br /><br />Legen Sie sich
-          deshalb bitte ein Stripe-Konto an. Das geht schnell und ist für Sie
-          <b>kostenlos</b>.<br /><br />Nach dieser Anmeldung und der
-          vollständigen Verifizierung Ihrer Person, können Sie direkt starten.
+          <b>Sie beraten nicht gratis!</b><br />
+          Pro Beratungseinheit (Dauer: 50 min. ) zahlt jede Frau 50 Euro. Sie als Berater*in
+          erhalten 40 Euro. Wir als Sichere Zuflucht behalten 10 Euro ein, um damit laufende
+          Kosten zu decken. Damit das Geld Sie auch umgehend erreicht, arbeiten wir mit dem
+          <b>Zahlungssystem Stripe.</b>
+        </p>
+        <p>
+          Legen Sie sich deshalb bitte ein Stripe-Konto an. Das geht
+          schnell und ist für Sie <b>kostenlos.</b>
+          <br /><br />
+          Nach dieser Anmeldung und der vollständigen Verifizierung Ihrer Person, können Sie
+          direkt starten.
         </p>
 
         <div v-if="!stripe">
           <div class="d-flex justify-center mb-2 mt-12">
-            <v-btn
-              :loading="loading"
-              :disabled="disabled"
-              color="secondary"
-              target="_blank"
-              @click="addStripe"
-              >Mein Stripe-Konto anlegen
+            <v-btn :loading="loading" :disabled="disabled" color="secondary" target="_blank" @click="addStripe">Mein
+              Stripe-Konto anlegen
             </v-btn>
           </div>
           <p class="caption text-center grey--text">
@@ -34,13 +34,7 @@
           </p>
         </div>
         <div v-else>
-          <v-alert
-            v-if="!stripe.charges_enabled"
-            color="error"
-            icon="mdi-clock-fast"
-            outlined
-            text
-          >
+          <v-alert v-if="!stripe.charges_enabled" color="error" icon="mdi-clock-fast" outlined text>
             <h3 class="text-h3">
               Registrierung unvollständig: Zahlung freischalten.
             </h3>
@@ -49,22 +43,12 @@
               registrieren Sie sich bei Stripe.
             </p>
             <v-divider class="my-4 error" style="opacity: 0.22" />
-            <v-btn
-              :loading="loading"
-              :disabled="disabled"
-              color="white"
-              target="_blank"
-              @click="addStripe"
-              >Stripe-Konto anlegen
+            <v-btn :loading="loading" :disabled="disabled" color="white" target="_blank" @click="addStripe">Stripe-Konto
+              anlegen
             </v-btn>
           </v-alert>
-          <v-alert
-            v-else-if="stripe.charges_enabled && !stripe.payouts_enabled"
-            color="error"
-            icon="mdi-clock-fast"
-            outlined
-            text
-          >
+          <v-alert v-else-if="stripe.charges_enabled && !stripe.payouts_enabled" color="error" icon="mdi-clock-fast"
+            outlined text>
             <h3 class="text-h3">
               Registrierung unvollständig: Auszahlung freischalten.
             </h3>
@@ -73,26 +57,15 @@
               vervollständigen Sie die Stripe-Registrierung.
             </p>
             <v-divider class="my-4 error" style="opacity: 0.22" />
-            <v-btn
-              :loading="loading"
-              :disabled="disabled"
-              color="white"
-              target="_blank"
-              @click="addStripe"
-              >Stripe-Konto vervollständigen
+            <v-btn :loading="loading" :disabled="disabled" color="white" target="_blank" @click="addStripe">Stripe-Konto
+              vervollständigen
             </v-btn>
           </v-alert>
         </div>
       </div>
       <div v-else>
         <h2 class="text-h2 primary--text">Stripe Übersicht</h2>
-        <v-btn
-          target="_blank"
-          color="secondary"
-          class="mt-4"
-          @click="stripeLogin"
-          >Zum Stripe Dashboard</v-btn
-        >
+        <v-btn target="_blank" color="secondary" class="mt-4" @click="stripeLogin">Zum Stripe Dashboard</v-btn>
         <!--<div v-if="stripeSession">
           <p>Kartenzahlung:</p>
         </div>
@@ -115,7 +88,7 @@
         Falls die Weiterleitung nicht funktioniert, kopiere und öffne bitte
         folgende URL:<br />
         <a :href="stripeRegisterURL" target="_blank">{{ stripeRegisterURL }}</a>
-        </p>
+      </p>
     </v-container>
   </div>
 </template>
@@ -145,7 +118,7 @@ export default {
     addStripe() {
       this.loading = true;
 
-      this.$createStripeAcc().then((d)=>{
+      this.$createStripeAcc().then((d) => {
         this.stripeRegisterURL = d.url;
         this.loading = false;
         this.disabled = true;

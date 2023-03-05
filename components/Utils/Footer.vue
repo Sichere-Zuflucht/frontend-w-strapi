@@ -118,10 +118,10 @@ export default {
           title: "FAQ",
           to: "/footer/faq",
         },
-        {
+       /*{
           title: "Hilfe",
           to: "/footer/hilfe",
-        },
+        },*/
       ],
       aktiveCookieBanner: true
     };
