@@ -136,7 +136,7 @@
 
       </p>
       <h2>
-        <strong>Registrierung auf unserer Website</strong>
+        <strong>Registrierung und Auftragsabwicklung auf unserer Webseite</strong>
       </h2>
       <h3>
         <strong>Art und Zweck der Verarbeitung:</strong>
@@ -157,15 +157,26 @@
         <strong>Rechtsgrundlage:</strong>
       </h3>
       <p>
-        Die Verarbeitung der bei der Registrierung eingegebenen Daten erfolgt
-          auf Grundlage einer Einwilligung des Nutzers (Art. 6 Abs. 1 lit. a
-          DSGVO).
+        Die Verarbeitung der bei der Registrierung eingegebenen Daten 
+        erfolgt auf Grundlage einer Einwilligung des Nutzers (Art. 6 
+        Abs. 1 lit. a DSGVO).
       </p>
       <p>
         Dient die Registrierung der Erfüllung eines Vertrages, dessen
           Vertragspartei die betroffene Person ist oder der Durchführung
-          vorvertraglicher Maßnahmen, so ist zusätzliche Rechtsgrundlage für die
-          Verarbeitung der Daten Art. 6 Abs. 1 lit. b DSGVO.
+          vorvertraglicher Maßnahmen, so ist zusätzliche Rechtsgrundlage 
+          für die Verarbeitung der Daten Art. 6 Abs. 1 lit. b DSGVO.
+      </p>
+      <p>
+        Wir speichern Ihre Daten nur zu folgenden Zwecken:<br/>
+          Zur Abwicklung von Bestellungen (einschließlich Zahlungsabwicklung 
+          und ggf. Bonitätsprüfung), zur Zusendung von Werbung durch uns 
+          sowie für den Kundenservice. <br/>
+          Eine Übermittlung Ihrer personenbezogenen Daten an Dritte erfolgt 
+          nur, sofern die Weitergabe im Rahmen der Vertragsabwicklung oder 
+          zu Abrechnungs- oder Inkassozwecken erforderlich ist (bspw. 
+          Versandunternehmen- oder Zahlungsdienstleister) oder Sie ausdrücklich 
+          eingewilligt haben. Unser Zahlungsanbieter ist Stripe, Inc.
       </p>
       <h3>
         <strong>Empfänger:</strong>
@@ -582,6 +593,7 @@
           beauftragt:
       </p>
       <p>Mailchimp</p>
+      <p>Stripe, Inc.</p>
       <h2>
         <strong>Änderung unserer Datenschutzerklärung</strong>
       </h2>
