@@ -43,13 +43,13 @@
               <v-item-group v-model="membership" class="mt-2">
                 <v-row>
                   <v-col v-for="(n, i) in memberships" :key="i" cols="12" sm="6">
-                    <v-item v-slot="{ active, toggle }" :value="n">
-                      <v-card :color="active ? 'primary' : 'blue-grey lighten-5'"
+                    <v-item v-slot="{ active, toggle }" :value="n" >
+                      <v-card :disabled="i == 0 ? true : false" :color="active ? 'primary' : 'blue-grey lighten-5'"
                         class="d-flex flex-column justify-center align-center pa-8" :dark="active" height="200"
                         @click="toggle">
                         <v-icon large class="pr-2">{{ n.icon }}</v-icon>
                         <p class="ma-0 text-center" style="padding-top: 2px">
-                          {{ n.description }}
+                          {{ n.description }}<br/><span class="caption">{{ n.notyet }}</span>
                         </p>
                       </v-card></v-item></v-col></v-row></v-item-group>
               <div class="d-flex justify-end pt-6">
@@ -261,6 +261,7 @@ export default {
       memberships: [
         {
           description: "Ich suche Beratung",
+          notyet: "(wird demnächst freigeschaltet)",
           icon: "mdi-face-woman",
           id: "Woman",
           roleName: 'woman',
