@@ -21,10 +21,10 @@ For detailed explanation on how things work, check out the [documentation](https
 
 ## General Information
 
-*Language:* [Nuxt 2](https://nuxtjs.org/)
-*Simplify Coding:* [NuxtStrapi](https://strapi.nuxtjs.org/)
-*Server:* [Netlify](https://www.netlify.com/)
-*Design Framework:* [Vuetify 2](https://v2.vuetifyjs.com/en/)
+**Language:** [Nuxt 2](https://nuxtjs.org/)
+**Simplify Coding:** [NuxtStrapi](https://strapi.nuxtjs.org/)
+**Server:** [Netlify](https://www.netlify.com/)
+**Design Framework:** [Vuetify 2](https://v2.vuetifyjs.com/en/)
 
 ## Install local
 
