@@ -23,7 +23,13 @@ export default {
       lang: 'de'
     },
     script: [
-      { src: "https://cloud.ccm19.de/app.js?apiKey=d6161339e1c1c956253c59fe99f8bcde7661b3367a5b9271&amp;domain=640e30a5f3b8eafe04017212&amp;lang=de_DE", referrerpolicy: "origin"}
+      /*{ src: "https://cloud.ccm19.de/app.js?apiKey=d6161339e1c1c956253c59fe99f8bcde7661b3367a5b9271&amp;domain=640e30a5f3b8eafe04017212&amp;lang=de_DE", referrerpolicy: "origin"}*/
+      {
+        src: "https://consent.cookiebot.com/uc.js", 
+        id:"Cookiebot",
+        'data-cbid': "22c38696-f2d7-4545-a7a1-cf1e98639ba1",'data-blockingmode':"auto", 
+        type:"text/javascript"
+      }
     ],
     meta: [
       { charset: 'utf-8' },
