@@ -22,6 +22,9 @@ export default {
     htmlAttrs: {
       lang: 'de'
     },
+    script: [
+      { src: "https://cloud.ccm19.de/app.js?apiKey=d6161339e1c1c956253c59fe99f8bcde7661b3367a5b9271&amp;domain=640e30a5f3b8eafe04017212&amp;lang=de_DE", referrerpolicy: "origin"}
+    ],
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -40,6 +43,7 @@ export default {
         rel: 'stylesheet',
       },
     ],
+    
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
