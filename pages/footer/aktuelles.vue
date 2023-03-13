@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-row v-if="!ready"
+    <v-row v-if="!ready && functionalCookieAccepted"
       ><v-col v-for="n in 4" :key="n" cols="12" md="3"
         ><v-card>
           <v-skeleton-loader
@@ -21,7 +21,7 @@
         style="background: transparent; border: 1px solid #ccc"
         :onload="(ready = true)"
       ></iframe>
-      <UtilsBanner v-else icon='mdi-cookie-alert' />
+      <UtilsBanner v-if="!functionalCookieAccepted" icon='mdi-cookie-alert' />
     </div>
   </div>
 </template>
@@ -33,5 +33,8 @@ export default {
       ready: false,
     }
   },
+  computed: {
+    functionalCookieAccepted(){return this.$functionalCookieAccepted()},
+  }
 }
 </script>
