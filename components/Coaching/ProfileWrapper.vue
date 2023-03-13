@@ -77,7 +77,7 @@ export default {
     }
   },
   computed: {
-    functionalCookieAccepted(){return this.$functionalCookieAccepted},
+    functionalCookieAccepted(){return this.$functionalCookieAccepted()},
   }
 }
 </script>

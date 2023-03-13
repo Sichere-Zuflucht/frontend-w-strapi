@@ -137,7 +137,7 @@ export default {
       .then(({data}) => data)
   },
   computed: {
-    functionalCookieAccepted(){return this.$functionalCookieAccepted},
+    functionalCookieAccepted(){return this.$functionalCookieAccepted()},
     altImg(){return location.href + 'cookie-alert.png'},
     cssVars() {
       return {

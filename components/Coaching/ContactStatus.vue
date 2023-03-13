@@ -378,7 +378,7 @@ export default {
     };
   },
   computed: {
-    functionalCookieAccepted(){return this.$functionalCookieAccepted},
+    functionalCookieAccepted(){return this.$functionalCookieAccepted()},
     jitsiWithWomanName() {
       const name = this.$store.getters['getActiveUser'].username
       return `${this.response.videoCoach}#userInfo.displayName="${name}"`
