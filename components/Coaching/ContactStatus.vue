@@ -18,14 +18,18 @@
       ' !important'
     ">
       <v-avatar v-if="coach.avatar" color="primary ma-5" size="90" contain>
-        <v-img :lazy-src="
+        <v-img :data-lazy-src="
           (coach.avatar.url.includes('https')
             ? ''
             : 'http://localhost:1337') + coach.avatar.url
-        " :src="(coach.avatar.url.includes('https')
-  ? ''
-  : 'http://localhost:1337') + coach.avatar.url
-" />
+          " 
+          :data-src="(coach.avatar.url.includes('https')
+            ? ''
+            : 'http://localhost:1337') + coach.avatar.url
+          " 
+          data-cookiescript="accepted" 
+          data-cookiecategory="functionality"
+      />
       </v-avatar>
       <div class="ma-5 ml-2 d-flex flex-column justify-center">
         <h2 class="secondary--text text-h2">

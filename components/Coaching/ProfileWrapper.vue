@@ -11,8 +11,9 @@
         <v-avatar color="primary" class="my-5" size="80"
           ><v-img 
             v-if="pubCoachData.avatar"
-            :lazy-src="(pubCoachData.avatar.url.includes('https') ? '' : 'http://localhost:1337') + pubCoachData.avatar.url"
-            :src="(pubCoachData.avatar.url.includes('https') ? '' : 'http://localhost:1337') + pubCoachData.avatar.url"
+            :data-lazy-src="(pubCoachData.avatar.url.includes('https') ? '' : 'http://localhost:1337') + pubCoachData.avatar.url"
+            :data-src="(pubCoachData.avatar.url.includes('https') ? '' : 'http://localhost:1337') + pubCoachData.avatar.url"
+            data-cookiescript="accepted" data-cookiecategory="functionality"
           /></v-avatar
       ></nuxt-link>
       <div class="d-flex flex-column justify-center">

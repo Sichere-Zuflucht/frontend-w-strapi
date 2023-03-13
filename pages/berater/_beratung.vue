@@ -1,15 +1,17 @@
 <template>
   <div v-if="pubData">
     <v-sheet class="d-flex justify-center pt-8" style="position: relative"><v-avatar size="162">
-        <v-img v-if="pubData.avatar" :lazy-src="
-          (pubData.avatar.url.includes('https')
+        <v-img 
+          v-if="pubData.avatar" 
+          :data-lazy-src="(pubData.avatar.url.includes('https')
             ? ''
-            : 'http://localhost:1337') + pubData.avatar.url
-        " :src="
-  (pubData.avatar.url.includes('https')
-    ? ''
-    : 'http://localhost:1337') + pubData.avatar.url
-"></v-img></v-avatar>
+            : 'http://localhost:1337') + pubData.avatar.url" 
+          :data-src="(pubData.avatar.url.includes('https')
+            ? ''
+            : 'http://localhost:1337') + pubData.avatar.url" 
+          data-cookiescript="accepted" 
+          data-cookiecategory="functionality"
+        /></v-avatar>
     </v-sheet>
     <v-container>
       <h1 class="text-center text-h1 primary--text text-uppercase">
@@ -136,9 +138,9 @@
             <v-alert v-else color="success" dark icon="mdi-check" class="mt-4 d-flex flex-column justify-center">
               <p class="mb-0">
                 Fertig! Deine Anfrage wurde gesendet, {{ pubData.displayName }} wird sich
-                in den nächsten Tagen bei dir melden. Suche daher bitte regelmäßig nach 
+                in den nächsten Tagen bei dir melden. Suche daher bitte regelmäßig nach
                 Updates.</p>
-                <v-btn to="/beratung" class="mt-2" color="secondary">Mein Bereich</v-btn >
+              <v-btn to="/beratung" class="mt-2" color="secondary">Mein Bereich</v-btn>
             </v-alert>
             <v-alert v-if="error.status" color="error" class="white--text mt-4">{{ error.message }}
             </v-alert>
@@ -1124,7 +1126,7 @@ export default {
         "ᵥ": "v",
         "ₓ": "x"
       };
-      return word.toString().replace(/[^A-Za-z0-9\[\] ]/g,(a)=>{return this.Latinise.latin_map[a]||a})
+      return word.toString().replace(/[^A-Za-z0-9\[\] ]/g, (a) => { return this.Latinise.latin_map[a] || a })
     }
   },
 };
