@@ -13,13 +13,17 @@
 
       <iframe
         v-if="article.attributes.spotifylink"
-        :src="
+        :data-src="
           'https://open.spotify.com/embed/' +
           article.attributes.spotifylink.replace(
             'https://open.spotify.com/',
             ''
           )
         "
+        data-cookiescript="accepted" 
+        :alt="altText"
+        :data-alt-img="altImg" 
+        data-cookiecategory="functionality"
         class="pt-2"
         width="100%"
         frameBorder="0"
@@ -32,18 +36,22 @@
       ></div>
       <iframe
         v-if="article.attributes.youtubelink"
-        width="100%"
-        :src="
+        :data-src="
           'https://www.youtube.com/embed/' +
           article.attributes.youtubelink.replace('https://youtu.be/', '')
         "
+        data-cookiescript="accepted" 
+        :alt="altText"
+        :data-alt-img="altImg" 
+        data-cookiecategory="functionality"
+        width="100%"
         class="pt-2"
         title="YouTube video player"
         frameborder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowfullscreen
       ></iframe>
-      <a
+      <!--<a
         v-if="article.attributes.youtubelink"
         class="caption"
         :href="article.attributes.youtubelink"
@@ -51,20 +59,24 @@
       >
         {{ article.attributes.youtubelink.slice(0, 50)
         }}{{ article.attributes.youtubelink.length > 50 ? "..." : "" }}
-      </a>
+      </a>-->
       <iframe
         v-if="article.attributes.soundcloudlink"
+        :data-src="
+          'https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/' +
+          article.attributes.soundcloudlink +
+          '&color=%23f9a825&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true'
+        "
+        data-cookiescript="accepted" 
+        :alt="altText"
+        :data-alt-img="altImg" 
+        data-cookiecategory="functionality"
         class="pt-2"
         width="100%"
         height="300"
         scrolling="no"
         frameborder="no"
         allow="autoplay"
-        :src="
-          'https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/' +
-          article.attributes.soundcloudlink +
-          '&color=%23f9a825&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true'
-        "
       ></iframe>
 
       <div
@@ -101,6 +113,7 @@ export default {
       error: null,
       relatedArticles: null,
       slugpath: this.$route.params.slug,
+      altText: "Bitte akzeptiere die funktionalen Cookies, um Video- und Audiobeiträge laden zu können.",
     };
   },
   async mounted(){
@@ -121,6 +134,7 @@ export default {
       .then(({data}) => data)
   },
   computed: {
+    altImg(){return location.href + 'cookie-alert.png'},
     cssVars() {
       return {
         "--primary": this.$vuetify.theme.themes.light.primary,
