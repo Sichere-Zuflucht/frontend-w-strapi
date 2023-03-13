@@ -236,9 +236,10 @@ ${ www ? '- :globe_with_meridians: : ' + www : '' }`
 
   inject('functionalCookieAccepted', ()=>{
     const cookie = app.$cookies.get('CookieScriptConsent')
+    console.log('cookie', typeof cookie.categories, cookie.categories)
     if(!cookie) return false
     if(cookie.categories.length == 0) return false
-    return cookie.join('').includes('functionality')
+    return cookie.categories.includes('functionality')
   })
 
 }

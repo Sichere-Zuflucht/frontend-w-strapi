@@ -1,6 +1,6 @@
 <template>
   <div v-if="pubData">
-    <v-sheet class="d-flex justify-center pt-8" style="position: relative"><v-avatar size="162">
+    <v-sheet class="d-flex justify-center pt-8" style="position: relative"><v-avatar color="primary" size="162">
         <v-img 
           v-if="pubData.avatar && functionalCookieAccepted" 
           :lazy-src="(pubData.avatar.url.includes('https')
