@@ -26,7 +26,9 @@ export default {
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { hid: 'description', name: 'description', content: '' },
-      { name: 'format-detection', content: 'telephone=no' }
+      { name: 'format-detection', content: 'telephone=no' },
+      { 'http-equiv': "Content-Security-Policy", content: "script-src 'self'"},
+      { name: "referrer", content: "no-referrer" },
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
@@ -34,7 +36,7 @@ export default {
       { rel: 'icon', sizes: '16x16', href: '/favicon-16x16.png' },
     ],
     script: [
-      { src: "//cdn.cookie-script.com/s/82dfb0411595d1e11442ab034e524cac.js", type: "text/javascript", charset: "UTF-8"}
+      { src: "//cdn.cookie-script.com/s/82dfb0411595d1e11442ab034e524cac.js", type: "text/javascript", charset: "UTF-8", crossorigin: "anonymous"}
     ]
     
   },
