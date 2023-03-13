@@ -5,9 +5,7 @@ on:
       # branches: [master, ionos_test_environment]
   - workflow_dispatch
   # Allows external webhook trigger
-  - repository_dispatch:
-    types:
-      - rebuild
+  - repository_dispatch
 
 jobs:
   deploy-now:
