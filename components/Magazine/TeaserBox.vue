@@ -6,7 +6,7 @@
     class="d-flex flex-column"
   >
     <v-img
-      v-if="this.magazineData.attributes.cover.data"
+      v-if="this.magazineData.attributes.cover.data && functionalCookieAccepted"
       height="200"
       :lazy-src="
         imgUrl +
@@ -65,6 +65,7 @@ export default {
     },
   },
   computed: {
+    functionalCookieAccepted(){return this.$functionalCookieAccepted()},
     imgUrl() {
       return (
         (this.magazineData.attributes.cover.data.attributes.url.includes(
