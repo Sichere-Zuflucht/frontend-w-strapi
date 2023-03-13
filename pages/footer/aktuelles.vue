@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-row v-if="!ready && functionalCookieAccepted"
+    <v-row v-if="!ready"
       ><v-col v-for="n in 4" :key="n" cols="12" md="3"
         ><v-card>
           <v-skeleton-loader
