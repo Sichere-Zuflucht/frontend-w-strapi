@@ -18,6 +18,7 @@
       "
       class="flex-grow-0 flex-shrink-1"
     />
+    <UtilsBanner v-else-if="!functionalCookieAccepted" icon='mdi-cookie-alert' />
     <v-card-actions v-if="magazineData.attributes.tags.data != 0">
       <v-avatar style="margin-top: -30px" color="white"
         ><v-icon>{{
