@@ -10,10 +10,10 @@
       <h1 class="text-h1 primary--text pt-2">{{ article.attributes.title }}</h1>
       <p class="font-weight-bold pb-6">{{ article.attributes.subtitle }}</p>
       <p class="caption">von {{ article.attributes.author }}</p>
-
+      <div v-if="functionalCookieAccepted">
       <iframe
         v-if="article.attributes.spotifylink"
-        :data-src="
+        :src="
           'https://open.spotify.com/embed/' +
           article.attributes.spotifylink.replace(
             'https://open.spotify.com/',
@@ -78,7 +78,10 @@
         frameborder="no"
         allow="autoplay"
       ></iframe>
-
+    </div>
+    <v-banner v-else>
+      <v-icon>mdi-cookie-alert</v-icon> {{ altText }}
+    </v-banner>
       <div
         class="singleArticleText mt-8"
         :style="cssVars"
@@ -134,6 +137,11 @@ export default {
       .then(({data}) => data)
   },
   computed: {
+    functionalCookieAccepted(){
+      const cookie = this.$cookies.get('CookieScriptConsent').categories
+      if(cookie.length == 0) return false
+      return cookie.join('').includes('functionality')
+    },
     altImg(){return location.href + 'cookie-alert.png'},
     cssVars() {
       return {

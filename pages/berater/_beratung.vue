@@ -2,16 +2,16 @@
   <div v-if="pubData">
     <v-sheet class="d-flex justify-center pt-8" style="position: relative"><v-avatar size="162">
         <v-img 
-          v-if="pubData.avatar" 
-          :data-lazy-src="(pubData.avatar.url.includes('https')
+          v-if="pubData.avatar && functionalCookieAccepted" 
+          :lazy-src="(pubData.avatar.url.includes('https')
             ? ''
             : 'http://localhost:1337') + pubData.avatar.url" 
-          :data-src="(pubData.avatar.url.includes('https')
+          :src="(pubData.avatar.url.includes('https')
             ? ''
             : 'http://localhost:1337') + pubData.avatar.url" 
           data-cookiescript="accepted" 
           data-cookiecategory="functionality"
-        /></v-avatar>
+        /><v-icon v-else-if="!functionalCookieAccepted" color="white">mdi-cookie-alert</v-icon></v-avatar>
     </v-sheet>
     <v-container>
       <h1 class="text-center text-h1 primary--text text-uppercase">
@@ -242,6 +242,13 @@ export default {
       Latinise: {},
       //pubData: undefined,
     };
+  },
+  computed: {
+    functionalCookieAccepted(){
+      const cookie = this.$cookies.get('CookieScriptConsent').categories
+      if(cookie.length == 0) return false
+      return cookie.join('').includes('functionality')
+    }
   },
   /*created () {
     this.getCoachContent()
