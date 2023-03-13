@@ -185,6 +185,9 @@ export default {
     options: {
       customProperties: true,
     },
+    font: {
+      family: 'Exo' 
+    },
     theme: {
       dark: false,
       themes: {
