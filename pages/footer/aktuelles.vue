@@ -21,7 +21,12 @@
         style="background: transparent; border: 1px solid #ccc"
         :onload="(ready = true)"
       ></iframe>
-      <UtilsBanner v-if="!functionalCookieAccepted" icon='mdi-cookie-alert' />
+      <div v-if="!functionalCookieAccepted">
+        <UtilsBanner  icon='mdi-cookie-alert' />
+        <v-sheet color="secondary" class="px-4 pt-4 pb-12 text-center white--text">
+          Bitte aktivieren Sie die funktionalen Cookies, um unser Board über aktuelle Tätigkeiten zu laden.
+        </v-sheet>
+      </div>
     </div>
   </div>
 </template>
