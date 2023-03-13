@@ -137,11 +137,7 @@ export default {
       .then(({data}) => data)
   },
   computed: {
-    functionalCookieAccepted(){
-      const cookie = this.$cookies.get('CookieScriptConsent').categories
-      if(cookie.length == 0) return false
-      return cookie.join('').includes('functionality')
-    },
+    functionalCookieAccepted(){return this.$functionalCookieAccepted},
     altImg(){return location.href + 'cookie-alert.png'},
     cssVars() {
       return {

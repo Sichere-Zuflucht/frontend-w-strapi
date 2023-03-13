@@ -244,11 +244,7 @@ export default {
     };
   },
   computed: {
-    functionalCookieAccepted(){
-      const cookie = this.$cookies.get('CookieScriptConsent').categories
-      if(cookie.length == 0) return false
-      return cookie.join('').includes('functionality')
-    }
+    functionalCookieAccepted(){return this.$functionalCookieAccepted},
   },
   /*created () {
     this.getCoachContent()
