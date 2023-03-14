@@ -5,9 +5,10 @@ on:
     branches:
       - master
       - beta
+  workflow_dispatch:
   repository_dispatch:
     types:
-      - run-redeploy
+      - redeploy
 
 jobs:
   deploy-now:
@@ -39,24 +40,24 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: v16.x
-
-      - if: ${{ github.ref == 'refs/heads/master' }}
-        name: Build Node assets MASTER
+      
+      - if: ${{ github.event.client_payload.beta }}
+        name: WEBHOOK build Node assets BETA
         env:
           CI: true
-          STRAPI_URL: ${{ secrets.PROD_STRAPI_URL }}
-          STRIPE_PK: ${{ secrets.STRIPE_PK_LIVE }}
-          DONATION_1: ${{ secrets.PROD_DONATION_1 }}
-          DONATION_2: ${{ secrets.PROD_DONATION_2 }}
-          DONATION_3: ${{ secrets.PROD_DONATION_3 }}
-          DONATION_4: ${{ secrets.PROD_DONATION_4 }}
+          STRAPI_URL: ${{ secrets.DEV_STRAPI_URL }}
+          STRIPE_PK: ${{ secrets.STRIPE_PK_TEST }}
+          DONATION_1: ${{ secrets.DEV_DONATION_1 }}
+          DONATION_2: ${{ secrets.DEV_DONATION_2 }}
+          DONATION_3: ${{ secrets.DEV_DONATION_3 }}
+          DONATION_4: ${{ secrets.DEV_DONATION_4 }}
           # RED_API: ${{ secrets.RED_API }}
         run: |
           npm install --global yarn
           yarn install --frozen-lockfile
           yarn build
           yarn generate
-      
+
       - if: ${{ github.ref == 'refs/heads/beta' }}
         name: Build Node assets BETA
         env:
@@ -67,6 +68,23 @@ jobs:
           DONATION_2: ${{ secrets.DEV_DONATION_2 }}
           DONATION_3: ${{ secrets.DEV_DONATION_3 }}
           DONATION_4: ${{ secrets.DEV_DONATION_4 }}
+          # RED_API: ${{ secrets.RED_API }}
+        run: |
+          npm install --global yarn
+          yarn install --frozen-lockfile
+          yarn build
+          yarn generate
+      
+      - if: ${{ github.ref == 'refs/heads/master' }}
+        name: Build Node assets MASTER
+        env:
+          CI: true
+          STRAPI_URL: ${{ secrets.PROD_STRAPI_URL }}
+          STRIPE_PK: ${{ secrets.STRIPE_PK_LIVE }}
+          DONATION_1: ${{ secrets.PROD_DONATION_1 }}
+          DONATION_2: ${{ secrets.PROD_DONATION_2 }}
+          DONATION_3: ${{ secrets.PROD_DONATION_3 }}
+          DONATION_4: ${{ secrets.PROD_DONATION_4 }}
           # RED_API: ${{ secrets.RED_API }}
         run: |
           npm install --global yarn
