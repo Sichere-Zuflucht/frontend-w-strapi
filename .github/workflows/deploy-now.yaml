@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - master
-      - ionos_test_environment
+      - beta
   repository_dispatch:
     types:
       - run-redeploy
@@ -41,7 +41,7 @@ jobs:
           node-version: v16.x
 
       - if: ${{ github.ref == 'refs/heads/master' }}
-        name: Build Node assets Master
+        name: Build Node assets MASTER
         env:
           CI: true
           STRAPI_URL: ${{ secrets.PROD_STRAPI_URL }}
@@ -57,8 +57,8 @@ jobs:
           yarn build
           yarn generate
       
-      - if: ${{ github.ref == 'refs/heads/ionos_test_environment' }}
-        name: Build Node assets Dev
+      - if: ${{ github.ref == 'refs/heads/beta' }}
+        name: Build Node assets BETA
         env:
           CI: true
           STRAPI_URL: ${{ secrets.DEV_STRAPI_URL }}
