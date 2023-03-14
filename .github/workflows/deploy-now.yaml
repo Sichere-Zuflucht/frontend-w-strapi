@@ -41,7 +41,7 @@ jobs:
         with:
           node-version: v16.x
 
-      - if: ${{ github.ref == 'refs/heads/beta' }} || ${{ github.event.client_payload.beta }}
+      - if: ${{ github.ref == 'refs/heads/beta' || github.event.client_payload.beta == true }}
         name: Build Node assets BETA
         env:
           CI: true
@@ -58,7 +58,7 @@ jobs:
           yarn build
           yarn generate
       
-      - if: ${{ github.ref == 'refs/heads/master' }} && !${{ github.event.client_payload.beta }}
+      - if: ${{ github.ref == 'refs/heads/master' && github.event.client_payload.beta != true }}
         name: Build Node assets MASTER
         env:
           CI: true
