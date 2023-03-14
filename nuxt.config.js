@@ -149,6 +149,16 @@ export default {
     status: process.env.NODE_ENV,
     notification: {
       meetingID: process.argv[2],
+      a:process.argv[0],
+      b:process.argv[1],
+      c:process.argv[3],
+      d:process.argv[4],
+      e:process.argv[5],
+      f:process.argv[6],
+      g:process.argv[7],
+      h:process.argv[8],
+      i:process.argv[9],
+      j:process.argv[10],
     }
   },
 
