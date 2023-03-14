@@ -5,6 +5,9 @@ on:
     branches:
       - master
       - ionos_test_environment
+  repository_dispatch:
+    types:
+      - run-redeploy
 
 jobs:
   deploy-now:
