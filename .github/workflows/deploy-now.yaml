@@ -1,12 +1,12 @@
 name: Deploy Now
 
 on:
-  push: 
+  - push: 
     branches: [master, ionos_test_environment]
-  workflow_dispatch
   # Allows external webhook trigger
-  repository_dispatch:
+  - repository_dispatch:
     types: [run-redeploy]
+  - workflow_dispatch
 
 jobs:
   deploy-now:
