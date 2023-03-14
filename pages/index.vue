@@ -4,7 +4,6 @@
       <h1 class="text-h1 mb-4 text-center primary--text pt-12">
         Niemand muss <br />häusliche Gewalt aushalten.
       </h1>
-      <div class='onesignal-customlink-container'>Subscribe</div>
       <h2 class="text-center secondary--text subtitle-1 mb-8 mb-md-12">
         Auch du nicht
       </h2>

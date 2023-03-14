@@ -36,8 +36,6 @@ export default {
     ],
     script: [
       { src: "//cdn.cookie-script.com/s/82dfb0411595d1e11442ab034e524cac.js", type: "text/javascript", charset: "UTF-8" },
-      { src: "https://cdn.onesignal.com/sdks/OneSignalSDK.js", async: '' },
-      { src: "/serviceworker/onesignal.js" }
     ]
     
   },
@@ -186,9 +184,7 @@ export default {
     customVariables: ['~/assets/variables.scss'],
     treeShake: true,
     defaultAssets: { 
-      font: {
-        family: 'Exo' 
-      },
+      font: false,
       icons: 'mdi',
     },
     options: {
