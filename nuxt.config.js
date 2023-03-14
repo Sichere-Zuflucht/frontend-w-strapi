@@ -147,6 +147,9 @@ export default {
     donate3: process.env.DONATION_3,
     donate4: process.env.DONATION_4,
     status: process.env.NODE_ENV,
+    notification: {
+      meetingID: process.argv[2],
+    }
   },
 
   generate: {
