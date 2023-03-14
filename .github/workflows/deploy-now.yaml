@@ -58,7 +58,7 @@ jobs:
           yarn build
           yarn generate
       
-      - if: ${{ github.ref == 'refs/heads/master' }} || !${{ github.event.client_payload.beta }}
+      - if: ${{ github.ref == 'refs/heads/master' }} && !${{ github.event.client_payload.beta }}
         name: Build Node assets MASTER
         env:
           CI: true
