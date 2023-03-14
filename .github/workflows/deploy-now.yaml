@@ -40,25 +40,8 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: v16.x
-      
-      - if: ${{ github.event.client_payload.beta }}
-        name: WEBHOOK build Node assets BETA
-        env:
-          CI: true
-          STRAPI_URL: ${{ secrets.DEV_STRAPI_URL }}
-          STRIPE_PK: ${{ secrets.STRIPE_PK_TEST }}
-          DONATION_1: ${{ secrets.DEV_DONATION_1 }}
-          DONATION_2: ${{ secrets.DEV_DONATION_2 }}
-          DONATION_3: ${{ secrets.DEV_DONATION_3 }}
-          DONATION_4: ${{ secrets.DEV_DONATION_4 }}
-          # RED_API: ${{ secrets.RED_API }}
-        run: |
-          npm install --global yarn
-          yarn install --frozen-lockfile
-          yarn build
-          yarn generate
 
-      - if: ${{ github.ref == 'refs/heads/beta' }}
+      - if: ${{ github.ref == 'refs/heads/beta' }} || ${{ github.event.client_payload.beta }}
         name: Build Node assets BETA
         env:
           CI: true
@@ -75,7 +58,7 @@ jobs:
           yarn build
           yarn generate
       
-      - if: ${{ github.ref == 'refs/heads/master' }}
+      - if: ${{ github.ref == 'refs/heads/master' }} || !${{ github.event.client_payload.beta }}
         name: Build Node assets MASTER
         env:
           CI: true
