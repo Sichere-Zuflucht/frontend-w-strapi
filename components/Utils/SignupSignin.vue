@@ -43,13 +43,13 @@
               <v-item-group v-model="membership" class="mt-2">
                 <v-row>
                   <v-col v-for="(n, i) in memberships" :key="i" cols="12" sm="6">
-                    <v-item v-slot="{ active, toggle }" :value="n" >
+                    <v-item v-slot="{ active, toggle }" :value="n">
                       <v-card :disabled="i == 0 ? true : false" :color="active ? 'primary' : 'blue-grey lighten-5'"
                         class="d-flex flex-column justify-center align-center pa-8" :dark="active" height="200"
                         @click="toggle">
                         <v-icon large class="pr-2">{{ n.icon }}</v-icon>
                         <p class="ma-0 text-center" style="padding-top: 2px">
-                          {{ n.description }}<br/><span class="caption">{{ n.notyet }}</span>
+                          {{ n.description }}<br /><span class="caption">{{ n.notyet }}</span>
                         </p>
                       </v-card></v-item></v-col></v-row></v-item-group>
               <div class="d-flex justify-end pt-6">
@@ -104,7 +104,10 @@
                       {{ n.title }}
                     </v-chip>
                     <v-text-field v-model="password2" :rules="rules.passwordRules2" label="Passwort wiederholen"
-                    :type="hidePassword2 ? 'password' : 'text'" :append-icon="hidePassword2 ? 'mdi-eye' : 'mdi-eye-off'" @click:append="() => (hidePassword2 = !hidePassword2)" name="new-password" autocomplete="off" class="mt-6"></v-text-field>
+                      :type="hidePassword2 ? 'password' : 'text'"
+                      :append-icon="hidePassword2 ? 'mdi-eye' : 'mdi-eye-off'"
+                      @click:append="() => (hidePassword2 = !hidePassword2)" name="new-password" autocomplete="off"
+                      class="mt-6"></v-text-field>
                   </div>
                   <div class="d-flex justify-end">
                     <v-btn text color="grey" @click="back()"> Zurück </v-btn>
@@ -339,15 +342,16 @@ export default {
       });
 
       // Ist nodemailer aktiviert, damit die Registrierung via localhost funktioniert?
-      this.$strapi
-        .register({
-          username: username,
+      const role = roleTypes.find(
+        (r) => r.type == this.membership.id.toLowerCase()
+      ).id
+      this.$store
+        .dispatch("register", {
+          username,
           email: this.email,
           password: this.password,
-          role: roleTypes.find(
-            (r) => r.type == this.membership.id.toLowerCase()
-          ).id,
-          roleName: this.membership.roleName,
+          role,
+          roleName:  this.membership.roleName,
         })
         .then(() => {
           this.valid = false

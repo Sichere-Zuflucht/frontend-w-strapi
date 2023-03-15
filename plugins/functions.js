@@ -7,23 +7,24 @@ export default ({ app }, inject) => {
   inject('newCoachEmail', (data) => {
     return app.$axios.$post(app.$config.strapi.url + "/newcoachemail", {
       headers: {
-        Authorization: "Bearer "+ JSON.parse(localStorage.getItem("strapi_jwt")).token
+        Authorization: "Bearer " + JSON.parse(localStorage.getItem("strapi_jwt")).token
       },
       body: data,
-    }).then(()=>{
-      
+    }).then(() => {
+
       if (app.$config.status != 'production') return
       const { tel, altEmail, www, name } = data
-      const slack = {"text":`*Neue Anmeldung* :rocket: 
+      const slack = {
+        "text": `*Neue Anmeldung* :rocket: 
 
 Die Person *${name}* möchte über unsere Plattform Beratung anbieten. <@U01F8C7HESU> wird den Kontakt aufnehmen. 
 
 *Weitere Details:*
-${ tel ? '- :telephone_receiver: : ' + tel : '' }
-${ altEmail ? '- :email: : ' + altEmail : '' }
-${ www ? '- :globe_with_meridians: : ' + www : '' }`
+${tel ? '- :telephone_receiver: : ' + tel : ''}
+${altEmail ? '- :email: : ' + altEmail : ''}
+${www ? '- :globe_with_meridians: : ' + www : ''}`
       }
-             
+
       fetch(app.$config.slackUrl, {
         method: "POST", // *GET, POST, PUT, DELETE, etc.
         mode: "cors", // no-cors, *cors, same-origin
@@ -32,7 +33,7 @@ ${ www ? '- :globe_with_meridians: : ' + www : '' }`
         redirect: "follow", // manual, *follow, error
         referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
         body: JSON.stringify(slack), // body data type must match "Content-Type" header
-      }).catch((err)=>{
+      }).catch((err) => {
         console.log('error slack', err)
       })
 
@@ -47,7 +48,7 @@ ${ www ? '- :globe_with_meridians: : ' + www : '' }`
     return app.$axios
       .get(app.$config.strapi.url + "/stripeloginlink?acc=" + app.store.getters["getActiveUser"].stripeID, {
         headers: {
-          Authorization: "Bearer "+ JSON.parse(localStorage.getItem("strapi_jwt")).token
+          Authorization: "Bearer " + JSON.parse(localStorage.getItem("strapi_jwt")).token
         },
       }).catch((e) => {
         app.store.dispatch("errorhandling", e);
@@ -64,7 +65,7 @@ ${ www ? '- :globe_with_meridians: : ' + www : '' }`
         location.origin,
         {
           headers: {
-            Authorization: "Bearer "+ JSON.parse(localStorage.getItem("strapi_jwt")).token
+            Authorization: "Bearer " + JSON.parse(localStorage.getItem("strapi_jwt")).token
           },
         }
       )
@@ -100,7 +101,7 @@ ${ www ? '- :globe_with_meridians: : ' + www : '' }`
         `${app.$config.strapi.url}/deletestripeacc?acc=${app.$strapi.user.stripeID}`,
         {
           headers: {
-            Authorization: "Bearer "+ JSON.parse(localStorage.getItem("strapi_jwt")).token
+            Authorization: "Bearer " + JSON.parse(localStorage.getItem("strapi_jwt")).token
           },
         }
       ).catch((e) => {
@@ -114,7 +115,7 @@ ${ www ? '- :globe_with_meridians: : ' + www : '' }`
         `${app.$config.strapi.url}/retrievestripepaymentsetup?checkoutSession=${checkoutSession}`,
         {
           headers: {
-            Authorization: "Bearer "+ JSON.parse(localStorage.getItem("strapi_jwt")).token
+            Authorization: "Bearer " + JSON.parse(localStorage.getItem("strapi_jwt")).token
           },
         }
       )
@@ -128,13 +129,13 @@ ${ www ? '- :globe_with_meridians: : ' + www : '' }`
   })
   // not in use... maybe it will be needed once ?!
   inject('stopStripePaymentSetup', (checkoutSession) => {
-    
+
     return app.$axios
       .get(
         `${app.$config.strapi.url}/stopstripepaymentsetup?checkoutSession=${checkoutSession}`,
         {
           headers: {
-            Authorization: "Bearer "+ JSON.parse(localStorage.getItem("strapi_jwt")).token
+            Authorization: "Bearer " + JSON.parse(localStorage.getItem("strapi_jwt")).token
           },
         }
       )
@@ -155,7 +156,7 @@ ${ www ? '- :globe_with_meridians: : ' + www : '' }`
         `${app.$config.strapi.url}/paywithstripe?coachStripeId=${coachStripeId}&name=${user.username}&email=${user.email}&url=${location.origin}&meetingID=${meetingID}`,
         {
           headers: {
-            Authorization: "Bearer "+ JSON.parse(localStorage.getItem("strapi_jwt")).token
+            Authorization: "Bearer " + JSON.parse(localStorage.getItem("strapi_jwt")).token
           },
         }
       ).catch((e) => {
@@ -171,7 +172,7 @@ ${ www ? '- :globe_with_meridians: : ' + www : '' }`
         app.store.getters["getActiveUser"].stripeID,
         {
           headers: {
-            Authorization: "Bearer "+ JSON.parse(localStorage.getItem("strapi_jwt")).token
+            Authorization: "Bearer " + JSON.parse(localStorage.getItem("strapi_jwt")).token
           },
         }
       ).catch((e) => {
@@ -180,19 +181,19 @@ ${ www ? '- :globe_with_meridians: : ' + www : '' }`
   })
 
   inject('getStripePaymentSession', (sessionID) => {
-    if(sessionID){
+    if (sessionID) {
       return app.$axios
         .$get(
           `${app.$config.strapi.url}/retrievestripepaysession?paymentID=${sessionID}`,
           {
             headers: {
-              Authorization: "Bearer "+ JSON.parse(localStorage.getItem("strapi_jwt")).token
+              Authorization: "Bearer " + JSON.parse(localStorage.getItem("strapi_jwt")).token
             },
           }
         ).catch((e) => {
           app.store.dispatch("errorhandling", e);
         });
-      }
+    }
     return {
       status: false
     }
@@ -206,10 +207,10 @@ ${ www ? '- :globe_with_meridians: : ' + www : '' }`
         `${app.$config.strapi.url}/deletemeeting?email=${email}&id=${id}&acceptedDate=${acceptedDate}`,
         {
           headers: {
-            Authorization: "Bearer "+ JSON.parse(localStorage.getItem("strapi_jwt")).token
+            Authorization: "Bearer " + JSON.parse(localStorage.getItem("strapi_jwt")).token
           },
         }
-      ).then(()=>{
+      ).then(() => {
         this.$stopStripePaymentSetup(paymentID)
       }).catch((e) => {
         const err = {
@@ -226,7 +227,7 @@ ${ www ? '- :globe_with_meridians: : ' + www : '' }`
         `${app.$config.strapi.url}/getvideomeeting?video=${video}`,
         {
           headers: {
-            Authorization: "Bearer "+ JSON.parse(localStorage.getItem("strapi_jwt")).token
+            Authorization: "Bearer " + JSON.parse(localStorage.getItem("strapi_jwt")).token
           },
         }
       ).catch((e) => {
@@ -234,10 +235,10 @@ ${ www ? '- :globe_with_meridians: : ' + www : '' }`
       });
   })
 
-  inject('functionalCookieAccepted', ()=>{
+  inject('functionalCookieAccepted', () => {
     const cookie = app.$cookies.get('CookieScriptConsent')
-    if(!cookie) return false
-    if(cookie.categories.length == 0) return false
+    if (!cookie) return false
+    if (cookie.categories.length == 0) return false
     return cookie.categories.includes('functionality')
   })
 
