@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-row v-if="!ready"
+    <v-row v-if="!ready && functionalCookieAccepted"
       ><v-col v-for="n in 4" :key="n" cols="12" md="3"
         ><v-card>
           <v-skeleton-loader
@@ -11,6 +11,7 @@
     ></v-row>
     <div style="height: calc(100vh - 64px)">
       <iframe
+        v-if="functionalCookieAccepted"
         class="airtable-embed"
         src="https://airtable.com/embed/shra2cMAHkEFvtgfI?backgroundColor=yellow&viewControls=on"
         frameborder="0"
@@ -20,6 +21,12 @@
         style="background: transparent; border: 1px solid #ccc"
         :onload="(ready = true)"
       ></iframe>
+      <div v-if="!functionalCookieAccepted">
+        <UtilsBanner  icon='mdi-cookie-alert' />
+        <v-sheet color="secondary" class="px-4 pt-4 pb-12 text-center white--text">
+          Bitte aktivieren Sie die funktionalen Cookies, um unser Board über aktuelle Tätigkeiten zu laden.
+        </v-sheet>
+      </div>
     </div>
   </div>
 </template>
@@ -31,5 +38,8 @@ export default {
       ready: false,
     }
   },
+  computed: {
+    functionalCookieAccepted(){return this.$functionalCookieAccepted()},
+  }
 }
 </script>

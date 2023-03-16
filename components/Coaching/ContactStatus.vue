@@ -17,15 +17,21 @@
           : $vuetify.theme.themes.light.primary) +
       ' !important'
     ">
-      <v-avatar v-if="coach.avatar" color="primary ma-5" size="90" contain>
-        <v-img :lazy-src="
+      <v-avatar color="primary ma-5" size="90" contain>
+        <v-img v-if="coach.avatar 
+            && functionalCookieAccepted"
+          :lazy-src="
           (coach.avatar.url.includes('https')
             ? ''
             : 'http://localhost:1337') + coach.avatar.url
-        " :src="(coach.avatar.url.includes('https')
-  ? ''
-  : 'http://localhost:1337') + coach.avatar.url
-" />
+          " 
+          :src="(coach.avatar.url.includes('https')
+            ? ''
+            : 'http://localhost:1337') + coach.avatar.url
+          " 
+          data-cookiescript="accepted" 
+          data-cookiecategory="functionality"
+      /><v-icon v-else-if="!functionalCookieAccepted" color="white">mdi-cookie-alert</v-icon>
       </v-avatar>
       <div class="ma-5 ml-2 d-flex flex-column justify-center">
         <h2 class="secondary--text text-h2">
@@ -372,6 +378,7 @@ export default {
     };
   },
   computed: {
+    functionalCookieAccepted(){return this.$functionalCookieAccepted()},
     jitsiWithWomanName() {
       const name = this.$store.getters['getActiveUser'].username
       return `${this.response.videoCoach}#userInfo.displayName="${name}"`

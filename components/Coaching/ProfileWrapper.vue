@@ -10,10 +10,13 @@
       <nuxt-link :to="'/berater/' + pubCoachData.username">
         <v-avatar color="primary" class="my-5" size="80"
           ><v-img 
-            v-if="pubCoachData.avatar"
+            v-if="pubCoachData.avatar 
+            && functionalCookieAccepted"
             :lazy-src="(pubCoachData.avatar.url.includes('https') ? '' : 'http://localhost:1337') + pubCoachData.avatar.url"
             :src="(pubCoachData.avatar.url.includes('https') ? '' : 'http://localhost:1337') + pubCoachData.avatar.url"
-          /></v-avatar
+            data-cookiescript="accepted" data-cookiecategory="functionality"
+          />
+          <v-icon v-else-if="!functionalCookieAccepted" color="white">mdi-cookie-alert</v-icon></v-avatar
       ></nuxt-link>
       <div class="d-flex flex-column justify-center">
         <nuxt-link
@@ -73,5 +76,8 @@ export default {
       isDelete: false,
     }
   },
+  computed: {
+    functionalCookieAccepted(){return this.$functionalCookieAccepted()},
+  }
 }
 </script>

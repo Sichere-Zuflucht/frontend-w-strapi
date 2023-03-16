@@ -63,7 +63,7 @@
       <span class="mt-0 caption">&copy; {{ new Date().getFullYear() }} Sichere Zuflucht gemeinnützige
         GmbH</span>
     </v-row>
-    <v-banner v-if="!aktiveCookieBanner" color="primary" class="white--text" rounded
+    <!--<v-banner v-if="!aktiveCookieBanner" color="primary" class="white--text" rounded
       style="position: fixed; bottom: 10px;">
       <v-avatar slot="icon" size="40">
         <v-icon icon="mdi-lock" color="white">
@@ -77,7 +77,7 @@
       <v-btn class="mx-4" @click="closeCookieBanner">
         Verstanden
       </v-btn>
-    </v-banner>
+    </v-banner>-->
   </v-footer>
 </template>
 

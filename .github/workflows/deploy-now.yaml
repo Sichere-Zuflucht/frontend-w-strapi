@@ -1,9 +1,14 @@
 name: Deploy Now
 
 on:
-  - push #: 
-      # branches: [master, ionos_test_environment]
-  - workflow_dispatch
+  push:
+    branches:
+      - master
+      - beta
+  workflow_dispatch:
+  repository_dispatch:
+    types:
+      - redeploy
 
 jobs:
   deploy-now:
@@ -36,25 +41,8 @@ jobs:
         with:
           node-version: v16.x
 
-      - if: ${{ github.ref == 'refs/heads/master' }}
-        name: Build Node assets Master
-        env:
-          CI: true
-          STRAPI_URL: ${{ secrets.PROD_STRAPI_URL }}
-          STRIPE_PK: ${{ secrets.STRIPE_PK_LIVE }}
-          DONATION_1: ${{ secrets.PROD_DONATION_1 }}
-          DONATION_2: ${{ secrets.PROD_DONATION_2 }}
-          DONATION_3: ${{ secrets.PROD_DONATION_3 }}
-          DONATION_4: ${{ secrets.PROD_DONATION_4 }}
-          # RED_API: ${{ secrets.RED_API }}
-        run: |
-          npm install --global yarn
-          yarn install --frozen-lockfile
-          yarn build
-          yarn generate
-      
-      - if: ${{ github.ref == 'refs/heads/ionos_test_environment' }}
-        name: Build Node assets Dev
+      - if: ${{ github.ref == 'refs/heads/beta' || github.event.client_payload.beta == true }}
+        name: Build Node assets BETA
         env:
           CI: true
           STRAPI_URL: ${{ secrets.DEV_STRAPI_URL }}
@@ -63,6 +51,23 @@ jobs:
           DONATION_2: ${{ secrets.DEV_DONATION_2 }}
           DONATION_3: ${{ secrets.DEV_DONATION_3 }}
           DONATION_4: ${{ secrets.DEV_DONATION_4 }}
+          # RED_API: ${{ secrets.RED_API }}
+        run: |
+          npm install --global yarn
+          yarn install --frozen-lockfile
+          yarn build
+          yarn generate
+      
+      - if: ${{ github.ref == 'refs/heads/master' && github.event.client_payload.beta != true }}
+        name: Build Node assets MASTER
+        env:
+          CI: true
+          STRAPI_URL: ${{ secrets.PROD_STRAPI_URL }}
+          STRIPE_PK: ${{ secrets.STRIPE_PK_LIVE }}
+          DONATION_1: ${{ secrets.PROD_DONATION_1 }}
+          DONATION_2: ${{ secrets.PROD_DONATION_2 }}
+          DONATION_3: ${{ secrets.PROD_DONATION_3 }}
+          DONATION_4: ${{ secrets.PROD_DONATION_4 }}
           # RED_API: ${{ secrets.RED_API }}
         run: |
           npm install --global yarn

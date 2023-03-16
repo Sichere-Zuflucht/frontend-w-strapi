@@ -26,20 +26,18 @@ export default {
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { hid: 'description', name: 'description', content: '' },
-      { name: 'format-detection', content: 'telephone=no' }
+      { name: 'format-detection', content: 'telephone=no' },
+      { name: "referrer", content: "no-referrer" },
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
       { rel: 'icon', sizes: '32x32', href: '/favicon-32x32.png' },
       { rel: 'icon', sizes: '16x16', href: '/favicon-16x16.png' },
-      { rel: 'preconnect', href: 'https://fonts.gstatic.com' },
-      {
-        href:
-          'https://fonts.googleapis.com/css2?family=Exo:ital,wght@0,300;0,400;0,' +
-          '600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&display=swap',
-        rel: 'stylesheet',
-      },
     ],
+    script: [
+      { src: "//cdn.cookie-script.com/s/82dfb0411595d1e11442ab034e524cac.js", type: "text/javascript", charset: "UTF-8", crossorigin: "anonymous"}
+    ]
+    
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
@@ -185,9 +183,16 @@ export default {
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
     treeShake: true,
+    defaultAssets: { 
+      font: {
+        family: 'Exo' 
+      },
+      icons: 'mdi',
+    },
     options: {
       customProperties: true,
     },
+    
     theme: {
       dark: false,
       themes: {

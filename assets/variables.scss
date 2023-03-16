@@ -8,6 +8,29 @@
   src: local('Yellowtail'), url(~assets/Yellowtail/Yellowtail-Regular.ttf) format("truetype");
 }
 
+@font-face {
+  font-family: "Exo";
+  src: local('Exo'), 
+    url(~assets/Exo/Exo-Black.ttf) format("truetype"), 
+    url(~assets/Exo/Exo-BlackItalic.ttf) format("truetype"), 
+    url(~assets/Exo/Exo-Bold.ttf) format("truetype"), 
+    url(~assets/Exo/Exo-BoldItalic.ttf) format("truetype"), 
+    url(~assets/Exo/Exo-ExtraBold.ttf) format("truetype"), 
+    url(~assets/Exo/Exo-ExtraBoldItalic.ttf) format("truetype")
+    url(~assets/Exo/Exo-ExtraLight.ttf) format("truetype"), 
+    url(~assets/Exo/Exo-ExtraLightItalic.ttf) format("truetype"), 
+    url(~assets/Exo/Exo-Light.ttf) format("truetype"), 
+    url(~assets/Exo/Exo-LightItalic.ttf) format("truetype"), 
+    url(~assets/Exo/Exo-Medium.ttf) format("truetype"), 
+    url(~assets/Exo/Exo-MediumItalic.ttf) format("truetype"), 
+    url(~assets/Exo/Exo-SemiBold.ttf) format("truetype"), 
+    url(~assets/Exo/Exo-SemiBoldItalic.ttf) format("truetype"), 
+    url(~assets/Exo/Exo-Thin.ttf) format("truetype"), 
+    url(~assets/Exo/Exo-ThinItalic.ttf) format("truetype"), 
+    url(~assets/Exo/Exo-Italic.ttf) format("truetype"), 
+    url(~assets/Exo/Exo-Regular.ttf) format("truetype"), ;
+}
+
 $container-padding-x: 24px;
 $body-font-family: 'Exo', sans-serif !default;
 $btn-font-weight: 600;
