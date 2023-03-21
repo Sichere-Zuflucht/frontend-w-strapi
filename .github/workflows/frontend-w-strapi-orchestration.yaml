@@ -33,7 +33,6 @@ jobs:
           project-id: 77285c6f-760a-46d2-a7fa-8504971a469c
           action: retrieve-info
 
-
   build:
     name: build
     needs: retrieve-project
