@@ -35,9 +35,13 @@ jobs:
       - name: Build Node assets
         env:
           CI: true
-          DONATE: https://donate.stripe.com/14k4gCaxOe1efCw28c
           SITE_URL: ${{ inputs.site-url }}
-          TEST: asdfasdf
+          STRAPI_URL: ${{ secrets.DEV_STRAPI_URL }}
+          STRIPE_PK: ${{ secrets.STRIPE_PK_TEST }}
+          DONATION_1: ${{ secrets.DEV_DONATION_1 }}
+          DONATION_2: ${{ secrets.DEV_DONATION_2 }}
+          DONATION_3: ${{ secrets.DEV_DONATION_3 }}
+          DONATION_4: ${{ secrets.DEV_DONATION_4 }}
         run: |
           npm install --global yarn
           yarn install --frozen-lockfile
