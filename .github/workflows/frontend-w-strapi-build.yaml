@@ -32,7 +32,8 @@ jobs:
         with:
           node-version: v16.x
 
-      - name: Build Node assets
+      - if: ${{ github.ref == 'refs/heads/beta' || github.event.client_payload.beta == true }}
+        name: Build Node assets BETA
         env:
           CI: true
           SITE_URL: ${{ inputs.site-url }}
@@ -42,6 +43,23 @@ jobs:
           DONATION_2: ${{ secrets.DEV_DONATION_2 }}
           DONATION_3: ${{ secrets.DEV_DONATION_3 }}
           DONATION_4: ${{ secrets.DEV_DONATION_4 }}
+        run: |
+          npm install --global yarn
+          yarn install --frozen-lockfile
+          yarn build
+          yarn generate
+      
+      - if: ${{ github.ref == 'refs/heads/master' && github.event.client_payload.beta != true }}
+        name: Build Node assets MASTER
+        env:
+          CI: true
+          SITE_URL: ${{ inputs.site-url }}
+          STRAPI_URL: ${{ secrets.PROD_STRAPI_URL }}
+          STRIPE_PK: ${{ secrets.STRIPE_PK_LIVE }}
+          DONATION_1: ${{ secrets.PROD_DONATION_1 }}
+          DONATION_2: ${{ secrets.PROD_DONATION_2 }}
+          DONATION_3: ${{ secrets.PROD_DONATION_3 }}
+          DONATION_4: ${{ secrets.PROD_DONATION_4 }}
         run: |
           npm install --global yarn
           yarn install --frozen-lockfile
