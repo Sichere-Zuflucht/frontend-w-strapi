@@ -17,9 +17,9 @@ env:
   DEPLOYMENT_FOLDER: dist
   ENVIRONMENT: 
     if: ${{ contains(github.ref,'master') }}
-      environment: production
+    environment: production
     if: ${{ contains(github.ref,'beta') }}
-      environment: development
+    environment: development
 
 jobs:
 # Please do not rename this job
