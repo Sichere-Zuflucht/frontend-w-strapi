@@ -15,18 +15,13 @@ on:
 
 env:
   DEPLOYMENT_FOLDER: dist
+  ENVIRONMENT: 
+    - if: ${{ contains(github.ref,'master') }}
+      environment: production
+    - if: ${{ contains(github.ref,'beta') }}
+      environment: development
 
 jobs:
-  set-production:
-    name: build PRODUCTION
-    if: ${{ contains(github.ref, 'master') }}
-    environment: production
-
-  set-development:
-    name: build DEVELOPMENT
-    if: ${{ contains(github.ref, 'beta') }}
-    environment: development
-
 # Please do not rename this job
   build-project:
     name: build frontend-w-strapi
@@ -53,7 +48,7 @@ jobs:
           DONATION_3: ${{ vars.DONATION_3 }}
           DONATION_4: ${{ vars.DONATION_4 }}
         run: |
-          echo "repository : ${{ github.ref }}"
+          echo "env : ${{ env.ENVIRONMENT }}"
           npm install --global yarn
           yarn install --frozen-lockfile
           yarn build
