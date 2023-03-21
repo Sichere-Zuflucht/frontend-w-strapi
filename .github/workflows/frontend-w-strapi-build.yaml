@@ -21,10 +21,10 @@ jobs:
   build-project:
     name: build frontend-w-strapi
     runs-on: ubuntu-latest
-    if: ${{ github.ref == 'refs/heads/beta' || github.event.client_payload.beta == true }}
+    - if: ${{ github.ref == 'refs/heads/beta' || github.event.client_payload.beta == true }}
       environment: development
     
-    if: ${{ github.ref == 'refs/heads/master' && github.event.client_payload.beta != true }}
+    - if: ${{ github.ref == 'refs/heads/master' && github.event.client_payload.beta != true }}
       environment: production
     
     steps:
