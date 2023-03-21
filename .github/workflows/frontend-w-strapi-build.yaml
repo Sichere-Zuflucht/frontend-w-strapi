@@ -19,13 +19,11 @@ env:
 jobs:
   set-production:
     name: build PRODUCTION
-    runs-on: ubuntu-latest
     if: ${{ contains(github.ref, 'master') }}
     environment: production
 
   set-development:
     name: build DEVELOPMENT
-    runs-on: ubuntu-latest
     if: ${{ contains(github.ref, 'beta') }}
     environment: development
 
@@ -33,7 +31,6 @@ jobs:
   build-project:
     name: build frontend-w-strapi
     runs-on: ubuntu-latest
-    environment: ${ GITHUB_REF }
     steps:
       - name: checkout
         uses: actions/checkout@v3
