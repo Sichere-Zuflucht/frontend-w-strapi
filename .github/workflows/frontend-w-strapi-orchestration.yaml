@@ -7,8 +7,14 @@ name: "Deploy Now: Orchestration"
 run-name: "Deploy Now: Build frontend-w-strapi · ${{ github.event.head_commit.message || format('Triggered by {0}', github.triggering_actor) }}"
 
 on:
-  - push
-  - workflow_dispatch
+  push:
+    branches:
+      - master
+      - beta
+  workflow_dispatch:
+  repository_dispatch:
+    types:
+      - redeploy
 
 jobs:
   retrieve-project:
