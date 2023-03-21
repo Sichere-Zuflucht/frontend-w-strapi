@@ -21,8 +21,11 @@ jobs:
   build-project:
     name: build frontend-w-strapi
     runs-on: ubuntu-latest
-    if: ${{ contains(github.ref, 'beta') }}
-    environment: development
+    environment: 
+      - if: ${{ contains(github.ref, 'beta') }}
+        name: development
+      - if: ${{ contains(github.ref, 'master') }}
+        name: production
     steps:
       - name: checkout
         uses: actions/checkout@v3
