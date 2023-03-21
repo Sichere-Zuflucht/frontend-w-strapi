@@ -17,15 +17,23 @@ env:
   DEPLOYMENT_FOLDER: dist
 
 jobs:
+  set-production:
+    name: build PRODUCTION
+    runs-on: ubuntu-latest
+    if: ${{ contains(github.ref, 'master') }}
+    environment: production
+
+  set-development:
+    name: build DEVELOPMENT
+    runs-on: ubuntu-latest
+    if: ${{ contains(github.ref, 'beta') }}
+    environment: development
+
 # Please do not rename this job
   build-project:
     name: build frontend-w-strapi
     runs-on: ubuntu-latest
-    environment: 
-      - if: ${{ contains(github.ref, 'beta') }}
-        name: development
-      - if: ${{ contains(github.ref, 'master') }}
-        name: production
+    environment: ${ GITHUB_REF }
     steps:
       - name: checkout
         uses: actions/checkout@v3
