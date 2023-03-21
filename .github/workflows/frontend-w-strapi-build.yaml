@@ -21,7 +21,8 @@ jobs:
   build-project:
     name: build frontend-w-strapi
     runs-on: ubuntu-latest
-    environment: ${{ github.ref || github.event.client_payload.ref }}
+    if: ${{ contains(github.ref, 'beta') }}
+    environment: development
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -36,7 +37,6 @@ jobs:
       - name: Build Node assets
         env:
           CI: true
-          DONATE: https://donate.stripe.com/14k4gCaxOe1efCw28c
           SITE_URL: ${{ inputs.site-url }}
           STRAPI_URL: ${{ vars.STRAPI_URL }}
           STRIPE_PK: ${{ vars.STRIPE_PK }}
@@ -45,9 +45,7 @@ jobs:
           DONATION_3: ${{ vars.DONATION_3 }}
           DONATION_4: ${{ vars.DONATION_4 }}
         run: |
-          echo "repository variable : ${{ vars.REPOSITORY_VAR }}"
-          echo "donate variable : ${{ vars.DONATION_1 }}"
-          echo "donate inside repository variable : ${{ vars.REPOSITORY_VAR.DONATION_1 }}"
+          echo "repository : ${{ github.ref }}"
           npm install --global yarn
           yarn install --frozen-lockfile
           yarn build
