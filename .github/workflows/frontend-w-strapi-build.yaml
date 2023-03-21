@@ -33,6 +33,7 @@ jobs:
           node-version: v16.x
 
       - name: Build Node assets
+        environment: production
         env:
           CI: true
           DONATE: https://donate.stripe.com/14k4gCaxOe1efCw28c
