@@ -29,6 +29,16 @@ export const actions = {
     commit('setUserData', data.user)
     commit('setJWT', data.jwt)
   },
+  register({commit},{username, email, password, role, roleName}){
+    return this.$strapi
+      .register({
+        username,
+        email,
+        password,
+        role,
+        roleName,
+      })
+  },
   logout({ commit }) {
     this.$strapi.logout()
     commit('setUserData', null)
