@@ -242,4 +242,18 @@ ${www ? '- :globe_with_meridians: : ' + www : ''}`
     return cookie.categories.includes('functionality')
   })
 
+  inject('meetingConfirmationEmail', (data) => {
+    return app.$axios
+      .post(
+        `${app.$config.strapi.url}/meetingConfirmationEmail`,
+        {
+          headers: {
+            Authorization: "Bearer " + JSON.parse(localStorage.getItem("strapi_jwt")).token
+          },
+          body: data,
+        }
+      ).catch((err) => {
+        console.log('error', err)
+      })
+  })
 }
