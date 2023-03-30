@@ -8,7 +8,7 @@
         nächsten Tagen über die unten angegebenen Informationen Kontakt mit Ihnen auf, um
         mehr über Sie zu erfahren und offene Fragen zu klären.
       </p>
-      <v-form ref="verify" v-model="validRef" class="pt-8" autocomplete="on">
+      <v-form ref="verify" v-model="validRef" class="pt-8" autocomplete="on" @submit.prevent="verifyProfil">
         <v-text-field v-model="verPhone" class="secondary--text font-weight-bold" :rules="rules.phone"
           label="Telefonnummer" type="tel" persistent-hint hint="Wir werden Sie telefonisch kontaktieren." name="mobile"
           autocomplete="tel"></v-text-field>

@@ -41,7 +41,7 @@
                 Ihr Vor- und Nachname werden in Ihrem Profil öffentlich sichtbar
                 sein.
               </p>
-              <v-form ref="form" v-model="validMem" class="pt-8" autocomplete="on">
+              <v-form ref="form" v-model="validMem" class="pt-8" autocomplete="on" @submit.prevent="updateProfile">
                 <v-text-field
                   v-model="firstName"
                   class="secondary--text font-weight-bold"
