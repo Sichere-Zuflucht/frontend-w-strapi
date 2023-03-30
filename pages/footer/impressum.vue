@@ -23,7 +23,7 @@
           <br /><br />
           <b>Handelsregister-Nr.:</b> HRB 16147 Amtsgericht Kempten (Allgäu)<br />
           <b>Steuernummer:</b> 127/147/07017<br />
-          <b>Umsatzsteuer-ID:</b> xxxxx<br /><br />
+          <b>Umsatzsteuer-ID:</b> DE359060755<br /><br />
           <b>Inhaltlich Verantwortliche*r gemäß §18 Abs. 1 MStV</b> &<br />
           <b>Redaktionell Verantwortliche*r gemäß §18 Abs. 1 MStV</b><br />
           Sichere Zuflucht gemeinnützige GmbH
