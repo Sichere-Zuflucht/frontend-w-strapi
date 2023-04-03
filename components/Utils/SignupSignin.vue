@@ -299,6 +299,26 @@ export default {
           this.step++
         });
     },
+    setLastLoginDate() {
+      const date = new Date()
+      const formatedDate = date.toLocaleDateString("de-DE", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+      });
+      this.$strapi.$users.update(this.$strapi.user.id, {
+        lastLogin: formatedDate,
+      })
+      .then((updatedData) => {
+        this.$store.dispatch("changeData",updatedData)
+      })
+      .catch((err) => {
+        this.$store.dispatch("errorhandling", err);
+      });     
+    },
     login() {
       this.loading = true;
       if (!process.client) return
@@ -308,6 +328,7 @@ export default {
           password: this.password,
         })
         .then((e) => {
+          this.setLastloginDate()
           this.loading = false;
           const route = window.localStorage.getItem("redirectBackTo")
             ? window.localStorage.getItem("redirectBackTo")
