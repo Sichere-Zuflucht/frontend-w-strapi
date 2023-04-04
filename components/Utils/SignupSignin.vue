@@ -328,7 +328,7 @@ export default {
           password: this.password,
         })
         .then((e) => {
-          this.setLastloginDate()
+          this.setLastLoginDate()
           this.loading = false;
           const route = window.localStorage.getItem("redirectBackTo")
             ? window.localStorage.getItem("redirectBackTo")
