@@ -1,37 +1,52 @@
 <template>
-  <v-card elevation="2" nuxt outlined width="100%" class="ma-2 d-flex flex-column" :max-width="width" :style="
-    'border: 1px solid ' +
-    (videoStatus.ready
-      ? $vuetify.theme.themes.light.success
-      : videoStatus.done
-        ? 'grey'
-        : $vuetify.theme.themes.light.primary)
-  ">
-
-    <nuxt-link :to="'/berater/' + coach.username" style="text-decoration: none;" class="d-flex" :style="
-      'border-bottom: 1px solid ' +
+  <v-card
+    elevation="2"
+    nuxt
+    outlined
+    width="100%"
+    class="ma-2 d-flex flex-column"
+    :max-width="width"
+    :style="
+      'border: 1px solid ' +
       (videoStatus.ready
         ? $vuetify.theme.themes.light.success
         : videoStatus.done
+        ? 'grey'
+        : $vuetify.theme.themes.light.primary)
+    "
+  >
+    <nuxt-link
+      :to="'/berater/' + coach.username"
+      style="text-decoration: none"
+      class="d-flex"
+      :style="
+        'border-bottom: 1px solid ' +
+        (videoStatus.ready
+          ? $vuetify.theme.themes.light.success
+          : videoStatus.done
           ? 'grey'
           : $vuetify.theme.themes.light.primary) +
-      ' !important'
-    ">
+        ' !important'
+      "
+    >
       <v-avatar color="primary ma-5" size="90" contain>
-        <v-img v-if="coach.avatar 
-            && functionalCookieAccepted"
+        <v-img
+          v-if="coach.avatar && functionalCookieAccepted"
           :lazy-src="
-          (coach.avatar.url.includes('https')
-            ? ''
-            : 'http://localhost:1337') + coach.avatar.url
-          " 
-          :src="(coach.avatar.url.includes('https')
-            ? ''
-            : 'http://localhost:1337') + coach.avatar.url
-          " 
-          data-cookiescript="accepted" 
+            (coach.avatar.url.includes('https')
+              ? ''
+              : 'http://localhost:1337') + coach.avatar.url
+          "
+          :src="
+            (coach.avatar.url.includes('https')
+              ? ''
+              : 'http://localhost:1337') + coach.avatar.url
+          "
+          data-cookiescript="accepted"
           data-cookiecategory="functionality"
-      /><v-icon v-else-if="!functionalCookieAccepted" color="white">mdi-cookie-alert</v-icon>
+        /><v-icon v-else-if="!functionalCookieAccepted" color="white"
+          >mdi-cookie-alert</v-icon
+        >
       </v-avatar>
       <div class="ma-5 ml-2 d-flex flex-column justify-center">
         <h2 class="secondary--text text-h2">
@@ -41,14 +56,16 @@
           {{ coach.profession }}
         </h3>
       </div>
-      
     </nuxt-link>
     <v-card-text class="flex-grow-1 relative">
       <div v-if="response.status == 'newRequest'">
         <p class="text-uppercase font-weight-bold mb-1 mt-2 caption">
           Der Coach hat auf deine Anfrage noch nicht reagiert.
         </p>
-        <p>Bitte habe ein wenig Gedult. Der*die Berater*in sollte sich innerhalb von 24h bei dir melden.</p>
+        <p>
+          Bitte habe ein wenig Gedult. Der*die Berater*in sollte sich innerhalb
+          von 24h bei dir melden.
+        </p>
       </div>
       <div v-else-if="response.status == 'chooseDate'">
         <p class="text-uppercase font-weight-bold mb-1 mt-2 caption">
@@ -56,8 +73,16 @@
         </p>
         <v-row>
           <v-col cols="12">
-            <v-select v-model="selectedDate" :items="response.suggestions" outlined dense hide-details color="primary"
-              label="Bitte wählen" class="my-2">
+            <v-select
+              v-model="selectedDate"
+              :items="response.suggestions"
+              outlined
+              dense
+              hide-details
+              color="primary"
+              label="Bitte wählen"
+              class="my-2"
+            >
               <template #item="{ item, on }">
                 <v-list-item v-on="on">
                   <v-list-item-content>
@@ -68,19 +93,26 @@
                   </v-list-item-content>
                 </v-list-item>
               </template>
-              <template #selection="{ item }">{{ formatDate(item.date) }} | {{ formatTime(item.date) }}
+              <template #selection="{ item }"
+                >{{ formatDate(item.date) }} | {{ formatTime(item.date) }}
               </template>
             </v-select>
             <p class="font-weight-bold mb-0 my-4">Preis: 50€</p>
-            <v-btn color="success" :loading="btn.payButtonLoading" :disabled="!selectedDate || btn.isDisabled" block
-              @click="pay(selectedDate)">Termin verbindlich buchen <v-icon small class="ml-1">mdi-open-in-new</v-icon>
+            <v-btn
+              color="success"
+              :loading="btn.payButtonLoading"
+              :disabled="!selectedDate || btn.isDisabled"
+              block
+              @click="pay(selectedDate)"
+              >Termin verbindlich buchen
+              <v-icon small class="ml-1">mdi-open-in-new</v-icon>
             </v-btn>
             <v-alert v-if="btn.error" type="error">{{ btn.errorMsg }}</v-alert>
             <p class="caption">
-              Um den Termin verbindlich zu buchen, wirst du unserem 
-              Zahlungsanbieter stripe weitergeleitet. Dort kannst du 
-              deine Zahlungsdaten hinterlegen. WICHTIG! Wir belasten 
-              dein Konto erst zu Beginn des Beratungsgespräches.
+              Um den Termin verbindlich zu buchen, wirst du unserem
+              Zahlungsanbieter stripe weitergeleitet. Dort kannst du deine
+              Zahlungsdaten hinterlegen. WICHTIG! Wir belasten dein Konto erst
+              zu Beginn des Beratungsgespräches.
             </p>
           </v-col>
         </v-row>
@@ -89,20 +121,24 @@
         <p class="text-uppercase font-weight-bold mb-1 mt-2 caption">
           Termin abgesagt
         </p>
-        <v-alert dark text dense color="primary">Der Termin {{
-          response.acceptedDate ? `für
+        <v-alert dark text dense color="primary"
+          >Der Termin
+          {{
+            response.acceptedDate
+              ? `für
                   ${formatDate(response.acceptedDate)} um
-                  ${formatTime(response.acceptedDate)}` : ''
-        }} wurde abgesagt.
+                  ${formatTime(response.acceptedDate)}`
+              : ""
+          }}
+          wurde abgesagt.
         </v-alert>
       </div>
       <div v-else-if="videoStatus.done">
         <p class="text-uppercase font-weight-bold mb-1 mt-2 caption">
           Vergangener Termin
         </p>
-        <v-alert dark text dense color="grey">Das Meeting hat am {{
-          formatDate(response.acceptedDate)
-        }} um
+        <v-alert dark text dense color="grey"
+          >Das Meeting hat am {{ formatDate(response.acceptedDate) }} um
           {{ formatTime(response.acceptedDate) }} stattgefunden.
         </v-alert>
       </div>
@@ -110,61 +146,111 @@
         <p class="text-uppercase font-weight-bold mb-1 mt-2 caption">
           Dein Online-Beratungstermin ist eingerichtet und startbereit.
         </p>
-        <v-btn class="my-2" color="success" target="_blank" :disabled="!videoStatus.ready"
-          :href="response.videoType === 'normal' ? jitsiWithWomanName : response.videoWoman"
-          @click="startPaySession">zum Videocall
+        <v-btn
+          class="my-2"
+          color="success"
+          target="_blank"
+          :disabled="!videoStatus.ready"
+          :href="
+            response.videoType === 'normal'
+              ? jitsiWithWomanName
+              : response.videoWoman
+          "
+          @click="startPaySession"
+          >zum Videocall
         </v-btn>
-        <v-btn v-if="response.videoType === 'normal'" class="my-2" color="secondary" outlined target="_blank"
-          :href="`https://meet.jit.si/test-${id}-${new Date().getTime()}`">Video testen
+        <v-btn
+          v-if="response.videoType === 'normal'"
+          class="my-2"
+          color="secondary"
+          outlined
+          target="_blank"
+          :href="`https://meet.jit.si/test-${id}-${new Date().getTime()}`"
+          >Video testen
         </v-btn>
-        <v-alert dark text dense color="success">Zugesagt für {{ formatDate(response.acceptedDate) }} um
+        <v-alert dark text dense color="success"
+          >Zugesagt für {{ formatDate(response.acceptedDate) }} um
           {{ formatTime(response.acceptedDate) }}
         </v-alert>
-        <p class="caption">Der Zugang zum Videocall wird <b>15min vor Beginn</b> freigeschaltet. Bitte lade
-          kurz vor Beginn die Seite nochmal neu, um den Videocall-Button zu aktivieren. <a @click="reload">neu laden</a></p>
+        <p class="caption">
+          Der Zugang zum Videocall wird <b>15min vor Beginn</b> freigeschaltet.
+          Bitte lade kurz vor Beginn die Seite nochmal neu, um den
+          Videocall-Button zu aktivieren. <a @click="reload">neu laden</a>
+        </p>
       </div>
-      <div v-else-if="payment == false || payment ? payment.status  == 'open' : false">
+      <div
+        v-else-if="
+          payment == false || payment ? payment.status == 'open' : false
+        "
+      >
         <v-alert dark color="error" type="error">
           <p>
-            Es liegt keine Bezahlung vor. Es könnte sein, dass etwas schief gelaufen ist.
+            Es liegt keine Bezahlung vor. Es könnte sein, dass etwas schief
+            gelaufen ist.
           </p>
-          <v-btn v-if="response.acceptedDate" @click="pay(response.acceptedDate)" class="mb-2">Zahlung erneut
-            probieren</v-btn>
-          <p class="caption">Wenn notwendig,
-            kontaktieren Sie uns unter:
+          <v-btn
+            v-if="response.acceptedDate"
+            @click="pay(response.acceptedDate)"
+            class="mb-2"
+            >Zahlung erneut probieren</v-btn
+          >
+          <p class="caption">
+            Wenn notwendig, kontaktieren Sie uns unter:
             <a href="mailto:support@sichere-zuflucht.de" class="white--text">
-              support@sichere-zuflucht.de</a>
+              support@sichere-zuflucht.de</a
+            >
           </p>
         </v-alert>
       </div>
     </v-card-text>
     <v-card-actions style="position: relative">
-      <v-dialog v-if="response.status != 'deleted' && !oldlist && videoStatus.before" v-model="isDelete" persistent max-width="290">
+      <v-dialog
+        v-if="response.status != 'deleted' && !oldlist && videoStatus.before"
+        v-model="isDelete"
+        persistent
+        max-width="290"
+      >
         <template #activator="{ on, attrs }">
-          <v-btn small text color="primary" v-bind="attrs" v-on="on">Termin absagen
+          <v-btn small text color="primary" v-bind="attrs" v-on="on"
+            >Termin absagen
           </v-btn>
         </template>
         <v-alert type="error" color="error" class="mt-2 ma-2">
           <p>Wirklich absagen?</p>
-          <v-btn light class="mr-1" :loading="eraseLoading" @click="cancel(response)">Ja, absagen
+          <v-btn
+            light
+            class="mr-1"
+            :loading="eraseLoading"
+            @click="cancel(response)"
+            >Ja, absagen
           </v-btn>
           <v-btn light @click="isDelete = false"> nein</v-btn>
         </v-alert>
       </v-dialog>
-      <v-btn v-else-if="response.status == 'deleted' || oldlist" small color="primary" outlined nuxt
-        :to="'/berater/' + coach.username">Neue Anfrage stellen
+      <v-btn
+        v-else-if="response.status == 'deleted' || oldlist"
+        small
+        color="primary"
+        outlined
+        nuxt
+        :to="'/berater/' + coach.username"
+        >Neue Anfrage stellen
       </v-btn>
-      <p class="caption grey--text mb-0" style="position: absolute; bottom:2px; right: 3px">ID: {{ id }}</p>
+      <p
+        class="caption grey--text mb-0"
+        style="position: absolute; bottom: 2px; right: 3px"
+      >
+        ID: {{ id }}
+      </p>
     </v-card-actions>
     <v-card-actions v-if="error">
-      <v-alert  type="error" color="error">{{ error }}</v-alert>
+      <v-alert type="error" color="error">{{ error }}</v-alert>
     </v-card-actions>
     <v-overlay :value="redirectWarning" color="black" opacity="0.8">
       <p>
         Weiterleitung zu Stripe. Dies kann ein bisschen dauern. Bitte warten...
       </p>
     </v-overlay>
-    
   </v-card>
   <!--
     <v-card elevation="2" nuxt outlined width="100%" class="ma-2" :max-width="width" :style="
@@ -338,11 +424,11 @@ export default {
   props: {
     coach: {
       type: Object,
-      default: () => { },
+      default: () => {},
     },
     response: {
       type: Object,
-      default: () => { },
+      default: () => {},
     },
     id: {
       type: Number,
@@ -358,8 +444,8 @@ export default {
     },
     width: {
       type: String,
-      default: '350',
-    }
+      default: "350",
+    },
   },
   data() {
     return {
@@ -378,39 +464,41 @@ export default {
     };
   },
   computed: {
-    functionalCookieAccepted(){return this.$functionalCookieAccepted()},
+    functionalCookieAccepted() {
+      return this.$functionalCookieAccepted();
+    },
     jitsiWithWomanName() {
-      const name = this.$store.getters['getActiveUser'].username
-      return `${this.response.videoCoach}#userInfo.displayName="${name}"`
+      const name = this.$store.getters["getActiveUser"].username;
+      return `${this.response.videoCoach}#userInfo.displayName="${name}"`;
     },
     videoStatus() {
-      let b = true
-      let r = false
-      let d = false
+      let b = true;
+      let r = false;
+      let d = false;
 
       if (this.response.acceptedDate) {
-        const startTime = new Date(this.response.acceptedDate)
-        const preTime = new Date
-        const overTime = new Date
-        const now = new Date
+        const startTime = new Date(this.response.acceptedDate);
+        const preTime = new Date();
+        const overTime = new Date();
+        const now = new Date();
 
         preTime.setTime(startTime.getTime() - 15 * 60 * 1000);
         overTime.setTime(startTime.getTime() + 60 * 60 * 1000);
 
-        b = now < preTime
-        r = overTime >= now && now >= preTime
-        d = overTime < now
+        b = now < preTime;
+        r = overTime >= now && now >= preTime;
+        d = overTime < now;
       }
 
       return {
         before: b,
         ready: r,
         done: d,
-      }
-    }
+      };
+    },
   },
   async mounted() {
-    this.payment = await this.$getStripePaymentSession(this.response.paymentID)
+    this.payment = await this.$getStripePaymentSession(this.response.paymentID);
   },
   methods: {
     cancel(doc) {
@@ -432,8 +520,26 @@ export default {
           this.$store.dispatch("errorhandling", err);
         });
     },
+    sendNotificationEmail({ date, time, id }) {
+      const email = this.coach.email
+        ? this.coach.email
+        : "nouser@sichere-zuflucht.de";
+      const body = {
+        date: date,
+        time: time,
+        id: id,
+      };
+      this.$meetingConfirmationEmail({ email, ...body })
+        .then(() => {
+          this.loading = false;
+          this.success = true;
+        })
+        .catch((err) => {
+          this.$store.dispatch("errorhandling", err);
+        });
+    },
     startPaySession() {
-      this.$retrieveStripePaymentSetup(this.payment.id, id)
+      this.$retrieveStripePaymentSetup(this.payment.id, id);
     },
     // RED is not implemented yet
     /*async testRED() {
@@ -454,7 +560,7 @@ export default {
       console.log("redReq", redReq);
       redReq.json().then((redRes) => {
         console.log("redRes", redRes);
-      });*//*
+      });*/ /*
 this.$axios
 .$post("https://redclient.redmedical.de/service/video", {
 body: {
@@ -563,6 +669,12 @@ this.$store.dispatch("errorhandling", err);
               window.localStorage.setItem("meetingID", this.id);
               window.localStorage.setItem("sessionID", paymentID);
 
+              this.sendNotificationEmail({
+                date: new Date(dI.date),
+                time: new Date(dI.date),
+                id: this.id,
+              });
+
               this.$stripe.redirectToCheckout({
                 // Make the id field from the Checkout Session creation API response
                 // available to this file, so you can provide it as argument here
@@ -600,7 +712,7 @@ this.$store.dispatch("errorhandling", err);
     },
     reload() {
       window.location.reload();
-    }
+    },
   },
 };
 </script>

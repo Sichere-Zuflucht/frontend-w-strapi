@@ -57,7 +57,7 @@
               </div>
             </v-stepper-content>
             <v-stepper-content step="2" class="pa-0 mt-4">
-              <v-form v-model="valid.email" style="width: 100%" class="mb-4" autocomplete="on">
+              <v-form v-model="valid.email" style="width: 100%" class="mb-4" autocomplete="on" @submit.prevent="next">
                 <h2 v-if="!emailExisting" class="text-h3 secondary--text">E-Mail-Adresse</h2>
                 <v-text-field v-model="email" type="email" :rules="rules.email" label="E-mail-Adresse" required
                   name="email" autocomplete="email"></v-text-field>
@@ -71,7 +71,7 @@
               </v-form>
             </v-stepper-content>
             <v-stepper-content step="3" class="pa-0">
-              <v-form v-model="valid.password" style="width: 100%" class="mb-8" autocomplete="on">
+              <v-form v-model="valid.password" style="width: 100%" class="mb-8" autocomplete="on" @submit.prevent="emailExisting ? login() : register()">
                 <v-alert v-if="emailExisting && !makeLogin" type="info" color="secondary" class="my-4">
                   Es existiert bereits ein Konto mit der E-Mail-Adresse
                   <b>{{ email }}</b>. Logge dich ein oder klicke "Passwort vergessen", solltest
@@ -110,9 +110,9 @@
                       class="mt-6"></v-text-field>
                   </div>
                   <div class="d-flex justify-end">
-                    <v-btn text color="grey" @click="back()"> Zurück </v-btn>
+                    <v-btn text color="grey" @click="back()" type="button"> Zurück </v-btn>
                     <v-btn v-if="emailExisting" text @click="sendResetPasswortCode" :loading="resetLoading"
-                      color="grey">Passwort vergessen</v-btn><v-btn class="inline" color="success" :loading="loading"
+                      color="grey" type="button">Passwort vergessen</v-btn><v-btn class="inline" color="success" :loading="loading" type="submit"
                       :disabled="!valid.password" nuxt @click="emailExisting ? login() : register()">{{
                         emailExisting?
                                             "Einloggen": "Account erstellen"
@@ -299,6 +299,26 @@ export default {
           this.step++
         });
     },
+    setLastLoginDate() {
+      const date = new Date()
+      const formatedDate = date.toLocaleDateString("de-DE", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+      });
+      this.$strapi.$users.update(this.$strapi.user.id, {
+        lastLogin: formatedDate,
+      })
+      .then((updatedData) => {
+        this.$store.dispatch("changeData",updatedData)
+      })
+      .catch((err) => {
+        this.$store.dispatch("errorhandling", err);
+      });     
+    },
     login() {
       this.loading = true;
       if (!process.client) return
@@ -308,6 +328,7 @@ export default {
           password: this.password,
         })
         .then((e) => {
+          this.setLastLoginDate()
           this.loading = false;
           const route = window.localStorage.getItem("redirectBackTo")
             ? window.localStorage.getItem("redirectBackTo")
