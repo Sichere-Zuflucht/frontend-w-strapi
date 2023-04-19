@@ -1,47 +1,48 @@
 <template>
-  <v-btn 
-    @click="sendEmail" 
-    :disabled="submitDisabled"
-    :loading="loading"
-    :color="color"
-  >{{text}}</v-btn>
+	<v-btn
+		@click="sendEmail"
+		:disabled="submitDisabled"
+		:loading="loading"
+		:color="color"
+		>{{ text }}</v-btn
+	>
 </template>
 
 <script>
-export default {
-  props: {
-    to: {
-      type: String,
-    },
-    template: {
-      type: Object,
-    },
-    color: {
-      type: String,
-      defualt: 'secondary',
-    },
-    loading: {
-      type: Boolean,
-      default: false,
-    },
-    disabled: {
-      type: Boolean,
-      default: false,
-    },
-    text: {
-      type: String,
-      defualt: 'secondary',
-    },
-  },
-  data(){
-    return {
-      submitDisabled: this.disabled,
-    }
-  },
-  methods: {
-    async sendEmail() {
-      this.submitDisabled = true
-      /*await this.$axios
+	export default {
+		props: {
+			to: {
+				type: String,
+			},
+			template: {
+				type: Object,
+			},
+			color: {
+				type: String,
+				defualt: 'secondary',
+			},
+			loading: {
+				type: Boolean,
+				default: false,
+			},
+			disabled: {
+				type: Boolean,
+				default: false,
+			},
+			text: {
+				type: String,
+				defualt: 'secondary',
+			},
+		},
+		data() {
+			return {
+				submitDisabled: this.disabled,
+			};
+		},
+		methods: {
+			async sendEmail() {
+				this.submitDisabled = true;
+				/*await this.$axios
         .$post("email", {
           to: this.to,
           from: "Sichere Zuflucht <kontakt@sichere-zuflucht.de>",
@@ -65,7 +66,7 @@ export default {
             // Something happened in setting up the request that triggered an Error
           }
         });*/
-    },
-  },
-};
+			},
+		},
+	};
 </script>

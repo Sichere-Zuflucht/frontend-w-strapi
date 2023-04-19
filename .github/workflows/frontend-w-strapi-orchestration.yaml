@@ -3,7 +3,7 @@
 # More information under https://docs.ionos.space/docs/github-actions-customization/
 # version: 2022-07-21
 
-name: "Deploy Now: Orchestration"
+name: 'Deploy Now: Orchestration'
 run-name: "Deploy Now: Build frontend-w-strapi · ${{ github.event.head_commit.message || format('Triggered by {0}', github.triggering_actor) }}"
 
 on:

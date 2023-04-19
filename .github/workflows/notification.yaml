@@ -1,18 +1,17 @@
 name: Notification
 
-on: 
+on:
   repository_dispatch:
     types: [notify]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - name: Send Push Notification
-      uses: techulus/push-github-action@1.0.0
-      env:
-        API_KEY: ${{ secrets.TECHULUS_API_KEY }}
-        MESSAGE: "Test notification from GitHub 🧪"
-        TITLE: Testing
+      - name: Send Push Notification
+        uses: techulus/push-github-action@1.0.0
+        env:
+          API_KEY: ${{ secrets.TECHULUS_API_KEY }}
+          MESSAGE: 'Test notification from GitHub 🧪'
+          TITLE: Testing
