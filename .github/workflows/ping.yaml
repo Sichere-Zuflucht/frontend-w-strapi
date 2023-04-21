@@ -52,7 +52,7 @@ jobs:
           yarn install --frozen-lockfile
           yarn build
           yarn generate
-      
+
       - if: ${{ github.ref == 'refs/heads/ionos_test_environment' }}
         name: Build Node assets Dev
         env:

@@ -1,6 +1,6 @@
 <template>
-  <v-container>
-    <!--<h1 class="text-h1 primary--text mb-4">Wohnungssuche</h1>
+	<v-container>
+		<!--<h1 class="text-h1 primary--text mb-4">Wohnungssuche</h1>
     <SharedVerificationPage v-if="!$store.getters['modules/user/verified']" />
     <v-form v-else ref="housing" v-model="valid" class="mb-8">
       <h2 class="text-h2 secondary--text">Deine Daten sind sicher</h2>
@@ -136,82 +136,82 @@
         </v-col>
       </v-row>
     </v-form>-->
-  </v-container>
+	</v-container>
 </template>
 
 <script>
-export default {
-  middleware: 'authWoman',
-  data() {
-    return {
-      valid: false,
-      location: '',
-      personAmount: '',
-      plz: '',
-      rules: {
-        email: (v) => !!(v || '').match(/@/) || 'Keine gültige E-Mail',
-        length: (len) => (v) =>
-          (v || '').length >= len ||
-          `Ungültige Zeichenlänge, ${len} erforderlich`,
-        required: (v) => !!v || 'Bitte ausfüllen',
-      },
-      dates: [
-        new Date().toISOString().substr(0, 10),
-        new Date().toISOString().substr(0, 10),
-      ],
-      modal: false,
-      selected: [],
-      price: '',
-      checkboxes: [
-        {
-          label: 'Türspion',
-          value: 'door spion',
-        },
-        {
-          label: 'Barrierefrei',
-          value: 'barrier free',
-        },
-        {
-          label: 'Sprechanlage',
-          value: 'door speaker',
-        },
-        {
-          label: 'Nichtraucher',
-          value: 'non-smoker',
-        },
-        {
-          label: 'Kein Erdgeschoss',
-          value: 'no ground',
-        },
-        {
-          label: 'Internet/W-Lan',
-          value: 'internet',
-        },
-        {
-          label: 'separater Eingang',
-          value: 'second door',
-        },
-        {
-          label: 'Öffentliche Verkehrsmittel',
-          value: 'public transport',
-        },
-      ],
-      loading: false,
-      showConfirmation: false,
-      buttonText: 'Anfrage versenden',
-      error: {
-        status: false,
-        message: '',
-      },
-    }
-  },
-  computed: {
-    dateRangeText() {
-      return this.dates.join(' – ')
-    },
-  },
-  methods: {
-    /*validate() {
+	export default {
+		middleware: 'authWoman',
+		data() {
+			return {
+				valid: false,
+				location: '',
+				personAmount: '',
+				plz: '',
+				rules: {
+					email: (v) => !!(v || '').match(/@/) || 'Keine gültige E-Mail',
+					length: (len) => (v) =>
+						(v || '').length >= len ||
+						`Ungültige Zeichenlänge, ${len} erforderlich`,
+					required: (v) => !!v || 'Bitte ausfüllen',
+				},
+				dates: [
+					new Date().toISOString().substr(0, 10),
+					new Date().toISOString().substr(0, 10),
+				],
+				modal: false,
+				selected: [],
+				price: '',
+				checkboxes: [
+					{
+						label: 'Türspion',
+						value: 'door spion',
+					},
+					{
+						label: 'Barrierefrei',
+						value: 'barrier free',
+					},
+					{
+						label: 'Sprechanlage',
+						value: 'door speaker',
+					},
+					{
+						label: 'Nichtraucher',
+						value: 'non-smoker',
+					},
+					{
+						label: 'Kein Erdgeschoss',
+						value: 'no ground',
+					},
+					{
+						label: 'Internet/W-Lan',
+						value: 'internet',
+					},
+					{
+						label: 'separater Eingang',
+						value: 'second door',
+					},
+					{
+						label: 'Öffentliche Verkehrsmittel',
+						value: 'public transport',
+					},
+				],
+				loading: false,
+				showConfirmation: false,
+				buttonText: 'Anfrage versenden',
+				error: {
+					status: false,
+					message: '',
+				},
+			};
+		},
+		computed: {
+			dateRangeText() {
+				return this.dates.join(' – ');
+			},
+		},
+		methods: {
+			/*validate() {
       if (!this.$refs.housing.validate()) return
       this.loading = true
       this.$fire.functions
@@ -236,6 +236,6 @@ export default {
           this.error.message = err.message
         })
     },*/
-  },
-}
+		},
+	};
 </script>

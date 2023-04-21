@@ -1,9 +1,9 @@
 <template>
-  <SharedProfilSettings />
+	<SharedProfilSettings />
 </template>
 
 <script>
-export default {
-  middleware: 'authCoach',
-}
+	export default {
+		middleware: 'authCoach',
+	};
 </script>

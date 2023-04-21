@@ -1,9 +1,9 @@
 <template>
-    <div></div>
+	<div></div>
 </template>
 
 <script>
-export default {
-  middleware: "notExisting",
-}
+	export default {
+		middleware: 'notExisting',
+	};
 </script>

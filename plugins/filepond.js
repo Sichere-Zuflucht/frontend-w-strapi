@@ -9,14 +9,14 @@ import FilePondPluginImageTransform from 'filepond-plugin-image-transform';
 import FilePondPluginImageEdit from 'filepond-plugin-image-edit';
 import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
 import FilePondPluginImageResize from 'filepond-plugin-image-resize';
-  
+
 const FilePond = vueFilePond(
-  FilePondPluginFileValidateType,
-  FilePondPluginImagePreview,
-  FilePondPluginImageCrop,
-  FilePondPluginImageTransform,
-  FilePondPluginImageEdit,
-  FilePondPluginImageExifOrientation,
-  FilePondPluginImageResize
+	FilePondPluginFileValidateType,
+	FilePondPluginImagePreview,
+	FilePondPluginImageCrop,
+	FilePondPluginImageTransform,
+	FilePondPluginImageEdit,
+	FilePondPluginImageExifOrientation,
+	FilePondPluginImageResize
 );
 Vue.component('FilePond', FilePond);

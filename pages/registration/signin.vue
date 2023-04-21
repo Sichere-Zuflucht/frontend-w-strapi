@@ -1,4 +1,3 @@
 <template>
-  <UtilsSignupSignin :make-login="true" title="Einloggen" />
+	<UtilsSignupSignin :make-login="true" title="Einloggen" />
 </template>
-</script>
