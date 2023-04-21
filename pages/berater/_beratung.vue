@@ -271,7 +271,7 @@ export default {
       this.loading = true;
       const woman = this.$store.getters["getActiveUser"];
       const coach = this.pubData;
-      const usernameWithoutUmlaut = this.runLatinize('Köhler')//this.$route.params.beratung)
+      const usernameWithoutUmlaut = this.runLatinize(coach.username)//this.$route.params.beratung)
       const data = {
         message: this.msgTitle + ": " + this.message,
         //coachID: this.$route.params.beratung,
