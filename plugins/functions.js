@@ -1,4 +1,165 @@
 export default ({ app }, inject) => {
+	/****** API to Ruby on Rails */
+	/** MEETINGS */
+	inject(
+		'womanSelectsProposalAndPays',
+		({ selected_time_index, meeting_id }) => {
+			// change Ruby Route, so that the payment id is happening in the backend!
+
+			const data = {
+				meeting: {
+					selected_time_index,
+				},
+			};
+
+			return app.$axios.$put(`meetings/${meeting_id}`, {
+				headers: {
+					Authorization:
+						'Bearer ' + JSON.parse(localStorage.getItem('ruby_jwt')).token,
+				},
+				body: JSON.stringify(data),
+			});
+		}
+	);
+
+	inject('womanCreatesNewMeeting', ({ message, woman_id, coach_id }) => {
+		const data = {
+			meeting: {
+				message,
+				woman_id,
+				coach_id,
+			},
+		};
+
+		return app.$axios.$post('meetings', {
+			headers: {
+				Authorization:
+					'Bearer ' + JSON.parse(localStorage.getItem('ruby_jwt')).token,
+			},
+			body: JSON.stringify(data),
+		});
+	});
+
+	inject(
+		'coachGivesProposals',
+		({ video_type, time_proposals, meeting_id }) => {
+			const data = {
+				meeting: {
+					video_type,
+					time_proposals,
+				},
+			};
+
+			return app.$axios.$put(`meetings/${meeting_id}`, {
+				headers: {
+					Authorization:
+						'Bearer ' + JSON.parse(localStorage.getItem('ruby_jwt')).token,
+				},
+				body: JSON.stringify(data),
+			});
+		}
+	);
+
+	inject('archiveMeeting', ({ meeting_id }) => {
+		return app.$axios.$put(`meetings/${meeting_id}/archive`, {
+			headers: {
+				Authorization:
+					'Bearer ' + JSON.parse(localStorage.getItem('ruby_jwt')).token,
+			},
+		});
+	});
+
+	inject('loadAllMeetingsOfParticipant', () => {
+		return app.$axios.$get('meetings', {
+			headers: {
+				Authorization:
+					'Bearer ' + JSON.parse(localStorage.getItem('ruby_jwt')).token,
+			},
+		});
+	});
+
+	/** COACHES */
+	inject('loadCurrentCoachData', () => {
+		return app.$axios.$get('users/me', {
+			headers: {
+				Authorization:
+					'Bearer ' + JSON.parse(localStorage.getItem('ruby_jwt')).token,
+			},
+		});
+	});
+
+	inject(
+		'updateCurrentCoachProfil',
+		({
+			avatar,
+			display_name,
+			topic_areas,
+			personal_background,
+			citation,
+			professional_background,
+			profession_line,
+		}) => {
+			const data = {
+				user: {
+					avatar,
+					display_name,
+					topic_areas, // topic
+					personal_background, //description
+					citation, //quote
+					professional_background, //history
+					profession_line, //profession
+				},
+			};
+
+			return app.$axios.$put('users/me', {
+				headers: {
+					Authorization:
+						'Bearer ' + JSON.parse(localStorage.getItem('ruby_jwt')).token,
+				},
+				body: JSON.stringify(data),
+			});
+		}
+	);
+
+	inject('loadAllCoaches', () => {
+		return app.$axios.$get('users');
+	});
+
+	inject('loadSingleCoaches', (user_id) => {
+		return app.$axios.$get(`users/${user_id}`);
+	});
+
+	/** AUTH */
+
+	inject('loginUser', async ({ email, password }) => {
+		const expirationDate = new Date();
+		expirationDate.setDate(expirationDate.getDate() + 7);
+
+		const token = (
+			await app.$axios.$post(
+				`authentication?email=${email}&password=${password}`
+			)
+		).token;
+
+		app.$cookies.set('user-jwt', token, {
+			secure: true,
+			expires: expirationDate,
+		});
+	});
+
+	/**
+	 *
+	 *
+	 *
+	 *
+	 *
+	 *
+	 *
+	 *
+	 *
+	 *
+	 */
+
 	//********* Default */
 	inject('console', (...data) => {
 		if (app.$config.status !== 'production') console.log(...data);

@@ -105,6 +105,15 @@ export default {
 	},
 
 	axios: {
+		// WARNING: baseURL and proxy cannot be used at the same time,
+		// so when the proxy option is in use, you need to define prefix
+		// instead of baseURL
+		baseURL: 'http://localhost:2901/api/v1/',
+
+		// WARNING: proxy doesn't work with nuxt generate,
+		// have to use a prefix and set an API_URL
+		// prefix: 'http://localhost:2901/api/v1',
+		// proxy: true,
 		//baseURL: process.env.STRAPI_URL, // || 'http://localhost:1337', // Used as fallback if no runtime config is provided
 	},
 	/*
@@ -128,6 +137,11 @@ export default {
 	},
 
 	publicRuntimeConfig: {
+		ruby: {
+			users: `${process.env.RUBY_URL}/users`,
+			meetings: `${process.env.RUBY_URL}/meetings`,
+			auth: `${process.env.RUBY_URL}/authentication`,
+		},
 		strapi: {
 			url: process.env.STRAPI_URL,
 		},
