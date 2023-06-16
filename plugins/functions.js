@@ -1,9 +1,32 @@
-export default ({ app }, inject) => {
+const Authorization = `Bearer ${localStorage.getItem('ruby_jwt')}`;
+function errorhandling(error) {
+	{
+		if (error.response) {
+			// The request was made and the server responded with a status code
+			// that falls out of the range of 2xx
+			console.log('error data:', error.response.data);
+			console.log('error status:', error.response.status);
+			console.log('error headers:', error.response.headers);
+		} else if (error.request) {
+			// The request was made but no response was received
+			// `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+			// http.ClientRequest in node.js
+			console.log('error request:', error.request);
+		} else {
+			// Something happened in setting up the request that triggered an Error
+			console.log('Error', error.message);
+		}
+		console.log('error config:', error.config);
+		error.location ? console.log('location', error.location) : null;
+	}
+}
+
+export default ({ $axios }, inject) => {
+	inject('errorhandling', errorhandling);
 	/****** API to Ruby on Rails */
-	/** MEETINGS */
-	inject(
-		'womanSelectsProposalAndPays',
-		({ selected_time_index, meeting_id }) => {
+	inject('func', {
+		/** MEETINGS */
+		womanSelectsProposalAndPays: ({ selected_time_index, meeting_id }) => {
 			// change Ruby Route, so that the payment id is happening in the backend!
 
 			const data = {
@@ -12,37 +35,31 @@ export default ({ app }, inject) => {
 				},
 			};
 
-			return app.$axios.$put(`meetings/${meeting_id}`, {
+			return $axios.$put(`meetings/${meeting_id}`, {
 				headers: {
-					Authorization:
-						'Bearer ' + JSON.parse(localStorage.getItem('ruby_jwt')).token,
+					Authorization,
 				},
 				body: JSON.stringify(data),
 			});
-		}
-	);
+		},
+		womanCreatesNewMeeting: ({ message, woman_id, coach_id }) => {
+			const data = {
+				meeting: {
+					message,
+					woman_id,
+					coach_id,
+				},
+			};
 
-	inject('womanCreatesNewMeeting', ({ message, woman_id, coach_id }) => {
-		const data = {
-			meeting: {
-				message,
-				woman_id,
-				coach_id,
-			},
-		};
+			return $axios.$post('meetings', {
+				headers: {
+					Authorization,
+				},
+				body: JSON.stringify(data),
+			});
+		},
 
-		return app.$axios.$post('meetings', {
-			headers: {
-				Authorization:
-					'Bearer ' + JSON.parse(localStorage.getItem('ruby_jwt')).token,
-			},
-			body: JSON.stringify(data),
-		});
-	});
-
-	inject(
-		'coachGivesProposals',
-		({ video_type, time_proposals, meeting_id }) => {
+		coachGivesProposals: ({ video_type, time_proposals, meeting_id }) => {
 			const data = {
 				meeting: {
 					video_type,
@@ -50,47 +67,37 @@ export default ({ app }, inject) => {
 				},
 			};
 
-			return app.$axios.$put(`meetings/${meeting_id}`, {
+			return $axios.$put(`meetings/${meeting_id}`, {
 				headers: {
-					Authorization:
-						'Bearer ' + JSON.parse(localStorage.getItem('ruby_jwt')).token,
+					Authorization,
 				},
 				body: JSON.stringify(data),
 			});
-		}
-	);
+		},
+		archiveMeeting: ({ meeting_id }) => {
+			return $axios.$put(`meetings/${meeting_id}/archive`, {
+				headers: {
+					Authorization,
+				},
+			});
+		},
+		loadAllMeetingsOfParticipant: () => {
+			return $axios.$get('meetings', {
+				headers: {
+					Authorization,
+				},
+			});
+		},
 
-	inject('archiveMeeting', ({ meeting_id }) => {
-		return app.$axios.$put(`meetings/${meeting_id}/archive`, {
-			headers: {
-				Authorization:
-					'Bearer ' + JSON.parse(localStorage.getItem('ruby_jwt')).token,
-			},
-		});
-	});
-
-	inject('loadAllMeetingsOfParticipant', () => {
-		return app.$axios.$get('meetings', {
-			headers: {
-				Authorization:
-					'Bearer ' + JSON.parse(localStorage.getItem('ruby_jwt')).token,
-			},
-		});
-	});
-
-	/** COACHES */
-	inject('loadCurrentCoachData', () => {
-		return app.$axios.$get('users/me', {
-			headers: {
-				Authorization:
-					'Bearer ' + JSON.parse(localStorage.getItem('ruby_jwt')).token,
-			},
-		});
-	});
-
-	inject(
-		'updateCurrentCoachProfil',
-		({
+		/** COACHES */
+		loadCurrentCoachData: () => {
+			return $axios.$get('users/me', {
+				headers: {
+					Authorization,
+				},
+			});
+		},
+		updateCurrentCoachProfil: ({
 			avatar,
 			display_name,
 			topic_areas,
@@ -111,40 +118,66 @@ export default ({ app }, inject) => {
 				},
 			};
 
-			return app.$axios.$put('users/me', {
+			return $axios.$put('users/me', {
 				headers: {
-					Authorization:
-						'Bearer ' + JSON.parse(localStorage.getItem('ruby_jwt')).token,
+					Authorization,
 				},
 				body: JSON.stringify(data),
 			});
-		}
-	);
+		},
+		loadAllCoaches: () => {
+			return $axios.$get('users');
+		},
+		loadSingleCoaches: (user_id) => {
+			return $axios.$get(`users/${user_id}`);
+		},
 
-	inject('loadAllCoaches', () => {
-		return app.$axios.$get('users');
-	});
+		/** AUTH */
+		me: async () => {
+			return $axios.$get('users/me', {
+				headers: {
+					Authorization,
+				},
+			});
+		},
+		register: async ({ usertype, email, password }) => {
+			const data = {
+				usertype,
+				email,
+				password,
+			};
 
-	inject('loadSingleCoaches', (user_id) => {
-		return app.$axios.$get(`users/${user_id}`);
-	});
+			return await $axios.$post('authentication/register', {
+				headers: {
+					Authorization,
+				},
+				body: JSON.stringify(data),
+			});
+		},
+		login: async ({ email, password }) => {
+			const expirationDate = new Date();
+			expirationDate.setDate(expirationDate.getDate() + 7);
 
-	/** AUTH */
+			/*const token = (
+				await $axios.$post(`authentication?email=${email}&password=${password}`)
+			).token;*/
 
-	inject('loginUser', async ({ email, password }) => {
-		const expirationDate = new Date();
-		expirationDate.setDate(expirationDate.getDate() + 7);
-
-		const token = (
-			await app.$axios.$post(
-				`authentication?email=${email}&password=${password}`
-			)
-		).token;
-
-		app.$cookies.set('user-jwt', token, {
-			secure: true,
-			expires: expirationDate,
-		});
+			await $axios
+				.$post(`authentication?email=${email}&password=${password}`)
+				.then((token) => {
+					console.log(token);
+					localStorage.setItem('ruby_jwt', token, {
+						secure: true,
+						expires: expirationDate,
+					});
+				})
+				.catch((e) => {
+					console.log('err', errorhandling(e));
+				});
+		},
+		logout: () => {
+			localStorage.removeItem('ruby_jwt');
+		},
 	});
 
 	/**
@@ -166,11 +199,10 @@ export default ({ app }, inject) => {
 	});
 
 	inject('newCoachEmail', (data) => {
-		return app.$axios
+		return $axios
 			.$post(app.$config.strapi.url + '/newcoachemail', {
 				headers: {
-					Authorization:
-						'Bearer ' + JSON.parse(localStorage.getItem('strapi_jwt')).token,
+					Authorization,
 				},
 				body: data,
 			})
@@ -201,41 +233,39 @@ ${www ? '- :globe_with_meridians: : ' + www : ''}`,
 				});
 			})
 			.catch((e) => {
-				app.store.dispatch('errorhandling', e);
+				errorhandling(e);
 			});
 	});
 
 	//********* Stripe */
 	inject('loginStripeAccLink', () => {
-		return app.$axios
+		return $axios
 			.get(
 				app.$config.strapi.url +
 					'/stripeloginlink?acc=' +
-					app.store.getters['getActiveUser'].stripeID,
+					app.store.getters['getCurrentUser'].stripeID,
 				{
 					headers: {
-						Authorization:
-							'Bearer ' + JSON.parse(localStorage.getItem('strapi_jwt')).token,
+						Authorization,
 					},
 				}
 			)
 			.catch((e) => {
-				app.store.dispatch('errorhandling', e);
+				errorhandling(e);
 			});
 	});
 
 	inject('createStripeAcc', () => {
-		return app.$axios
+		return $axios
 			.get(
 				app.$config.strapi.url +
 					'/createstripe?email=' +
-					app.store.getters['getActiveUser'].email +
+					app.store.getters['getCurrentUser'].email +
 					'&url=' +
 					location.origin,
 				{
 					headers: {
-						Authorization:
-							'Bearer ' + JSON.parse(localStorage.getItem('strapi_jwt')).token,
+						Authorization,
 					},
 				}
 			)
@@ -258,35 +288,33 @@ ${www ? '- :globe_with_meridians: : ' + www : ''}`,
 						};
 					})
 					.catch((e) => {
-						app.store.dispatch('errorhandling', e);
+						errorhandling(e);
 					});
 			});
 	});
 
 	inject('deleteStripeAcc', () => {
-		return app.$axios
+		return $axios
 			.get(
 				`${app.$config.strapi.url}/deletestripeacc?acc=${app.$strapi.user.stripeID}`,
 				{
 					headers: {
-						Authorization:
-							'Bearer ' + JSON.parse(localStorage.getItem('strapi_jwt')).token,
+						Authorization,
 					},
 				}
 			)
 			.catch((e) => {
-				app.store.dispatch('errorhandling', e);
+				errorhandling(e);
 			});
 	});
 
 	inject('retrieveStripePaymentSetup', (checkoutSession) => {
-		return app.$axios
+		return $axios
 			.get(
 				`${app.$config.strapi.url}/retrievestripepaymentsetup?checkoutSession=${checkoutSession}`,
 				{
 					headers: {
-						Authorization:
-							'Bearer ' + JSON.parse(localStorage.getItem('strapi_jwt')).token,
+						Authorization,
 					},
 				}
 			)
@@ -295,18 +323,17 @@ ${www ? '- :globe_with_meridians: : ' + www : ''}`,
 					...e,
 					location: 'functions.js retrieveStripePaymentSetup',
 				};
-				app.store.dispatch('errorhandling', err);
+				errorhandling(err);
 			});
 	});
 	// not in use... maybe it will be needed once ?!
 	inject('stopStripePaymentSetup', (checkoutSession) => {
-		return app.$axios
+		return $axios
 			.get(
 				`${app.$config.strapi.url}/stopstripepaymentsetup?checkoutSession=${checkoutSession}`,
 				{
 					headers: {
-						Authorization:
-							'Bearer ' + JSON.parse(localStorage.getItem('strapi_jwt')).token,
+						Authorization,
 					},
 				}
 			)
@@ -315,61 +342,57 @@ ${www ? '- :globe_with_meridians: : ' + www : ''}`,
 					...e,
 					location: 'functions.js stopStripePaymentSetup',
 				};
-				app.store.dispatch('errorhandling', err);
+				errorhandling(err);
 			});
 	});
 
 	//old -> a new version above is creating a delayed charge
 	inject('stripePayment', (coachStripeId, meetingID) => {
-		const user = app.store.getters['getActiveUser'];
-		return app.$axios
+		const user = app.store.getters['getCurrentUser'];
+		return $axios
 			.$get(
 				`${app.$config.strapi.url}/paywithstripe?coachStripeId=${coachStripeId}&name=${user.username}&email=${user.email}&url=${location.origin}&meetingID=${meetingID}`,
 				{
 					headers: {
-						Authorization:
-							'Bearer ' + JSON.parse(localStorage.getItem('strapi_jwt')).token,
+						Authorization,
 					},
 				}
 			)
 			.catch((e) => {
-				app.store.dispatch('errorhandling', e);
+				errorhandling(e);
 			});
 	});
 
 	inject('getStripeAccData', () => {
-		return app.$axios
+		return $axios
 			.get(
 				app.$config.strapi.url +
 					'/retrievestripe?stripeID=' +
-					app.store.getters['getActiveUser'].stripeID,
+					app.store.getters['getCurrentUser'].stripeID,
 				{
 					headers: {
-						Authorization:
-							'Bearer ' + JSON.parse(localStorage.getItem('strapi_jwt')).token,
+						Authorization,
 					},
 				}
 			)
 			.catch((e) => {
-				app.store.dispatch('errorhandling', e);
+				errorhandling(e);
 			});
 	});
 
 	inject('getStripePaymentSession', (sessionID) => {
 		if (sessionID) {
-			return app.$axios
+			return $axios
 				.$get(
 					`${app.$config.strapi.url}/retrievestripepaysession?paymentID=${sessionID}`,
 					{
 						headers: {
-							Authorization:
-								'Bearer ' +
-								JSON.parse(localStorage.getItem('strapi_jwt')).token,
+							Authorization,
 						},
 					}
 				)
 				.catch((e) => {
-					app.store.dispatch('errorhandling', e);
+					errorhandling(e);
 				});
 		}
 		return {
@@ -379,13 +402,12 @@ ${www ? '- :globe_with_meridians: : ' + www : ''}`,
 
 	//********* Meeting */
 	inject('deleteMeeting', (email, id, acceptedDate, paymentID) => {
-		return app.$axios
+		return $axios
 			.get(
 				`${app.$config.strapi.url}/deletemeeting?email=${email}&id=${id}&acceptedDate=${acceptedDate}`,
 				{
 					headers: {
-						Authorization:
-							'Bearer ' + JSON.parse(localStorage.getItem('strapi_jwt')).token,
+						Authorization,
 					},
 				}
 			)
@@ -397,20 +419,19 @@ ${www ? '- :globe_with_meridians: : ' + www : ''}`,
 					...e,
 					location: 'functions.js deleteMeeting',
 				};
-				app.store.dispatch('errorhandling', err);
+				errorhandling(err);
 			});
 	});
 
 	inject('getVideoMeeting', (video) => {
-		return app.$axios
+		return $axios
 			.$get(`${app.$config.strapi.url}/getvideomeeting?video=${video}`, {
 				headers: {
-					Authorization:
-						'Bearer ' + JSON.parse(localStorage.getItem('strapi_jwt')).token,
+					Authorization,
 				},
 			})
 			.catch((e) => {
-				app.store.dispatch('errorhandling', e);
+				errorhandling(e);
 			});
 	});
 
@@ -422,11 +443,10 @@ ${www ? '- :globe_with_meridians: : ' + www : ''}`,
 	});
 
 	inject('meetingConfirmationEmail', (data) => {
-		return app.$axios
+		return $axios
 			.post(`${app.$config.strapi.url}/meetingConfirmationEmail`, {
 				headers: {
-					Authorization:
-						'Bearer ' + JSON.parse(localStorage.getItem('strapi_jwt')).token,
+					Authorization,
 				},
 				body: data,
 			})

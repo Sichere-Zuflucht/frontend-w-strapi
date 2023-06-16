@@ -51,6 +51,8 @@
 					</div>
 				</v-list>
 				<v-divider />
+
+				{{ user }}
 				<v-list v-if="user">
 					<div v-if="user.roleName === 'woman'">
 						<v-list-group
@@ -338,12 +340,12 @@
 		},
 		computed: {
 			user() {
-				return this.$store.getters['getActiveUser'];
+				return this.$store.getters['getCurrentUser'];
 			},
 		},
 		methods: {
 			logout() {
-				this.$store.dispatch('logout');
+				this.$func.logout();
 				this.$router.push('/');
 			},
 		},

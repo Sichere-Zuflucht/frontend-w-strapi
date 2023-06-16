@@ -280,7 +280,7 @@
 			},
 			finish() {
 				const data = {
-					...this.$store.getters['getActiveUser'],
+					...this.$store.getters['getCurrentUser'],
 					topicArea: this.selectedTopic,
 					description: this.changeDescription,
 					quote: this.changeQuote,
@@ -305,7 +305,7 @@
 							this.overlay = !close;
 						})
 						.catch((e) => {
-							this.$store.dispatch('errorhandling', e);
+							this.$errorhandling(e);
 						});
 					this.$store.dispatch('changeAvatar', res[0]);
 				});

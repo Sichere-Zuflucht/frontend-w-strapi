@@ -447,14 +447,14 @@
 						this.$store.dispatch('changeData', updatedData);
 					})
 					.catch((err) => {
-						this.$store.dispatch('errorhandling', err);
+						this.$errorhandling(err);
 					});
 			},
 			login() {
 				this.loading = true;
 				if (!process.client) return;
-				this.$store
-					.dispatch('login', {
+				this.$func
+					.login({
 						email: this.email,
 						password: this.password,
 					})
@@ -475,7 +475,7 @@
 						)
 							? 'Ungültige E-Mail-Adresse oder ungültiges Passwort'
 							: err.response.data.error.message;
-						this.$store.dispatch('errorhandling', err);
+						this.$errorhandling(err);
 					});
 			},
 			async register() {
@@ -500,13 +500,11 @@
 				const role = roleTypes.find(
 					(r) => r.type == this.membership.id.toLowerCase()
 				).id;
-				this.$store
-					.dispatch('register', {
-						username,
+				this.$func
+					.register({
 						email: this.email,
 						password: this.password,
-						role,
-						roleName: this.membership.roleName,
+						usertype: this.membership.roleName,
 					})
 					.then(() => {
 						this.valid = false;
@@ -515,7 +513,7 @@
 						this.step++;
 					})
 					.catch((err) => {
-						this.$store.dispatch('errorhandling', err);
+						this.$errorhandling(err);
 					});
 			},
 			sendConfirmationAgain() {

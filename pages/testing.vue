@@ -2,7 +2,9 @@
 	<div>
 		<v-container class="py-md-8" style="min-height: calc(50vh - 74px)">
 			<v-btn @click="login">Login</v-btn>
+			<v-btn @click="me">me</v-btn>
 			u: {{ user }}
+			<v-btn @click="logout">logout</v-btn>
 		</v-container>
 	</div>
 </template>
@@ -16,16 +18,16 @@
 		},
 		methods: {
 			login() {
-				this.$loginUser({
-					email: 'woman@asdf.de',
-					password: 'asdfasdf',
-				}).then((userdata) => {
-					console.log('userdata', userdata);
-					this.user = userdata;
+				this.$func.login({
+					email: 'coach@zuio.de',
+					password: 'zuiozui',
 				});
 			},
-			async loadAllCoaches() {
-				this.user = await this.$loadAllCoaches();
+			async me() {
+				this.user = await this.$func.me();
+			},
+			logout() {
+				this.$func.logout();
 			},
 		},
 	};

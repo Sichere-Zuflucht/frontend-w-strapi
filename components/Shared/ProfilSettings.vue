@@ -130,7 +130,7 @@
 
 		computed: {
 			pubData() {
-				return this.$store.getters['getActiveUser'];
+				return this.$store.getters['getCurrentUser'];
 			},
 		},
 		methods: {

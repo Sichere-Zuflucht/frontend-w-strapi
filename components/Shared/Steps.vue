@@ -42,7 +42,9 @@
 						btn: 'Registrieren',
 						link: '/registration/signup',
 						textStyle: false,
-						rule: this.noButton ? false : !this.$store.getters['getActiveUser'],
+						rule: this.noButton
+							? false
+							: !this.$store.getters['getCurrentUser'],
 					},
 					{
 						icon: 'mdi-account-search',

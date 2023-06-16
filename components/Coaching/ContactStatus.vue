@@ -468,7 +468,7 @@
 				return this.$functionalCookieAccepted();
 			},
 			jitsiWithWomanName() {
-				const name = this.$store.getters['getActiveUser'].username;
+				const name = this.$store.getters['getCurrentUser'].username;
 				return `${this.response.videoCoach}#userInfo.displayName="${name}"`;
 			},
 			videoStatus() {
@@ -519,7 +519,7 @@
 						this.isDelete = false;
 						this.eraseLoading = false;
 						this.error = err;
-						this.$store.dispatch('errorhandling', err);
+						this.$errorhandling(err);
 					});
 			},
 			sendNotificationEmail({ date, time, id }) {
@@ -537,47 +537,12 @@
 						this.success = true;
 					})
 					.catch((err) => {
-						this.$store.dispatch('errorhandling', err);
+						this.$errorhandling(err);
 					});
 			},
 			startPaySession() {
 				this.$retrieveStripePaymentSetup(this.payment.id, id);
 			},
-			// RED is not implemented yet
-			/*async testRED() {
-      const data = {
-        method: "getEntryCodes",
-        date: "2023-11-27",
-        token: this.$config.redAPI,
-      };
-      /*const redReq = await this.$axios.$post(
-        "https://redclient.redmedical.de/service/video",
-        {
-          header: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
-      console.log("redReq", redReq);
-      redReq.json().then((redRes) => {
-        console.log("redRes", redRes);
-      });*/ /*
-this.$axios
-.$post("https://redclient.redmedical.de/service/video", {
-body: {
-method: "getEntryCodes",
-date: "2023-11-27",
-token: this.$config.redAPI,
-},
-})
-.then((response) => {
-console.log('res', response);
-})
-.catch((err)=>{
-this.$store.dispatch("errorhandling", err);
-});
-},*/
 			async pay(dateInput) {
 				this.btn.payButtonLoading = true;
 				let redReq, data, video;
@@ -685,13 +650,13 @@ this.$store.dispatch("errorhandling", err);
 								});
 							})
 							.catch((e) => {
-								this.$store.dispatch('errorhandling', e);
+								this.$errorhandling(e);
 								this.error = e.response.data.error.name;
 								this.redirectWarning = false;
 							});
 					})
 					.catch((e) => {
-						this.$store.dispatch('errorhandling', e);
+						this.$errorhandling(e);
 						this.error = e.response.data.error.name;
 						this.redirectWarning = false;
 					});

@@ -180,7 +180,7 @@
 						this.success = true;
 					})
 					.catch((e) => {
-						this.$store.dispatch('errorhandling', e);
+						this.$errorhandling(e);
 					});
 				this.bioSaved = true;
 				// this.$router.push('/berater/' + this.user.public.uid)
@@ -193,50 +193,6 @@
 					this.loading = false;
 					this.disabled = true;
 				});
-
-				// moved to plugin
-				/*
-      this.$axios
-        .get(
-          this.$config.strapi.url +
-            "/createStripe?email=" +
-            this.user.email +
-            "&url=" +
-            window.location.origin,
-          {
-            headers: {
-              Authorization:
-                "Bearer " +
-                JSON.parse(window.localStorage.getItem("strapi_jwt")).token,
-            },
-          }
-        )
-        .then((body) => {
-          console.log(body.data);
-          this.$strapi.$users
-            .update(this.$strapi.user.id, {
-              stripe: {
-                payouts_enabled: false,
-                id: body.data.stripeId,
-              },
-            })
-            .then((r) => {
-              this.stripeRegisterURL = body.data.url;
-              this.loading = false;
-              this.disabled = true;
-              if (
-                confirm(
-                  "Sichere Zuflucht möchte Sie weiterleiten zu: " +
-                    body.data.url
-                )
-              ) {
-                location.replace(this.stripeRegisterURL);
-              }
-            })
-            .catch((e) => {
-              this.$store.dispatch("errorhandling", e);
-            });
-        });*/
 			},
 		},
 	};

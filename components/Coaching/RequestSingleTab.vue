@@ -445,7 +445,7 @@
 			cancel(doc) {
 				//this.$deleteMeeting(informTo, this.id, doc.acceptedDate)
 				this.$deleteMeeting(
-					this.$store.getters['getActiveUser'].email,
+					this.$store.getters['getCurrentUser'].email,
 					this.id,
 					doc.acceptedDate,
 					doc.paymentID

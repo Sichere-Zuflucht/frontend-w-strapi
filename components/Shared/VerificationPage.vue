@@ -159,7 +159,7 @@
 							this.success = true;
 						})
 						.catch((err) => {
-							this.$store.dispatch('errorhandling', err);
+							this.$errorhandling(err);
 						});
 				});
 			},

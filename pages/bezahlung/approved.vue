@@ -23,7 +23,7 @@
 	export default {
 		name: 'Approved',
 		/*mounted() {
-    if (this.$store.getters["getActiveUser"].roleName == "woman") {
+    if (this.$store.getters["getCurrentUser"].roleName == "woman") {
       const meetingID = window.localStorage.getItem("meetingID");
       const sessionID = window.localStorage.getItem("sessionID");
       if (!sessionID) return;

@@ -137,10 +137,10 @@
 			// on the register function its not possible (any more?!) to add the variable roleName -> maybe change to role: authenticated
 			if (this.$strapi.user.roleName != 'authenticated') {
 				if (this.$strapi.user.roleName == 'woman') this.$router.push('/frauen');
-				this.userdata = this.$store.getters['getActiveUser'];
+				this.userdata = this.$store.getters['getCurrentUser'];
 				this.stepper = 2;
 			}
-			this.email = this.$store.getters['getActiveUser'].email;
+			this.email = this.$store.getters['getCurrentUser'].email;
 		},
 		methods: {
 			updateProfile() {
@@ -180,7 +180,7 @@
 								this.alert.isActive = false;
 								this.$store.dispatch('changeData', newU).then(() => {
 									this.loading = false;
-									this.userdata = this.$store.getters['getActiveUser'];
+									this.userdata = this.$store.getters['getCurrentUser'];
 									this.stepper++;
 								});
 							})
@@ -188,7 +188,7 @@
 								this.alert.isActive = true;
 								this.alert.message = err.response.data.error.message;
 								this.loading = false;
-								this.$store.dispatch('errorhandling', err);
+								this.$errorhandling(err);
 							});
 					});
 			},

@@ -103,7 +103,7 @@
 					<v-card-title class="text-h2 secondary--text"
 						>online-beratungstermin anfragen</v-card-title
 					>
-					<v-card-text v-if="$store.getters['getActiveUser']">
+					<v-card-text v-if="$store.getters['getCurrentUser']">
 						<p>
 							Fülle bitte die beiden Felder aus. Unser/e Berater*in sendet dir
 							dann passende Terminvorschläge für euren Beratungstermin.
@@ -347,13 +347,13 @@
         },*/
 			createMeeting() {
 				this.loading = true;
-				const woman = this.$store.getters['getActiveUser'];
+				const woman = this.$store.getters['getCurrentUser'];
 				const coach = this.pubData;
 				const usernameWithoutUmlaut = this.runLatinize('Köhler'); //this.$route.params.beratung)
 				const data = {
 					message: this.msgTitle + ': ' + this.message,
 					//coachID: this.$route.params.beratung,
-					//womanID: this.$store.getters["getActiveUser"].id.toString(),
+					//womanID: this.$store.getters["getCurrentUser"].id.toString(),
 					//coachEmail: this.pubData.email,
 					users_permissions_users: [woman, coach],
 					meetingId: `w${woman.id.toString()}-c${usernameWithoutUmlaut}-${new Date().getTime()}`,
@@ -369,7 +369,7 @@
 						this.isDisabled = true;
 					})
 					.catch((error) => {
-						this.$store.dispatch('errorhandling', error); //errorhandling(error)
+						this.$errorhandling(error);
 					});
 			},
 			copy() {

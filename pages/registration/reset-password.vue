@@ -145,7 +145,7 @@
 						//window.location.replace('/')
 					})
 					.catch((err) => {
-						this.$store.dispatch('errorhandling', err);
+						this.$errorhandling(err);
 						this.error.status = true;
 						this.error.message = err.response.data.error.message;
 					});
