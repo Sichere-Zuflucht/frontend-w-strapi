@@ -7,7 +7,6 @@ function errorhandling(error) {
 			console.log('error data:', error.response.data);
 			console.log('error status:', error.response.status);
 			console.log('error headers:', error.response.headers);
-			return `${error.response.status}: ${error.response.data.errors[0]}`;
 		} else if (error.request) {
 			// The request was made but no response was received
 			// `error.request` is an instance of XMLHttpRequest in the browser and an instance of
@@ -24,7 +23,7 @@ function errorhandling(error) {
 	}
 }
 
-export default ({ $axios, redirect }, inject) => {
+export default ({ $axios, redirect, store }, inject) => {
 	inject('errorhandling', errorhandling);
 
 	inject('rules', {
@@ -143,11 +142,12 @@ export default ({ $axios, redirect }, inject) => {
 
 		/** AUTH */
 		me: async () => {
-			return $axios.$get('users/me', {
+			const me = await $axios.$get('users/me', {
 				headers: {
 					Authorization,
 				},
 			});
+			return me.data;
 		},
 		register: async ({ usertype, email, password }) => {
 			const data = {
@@ -167,52 +167,32 @@ export default ({ $axios, redirect }, inject) => {
 			const expirationDate = new Date();
 			expirationDate.setDate(expirationDate.getDate() + 7);
 
-			/*const token = (
-				await $axios.$post(`authentication?email=${email}&password=${password}`)
-			).token;*/
-
 			try {
-				await $axios
-					.$post(`authentication?email=${email}&password=${password}`)
-					.then((token) => {
-						console.log(token);
-						localStorage.setItem('ruby_jwt', token, {
-							secure: true,
-							expires: expirationDate,
-						});
+				const data = await $axios.$post(
+					`authentication?email=${email}&password=${password}`
+				);
+				store.dispatch('changeData', data.user);
 
-						const route = window.localStorage.getItem('redirectBackTo')
-							? window.localStorage.getItem('redirectBackTo')
-							: '/frauen';
-						window.localStorage.removeItem('redirectBackTo');
-						redirect(route);
-					});
+				localStorage.setItem('ruby_jwt', data.token);
+
+				const route = window.localStorage.getItem('redirectBackTo')
+					? window.localStorage.getItem('redirectBackTo')
+					: '/frauen';
+				window.localStorage.removeItem('redirectBackTo');
+
+				redirect(route);
 			} catch (err) {
-				return err;
+				console.log('err', errorhandling(err));
+				const msg = err.response.data.errors[0].includes('Invalid email')
+					? 'Ungültige E-Mail-Adresse oder ungültiges Passwort'
+					: err.response.data.errors[0];
+				throw msg;
 			}
-
-			/*return await $axios
-				.$post(`authentication?email=${email}&password=${password}`)
-				.then((token) => {
-					console.log(token);
-					localStorage.setItem('ruby_jwt', token, {
-						secure: true,
-						expires: expirationDate,
-					});
-
-					const route = window.localStorage.getItem('redirectBackTo')
-						? window.localStorage.getItem('redirectBackTo')
-						: '/frauen';
-					window.localStorage.removeItem('redirectBackTo');
-					redirect(route);
-				})
-				.catch((err) => {
-					console.log('err', errorhandling(err));
-					return err;
-				});*/
 		},
 		logout: () => {
 			localStorage.removeItem('ruby_jwt');
+			store.dispatch('changeData', null);
+			redirect('registration/signin');
 		},
 	});
 
@@ -230,7 +210,7 @@ export default ({ $axios, redirect }, inject) => {
 	 */
 
 	//********* Default */
-	inject('console', (...data) => {
+	/*inject('console', (...data) => {
 		if (app.$config.status !== 'production') console.log(...data);
 	});
 
@@ -273,7 +253,7 @@ ${www ? '- :globe_with_meridians: : ' + www : ''}`,
 			});
 	});
 
-	//********* Stripe */
+	//********* Stripe 
 	inject('loginStripeAccLink', () => {
 		return $axios
 			.get(
@@ -436,7 +416,7 @@ ${www ? '- :globe_with_meridians: : ' + www : ''}`,
 		};
 	});
 
-	//********* Meeting */
+	//********* Meeting 
 	inject('deleteMeeting', (email, id, acceptedDate, paymentID) => {
 		return $axios
 			.get(
@@ -489,5 +469,5 @@ ${www ? '- :globe_with_meridians: : ' + www : ''}`,
 			.catch((err) => {
 				console.log('error', err);
 			});
-	});
+	});*/
 };

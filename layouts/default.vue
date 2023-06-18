@@ -336,7 +336,7 @@
 			};
 		},
 		async fetch() {
-			this.$store.dispatch('checkAuth');
+			//this.$store.dispatch('checkAuth');
 		},
 		computed: {
 			user() {

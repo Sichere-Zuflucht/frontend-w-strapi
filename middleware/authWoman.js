@@ -1,11 +1,11 @@
-export default function ({ redirect, $strapi, route }) {
-	if (!$strapi.user) {
+export default async function ({ redirect, route, $func, store }) {
+	if (!store.getters['getCurrentUser']) {
 		window.localStorage.setItem('redirectBackTo', route.fullPath);
 		redirect('/registration/signin');
 	} else {
-		if ($strapi.user.roleName == 'authenticated') {
+		if (store.getters['getCurrentUser'].roleName == 'authenticated') {
 			redirect('/registration/membership-selection');
-		} else if ($strapi.user.roleName != 'woman') {
+		} else if (store.getters['getCurrentUser'].roleName != 'woman') {
 			redirect('/beratung');
 		}
 	}
