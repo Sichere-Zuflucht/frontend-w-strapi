@@ -7,6 +7,7 @@ function errorhandling(error) {
 			console.log('error data:', error.response.data);
 			console.log('error status:', error.response.status);
 			console.log('error headers:', error.response.headers);
+			return `${error.response.status}: ${error.response.data.errors[0]}`;
 		} else if (error.request) {
 			// The request was made but no response was received
 			// `error.request` is an instance of XMLHttpRequest in the browser and an instance of
@@ -18,11 +19,19 @@ function errorhandling(error) {
 		}
 		console.log('error config:', error.config);
 		error.location ? console.log('location', error.location) : null;
+
+		``;
 	}
 }
 
-export default ({ $axios }, inject) => {
+export default ({ $axios, redirect }, inject) => {
 	inject('errorhandling', errorhandling);
+
+	inject('rules', {
+		email: (v) =>
+			/[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+/.test(v) ||
+			'E-Mail muss gültig sein',
+	});
 	/****** API to Ruby on Rails */
 	inject('func', {
 		/** MEETINGS */
@@ -162,7 +171,27 @@ export default ({ $axios }, inject) => {
 				await $axios.$post(`authentication?email=${email}&password=${password}`)
 			).token;*/
 
-			await $axios
+			try {
+				await $axios
+					.$post(`authentication?email=${email}&password=${password}`)
+					.then((token) => {
+						console.log(token);
+						localStorage.setItem('ruby_jwt', token, {
+							secure: true,
+							expires: expirationDate,
+						});
+
+						const route = window.localStorage.getItem('redirectBackTo')
+							? window.localStorage.getItem('redirectBackTo')
+							: '/frauen';
+						window.localStorage.removeItem('redirectBackTo');
+						redirect(route);
+					});
+			} catch (err) {
+				return err;
+			}
+
+			/*return await $axios
 				.$post(`authentication?email=${email}&password=${password}`)
 				.then((token) => {
 					console.log(token);
@@ -170,10 +199,17 @@ export default ({ $axios }, inject) => {
 						secure: true,
 						expires: expirationDate,
 					});
+
+					const route = window.localStorage.getItem('redirectBackTo')
+						? window.localStorage.getItem('redirectBackTo')
+						: '/frauen';
+					window.localStorage.removeItem('redirectBackTo');
+					redirect(route);
 				})
-				.catch((e) => {
-					console.log('err', errorhandling(e));
-				});
+				.catch((err) => {
+					console.log('err', errorhandling(err));
+					return err;
+				});*/
 		},
 		logout: () => {
 			localStorage.removeItem('ruby_jwt');
