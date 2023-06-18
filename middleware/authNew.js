@@ -1,11 +1,11 @@
-export default function ({ redirect, $strapi, route }) {
-	if (!$strapi.user) {
+export default function ({ redirect, store, route }) {
+	if (!store.getters['getCurrentUser']) {
 		window.localStorage.setItem('redirectBackTo', route.fullPath);
 		redirect('/registration/signin');
 	} else {
 		if (
-			$strapi.user.roleName != 'authenticated' &&
-			$strapi.user.verification == 'done'
+			store.getters['getCurrentUser'].usertype != 'authenticated' &&
+			store.getters['getCurrentUser'].verification - status == 'done'
 		) {
 			redirect('/');
 		}

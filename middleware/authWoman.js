@@ -3,9 +3,9 @@ export default async function ({ redirect, route, $func, store }) {
 		window.localStorage.setItem('redirectBackTo', route.fullPath);
 		redirect('/registration/signin');
 	} else {
-		if (store.getters['getCurrentUser'].roleName == 'authenticated') {
+		if (store.getters['getCurrentUser'].usertype == 'authenticated') {
 			redirect('/registration/membership-selection');
-		} else if (store.getters['getCurrentUser'].roleName != 'woman') {
+		} else if (store.getters['getCurrentUser'].usertype != 'woman') {
 			redirect('/beratung');
 		}
 	}

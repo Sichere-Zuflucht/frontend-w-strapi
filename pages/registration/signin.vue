@@ -96,26 +96,12 @@
 						email: this.email,
 						password: this.password,
 					})
-					.then((d) => {
-						console.log('d', d);
-					})
 					.catch((err) => {
 						this.loading = false;
 						this.error.status = true;
 						this.error.message = err;
-						//console.log('err', err);
-						/*this.error.message = err.response.data.error.message.includes(
-							'Invalid identifier'
-						)
-							? 'Ungültige E-Mail-Adresse oder ungültiges Passwort'
-							: err.response.data.error.message;*/
 					});
 			},
 		},
-		/*mounted() {
-			this.email = (
-				await this.$getStripeAccData()
-			).data.payouts_enabled;
-		},*/
 	};
 </script>

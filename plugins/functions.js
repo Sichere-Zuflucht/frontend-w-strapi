@@ -147,7 +147,7 @@ export default ({ $axios, redirect, store }, inject) => {
 					Authorization,
 				},
 			});
-			return me.data;
+			return me.data.attributes;
 		},
 		register: async ({ usertype, email, password }) => {
 			const data = {
@@ -171,13 +171,17 @@ export default ({ $axios, redirect, store }, inject) => {
 				const data = await $axios.$post(
 					`authentication?email=${email}&password=${password}`
 				);
-				store.dispatch('changeData', data.user);
+				//store.dispatch('changeData', data.user.attributes);
 
 				localStorage.setItem('ruby_jwt', data.token);
 
 				const route = window.localStorage.getItem('redirectBackTo')
 					? window.localStorage.getItem('redirectBackTo')
+					: data.user.usertype == 'coach'
+					? '/beratung'
 					: '/frauen';
+
+				console.log('route', route);
 				window.localStorage.removeItem('redirectBackTo');
 
 				redirect(route);

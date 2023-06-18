@@ -3,7 +3,7 @@ export default function ({ redirect, store, route }) {
 		window.localStorage.setItem('redirectBackTo', route.fullPath);
 		redirect('/registration/signin');
 	} else {
-		if (store.getters['getCurrentUser'].roleName != 'coach') {
+		if (store.getters['getCurrentUser'].usertype != 'coach') {
 			redirect('/frauen');
 		}
 	}
