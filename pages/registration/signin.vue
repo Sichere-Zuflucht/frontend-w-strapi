@@ -64,6 +64,7 @@
 
 <script>
 	export default {
+		middleware: 'authAlreadyLoggedin',
 		data() {
 			return {
 				valid: false,

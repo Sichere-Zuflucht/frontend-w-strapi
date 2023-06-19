@@ -140,6 +140,13 @@ export default ({ $axios, redirect, store }, inject) => {
 			return $axios.$get(`users/${user_id}`);
 		},
 
+		/** STRIPE */
+		/*getStripeAccData: () => {
+			return $axios.$get('stripe-account').catch((e) => {
+				errorhandling(e);
+			});
+		},*/
+
 		/** AUTH */
 		me: async () => {
 			const me = await $axios.$get('users/me', {
@@ -183,8 +190,7 @@ export default ({ $axios, redirect, store }, inject) => {
 
 				console.log('route', route);
 				window.localStorage.removeItem('redirectBackTo');
-
-				redirect(route);
+				location.href = route;
 			} catch (err) {
 				console.log('err', errorhandling(err));
 				const msg = err.response.data.errors[0].includes('Invalid email')
@@ -196,7 +202,7 @@ export default ({ $axios, redirect, store }, inject) => {
 		logout: () => {
 			localStorage.removeItem('ruby_jwt');
 			store.dispatch('changeData', null);
-			redirect('registration/signin');
+			location.href = 'registration/signin';
 		},
 	});
 

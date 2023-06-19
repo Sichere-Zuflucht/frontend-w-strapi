@@ -82,8 +82,8 @@
 		async mounted() {
 			const res = (await this.$strapi.find('users-permissions/roles')).roles;
 			res.forEach((role) => {
-				if (role.type == 'coach') this.roleTypes.push(role);
-				if (role.type == 'woman') this.roleTypes.push(role);
+				if (role.usertype == 'coach') this.roleTypes.push(role);
+				if (role.usertype == 'woman') this.roleTypes.push(role);
 			});
 		},
 	};

@@ -3,16 +3,20 @@
 		<client-only>
 			<p class="caption mb-0 font-weight-bold">Hallo</p>
 			<h1 v-if="user" class="text-h1 secondary--text">
-				{{ user.displayName }}
+				{{ user.display_name }}
 			</h1>
 		</client-only>
 		<CoachFulfilRegistration
 			v-if="
-				user.topicArea == null || !stripeEnabled || user.verification != 'done'
+				user.topic_areas == null ||
+				user.stripe ||
+				user.verification_status != 'done'
 			"
 		/>
 		<div
-			v-else-if="user.topicArea && stripeEnabled && user.verification == 'done'"
+			v-else-if="
+				user.topic_areas && user.stripe && user.verification_status == 'done'
+			"
 		>
 			<h2 class="primary--text mb-2">Anfragen</h2>
 			<v-btn outlined color="primary" class="mb-4" @click="loadMeetings"
@@ -41,14 +45,12 @@
 		data() {
 			return {
 				showOld: false,
-				stripeEnabled: null,
+				//stripeEnabled: null,
 				requests: null,
 			};
 		},
 		async mounted() {
-			this.stripeEnabled = (
-				await this.$getStripeAccData()
-			).data.payouts_enabled;
+			//this.stripeEnabled = await this.$func.getStripeAccData(); //.data.payouts_enabled;
 			this.loadMeetings();
 		},
 		computed: {
@@ -57,16 +59,17 @@
 			},
 		},
 		methods: {
-			loadMeetings() {
+			async loadMeetings() {
 				this.requests = null;
-				this.$strapi.$meetings
+				this.requests = await this.$func.loadAllMeetingsOfParticipant();
+				/*this.$strapi.$meetings
 					.find({
 						populate: '*',
 						'filters[users_permissions_users]': this.$strapi.user.id,
 					})
 					.then((meetings) => {
 						this.requests = meetings.data;
-					});
+					});*/
 			},
 		},
 	};

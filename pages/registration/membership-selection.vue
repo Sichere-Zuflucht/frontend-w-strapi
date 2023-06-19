@@ -135,8 +135,9 @@
 		},
 		async mounted() {
 			// on the register function its not possible (any more?!) to add the variable roleName -> maybe change to role: authenticated
-			if (this.$strapi.user.roleName != 'authenticated') {
-				if (this.$strapi.user.roleName == 'woman') this.$router.push('/frauen');
+			if (this.$store.getters['getActiveUser'].usertype != 'authenticated') {
+				if (this.$store.getters['getActiveUser'].usertype == 'woman')
+					this.$router.push('/frauen');
 				this.userdata = this.$store.getters['getCurrentUser'];
 				this.stepper = 2;
 			}
@@ -169,7 +170,7 @@
 						const data = {
 							roleName: 'coach',
 							role: getCoach.id,
-							displayName: this.firstName + ' ' + this.lastName,
+							display_name: this.firstName + ' ' + this.lastName,
 							username: username,
 						};
 

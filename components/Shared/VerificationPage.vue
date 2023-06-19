@@ -151,7 +151,7 @@
 						tel: data.tel,
 						www: data.www,
 						altEmail: data.altEmail,
-						name: this.$strapi.user.displayName,
+						name: this.$strapi.user.display_name,
 					};
 					this.$newCoachEmail(body)
 						.then(() => {

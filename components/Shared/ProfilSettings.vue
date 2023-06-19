@@ -5,16 +5,16 @@
 			<h1 class="text-h1 primary--text mb-4">Einstellungen<br />einsehen</h1>
 			<small>Name:</small>
 			<p>
-				{{ pubData.displayName }}
+				{{ pubData.display_name }}
 			</p>
 			<small>NutzerID:</small>
 			<p>{{ pubData.id }}</p>
 			<small>E-Mail:</small>
 			<p>{{ pubData.email }}</p>
 			<small>Mitglied als:</small>
-			<p v-if="pubData.roleName">
+			<p v-if="pubData.usertype">
 				{{
-					pubData.roleName == 'Woman' ? 'gewaltbetroffene Frau' : 'Berater:in'
+					pubData.usertype == 'woman' ? 'gewaltbetroffene Frau' : 'Berater:in'
 				}}
 			</p>
 

@@ -18,7 +18,10 @@
 								cover /></v-col
 						><v-col cols="12" sm="8" class="py-8 px-10"
 							><h3 class="text-h5 primary--text pb-4">{{ offer.title }}</h3>
-							<p v-if="$strapi.user.roleName == 'coach'" class="caption pr-0">
+							<p
+								v-if="$store.getters['getActiveUser'].usertype == 'coach'"
+								class="caption pr-0"
+							>
 								{{ offer.text }}
 							</p>
 							<p v-else class="caption pr-0">{{ offer.alternativText }}</p>

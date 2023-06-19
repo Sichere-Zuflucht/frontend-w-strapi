@@ -50,7 +50,7 @@
 			</v-avatar>
 			<div class="ma-5 ml-2 d-flex flex-column justify-center">
 				<h2 class="secondary--text text-h2">
-					{{ coach.displayName }}
+					{{ coach.display_name }}
 				</h2>
 				<h3 class="mt-2 text-h5">
 					{{ coach.profession }}

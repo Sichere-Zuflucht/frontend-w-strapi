@@ -139,7 +139,7 @@
 			};
 		},
 		async mounted() {
-			this.stripe = (await this.$getStripeAccData()).data;
+			//this.stripe = (await this.$getStripeAccData()).data;
 		},
 		computed: {
 			user() {

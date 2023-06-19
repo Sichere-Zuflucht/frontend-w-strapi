@@ -492,8 +492,8 @@
 				const roleTypes = [];
 				const res = (await this.$strapi.find('users-permissions/roles')).roles;
 				res.forEach((role) => {
-					if (role.type == 'coach') roleTypes.push(role);
-					if (role.type == 'woman') roleTypes.push(role);
+					if (role.usertype == 'coach') roleTypes.push(role);
+					if (role.usertype == 'woman') roleTypes.push(role);
 				});
 
 				// Ist nodemailer aktiviert, damit die Registrierung via localhost funktioniert?

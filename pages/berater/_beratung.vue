@@ -23,7 +23,7 @@
 		</v-sheet>
 		<v-container>
 			<h1 class="text-center text-h1 primary--text text-uppercase">
-				{{ pubData.displayName }}
+				{{ pubData.display_name }}
 			</h1>
 			<h2 class="text-center text-h4 mb-4">
 				{{ pubData.profession }}
@@ -92,7 +92,12 @@
 				</div>
 			</div>
 		</v-container>
-		<div v-if="!$strapi.user || $strapi.user.roleName === 'woman'">
+		<div
+			v-if="
+				!$store.getters['getActiveUser'] ||
+				$store.getters['getActiveUser'].usertype === 'woman'
+			"
+		>
 			<v-container>
 				<v-card
 					outlined
@@ -192,7 +197,7 @@
 						>
 							<p class="mb-0">
 								Fertig! Deine Anfrage wurde gesendet,
-								{{ pubData.displayName }} wird sich in den nächsten Tagen bei
+								{{ pubData.display_name }} wird sich in den nächsten Tagen bei
 								dir melden. Suche daher bitte regelmäßig nach Updates.
 							</p>
 							<v-btn to="/beratung" class="mt-2" color="secondary"

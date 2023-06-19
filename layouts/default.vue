@@ -51,10 +51,8 @@
 					</div>
 				</v-list>
 				<v-divider />
-
-				{{ user }}
 				<v-list v-if="user">
-					<div v-if="user.roleName === 'woman'">
+					<div v-if="user.usertype === 'woman'">
 						<v-list-group
 							v-for="(item, i) in loggedInWoman"
 							:key="i"
@@ -177,28 +175,8 @@
 						>
 					</div>
 					<client-only>
-						<v-btn
-							v-if="user && user.confirmed"
-							nuxt
-							exact
-							icon
-							plain
-							:to="user.role === 'Coach' ? '/beratung' : null"
-							@click="user.role === 'Coach' ? null : logout()"
-						>
-							<v-avatar
-								v-if="user.role === 'Coach'"
-								size="38"
-								color="grey lighten-2"
-								><v-img v-if="user.public.avatar" :src="user.public.avatar" />
-								<v-icon v-else>mdi-account</v-icon>
-								<!-- <SharedCoachIcon
-              v-else
-              color="#b3b3b3"
-              style="border: 1px solid #b3b3b3"
-              class="pa-2"
-            />--> </v-avatar
-							><v-icon v-else>mdi-logout</v-icon></v-btn
+						<v-btn v-if="user" nuxt exact icon plain @click="logout()">
+							<v-icon>mdi-logout</v-icon></v-btn
 						>
 					</client-only>
 				</v-col>
@@ -346,7 +324,6 @@
 		methods: {
 			logout() {
 				this.$func.logout();
-				this.$router.push('/');
 			},
 		},
 	};

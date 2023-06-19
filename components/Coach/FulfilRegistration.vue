@@ -74,11 +74,11 @@
 				stripeEnabled: true,
 			};
 		},
-		async mounted() {
+		/*async mounted() {
 			this.stripeEnabled = (
 				await this.$getStripeAccData()
 			).data.payouts_enabled;
-		},
+		},*/
 		computed: {
 			userData() {
 				return this.$store.getters['getCurrentUser'];
