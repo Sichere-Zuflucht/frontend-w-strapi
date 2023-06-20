@@ -56,7 +56,7 @@
 						placeholder="Jobbezeichnung"
 					></v-text-field>
 					<v-textarea
-						v-model="changeQuote"
+						v-model="changeCitation"
 						outlined
 						label="Persönliches Zitat:"
 						:rules="[(v) => !!v || 'Bitte ausfüllen']"
@@ -64,7 +64,7 @@
 						height="100"
 					></v-textarea>
 					<v-textarea
-						v-model="changeHistory"
+						v-model="changeProfessionalBackground"
 						outlined
 						label="Beruflicher Hintergrund / Schwerpunkte:"
 						placeholder="z.B. was Sie vorher gemacht haben oder was Sie bewegt"
@@ -75,7 +75,7 @@
 						]"
 					></v-textarea>
 					<v-textarea
-						v-model="changeDescription"
+						v-model="changePersonalBackground"
 						outlined
 						label="Eisbrecher (etwas persönliches über Sie)"
 						placeholder="Schreiben Sie etwas persönliches über sich, das ein Eisbrecher sein könnte. Gern einfach in Form von Stichpunkten. z.B. 
@@ -219,10 +219,10 @@
 				},
 				topics: ['psychosoziale Beratung', 'Coaching', 'Rechtsberatung'],
 				selectedTopic: null,
-				changeProfession: this.info.profession,
-				changeQuote: this.info.quote,
-				changeDescription: this.info.description,
-				changeHistory: this.info.history,
+				changeProfession: this.info.profession_line,
+				changeCitation: this.info.citation,
+				changePersonalBackground: this.info.personal_background,
+				changeProfessionalBackground: this.info.professional_background,
 				e6: 1,
 				panel: [0],
 				imageFile: null,
@@ -254,7 +254,7 @@
 			},
 		},
 		mounted() {
-			this.selectedTopic = this.info.topicArea;
+			this.selectedTopic = this.info.topic_areas;
 		},
 		fetchOnServer: false,
 		methods: {
@@ -281,12 +281,13 @@
 			finish() {
 				const data = {
 					...this.$store.getters['getCurrentUser'],
-					topicArea: this.selectedTopic,
-					description: this.changeDescription,
-					quote: this.changeQuote,
-					history: this.changeHistory,
-					profession: this.changeProfession,
+					topic_areas: this.selectedTopic,
+					personal_background: this.changePersonalBackground,
+					citation: this.changeCitation,
+					professional_background: this.changeProfessionalBackground,
+					profession_line: this.changeProfession,
 				};
+				console.log('data', data);
 				this.$store.dispatch('changeData', data);
 				this.$emit('selection', data);
 			},

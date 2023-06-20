@@ -46,16 +46,20 @@
 				default: false,
 			},
 		},
-		data() {
+		/*data() {
 			return {
 				roleTypes: [],
 			};
-		},
+		},*/
 		computed: {
 			upcomingResponses() {
 				return this.list.filter((r) => {
-					if (r.attributes.acceptedDate) {
-						const startTime = new Date(r.attributes.acceptedDate);
+					if (r.attributes.selected_time_index != -1) {
+						const startTime = new Date(
+							r.attributes.time_proposals_parsed[
+								r.attributes.selected_time_index
+							]
+						);
 						const endTime = new Date().setTime(
 							startTime.getTime() + 60 * 60 * 1000
 						);
@@ -67,8 +71,12 @@
 			},
 			oldResponses() {
 				return this.list.filter((r) => {
-					if (r.attributes.acceptedDate) {
-						const startTime = new Date(r.attributes.acceptedDate);
+					if (r.attributes.selected_time_index != -1) {
+						const startTime = new Date(
+							r.attributes.time_proposals_parsed[
+								r.attributes.selected_time_index
+							]
+						);
 						const endTime = new Date().setTime(
 							startTime.getTime() + 60 * 60 * 1000
 						);
@@ -79,12 +87,12 @@
 				});
 			},
 		},
-		async mounted() {
+		/*async mounted() {
 			const res = (await this.$strapi.find('users-permissions/roles')).roles;
 			res.forEach((role) => {
 				if (role.usertype == 'coach') this.roleTypes.push(role);
 				if (role.usertype == 'woman') this.roleTypes.push(role);
 			});
-		},
+		},*/
 	};
 </script>

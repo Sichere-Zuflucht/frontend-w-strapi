@@ -519,7 +519,7 @@
 						this.isDelete = false;
 						this.eraseLoading = false;
 						this.error = err;
-						this.$errorhandling(err);
+						this.$errorhandling(err, 'ContactStatus $deleteMeeting');
 					});
 			},
 			sendNotificationEmail({ date, time, id }) {
@@ -537,7 +537,7 @@
 						this.success = true;
 					})
 					.catch((err) => {
-						this.$errorhandling(err);
+						this.$errorhandling(err, 'ContactStatus $meetingConfirmationEmail');
 					});
 			},
 			startPaySession() {

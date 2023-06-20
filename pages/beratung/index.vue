@@ -9,13 +9,15 @@
 		<CoachFulfilRegistration
 			v-if="
 				user.topic_areas == null ||
-				user.stripe ||
-				user.verification_status != 'done'
+				//user.stripe ||
+				user.verification_status != 'verified'
 			"
 		/>
 		<div
 			v-else-if="
-				user.topic_areas && user.stripe && user.verification_status == 'done'
+				user.topic_areas &&
+				//user.stripe &&
+				user.verification_status == 'verified'
 			"
 		>
 			<h2 class="primary--text mb-2">Anfragen</h2>

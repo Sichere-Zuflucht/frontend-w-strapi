@@ -1,4 +1,12 @@
-const Authorization = `Bearer ${localStorage.getItem('ruby_jwt')}`;
+let Authorization = `Bearer ${localStorage.getItem('ruby_jwt')}`;
+let config = {
+	headers: {
+		'Content-Type': 'application/json',
+		Authorization,
+	},
+	//data: data
+};
+
 function errorhandling(error) {
 	{
 		if (error.response) {
@@ -17,7 +25,7 @@ function errorhandling(error) {
 			console.log('Error', error.message);
 		}
 		console.log('error config:', error.config);
-		error.location ? console.log('location', error.location) : null;
+		error.location ? console.log('location:', error.location) : null;
 
 		``;
 	}
@@ -67,20 +75,18 @@ export default ({ $axios, redirect, store }, inject) => {
 			});
 		},
 
-		coachGivesProposals: ({ video_type, time_proposals, meeting_id }) => {
-			const data = {
-				meeting: {
-					video_type,
-					time_proposals,
-				},
-			};
-
-			return $axios.$put(`meetings/${meeting_id}`, {
-				headers: {
-					Authorization,
-				},
-				body: JSON.stringify(data),
-			});
+		coachGivesProposals: async ({ video_type, time_proposals, meeting_id }) => {
+			try {
+				const data = JSON.stringify({
+					meeting: {
+						video_type,
+						time_proposals,
+					},
+				});
+				return await $axios.$put(`meetings/${meeting_id}`, data, config);
+			} catch (err) {
+				throw err;
+			}
 		},
 		archiveMeeting: ({ meeting_id }) => {
 			return $axios.$put(`meetings/${meeting_id}/archive`, {
@@ -89,12 +95,14 @@ export default ({ $axios, redirect, store }, inject) => {
 				},
 			});
 		},
-		loadAllMeetingsOfParticipant: () => {
-			return $axios.$get('meetings', {
-				headers: {
-					Authorization,
-				},
-			});
+		loadAllMeetingsOfParticipant: async () => {
+			return (
+				await $axios.$get('meetings', {
+					headers: {
+						Authorization,
+					},
+				})
+			).data;
 		},
 
 		/** COACHES */
@@ -147,7 +155,7 @@ export default ({ $axios, redirect, store }, inject) => {
 			});
 		},*/
 
-		/** AUTH */
+		/** AUTH + CURRENT USER*/
 		me: async () => {
 			const me = await $axios.$get('users/me', {
 				headers: {
@@ -155,6 +163,18 @@ export default ({ $axios, redirect, store }, inject) => {
 				},
 			});
 			return me.data.attributes;
+		},
+		updateMe: async (user) => {
+			try {
+				let data = JSON.stringify({
+					user: {
+						...user,
+					},
+				});
+				$axios.$put('users/me', data, config);
+			} catch (err) {
+				throw err;
+			}
 		},
 		register: async ({ usertype, email, password }) => {
 			const data = {

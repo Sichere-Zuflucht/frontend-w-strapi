@@ -94,8 +94,8 @@
 		</v-container>
 		<div
 			v-if="
-				!$store.getters['getActiveUser'] ||
-				$store.getters['getActiveUser'].usertype === 'woman'
+				!$store.getters['getCurrentUser'] ||
+				$store.getters['getCurrentUser'].usertype === 'woman'
 			"
 		>
 			<v-container>

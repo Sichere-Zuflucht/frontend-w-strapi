@@ -135,8 +135,8 @@
 		},
 		async mounted() {
 			// on the register function its not possible (any more?!) to add the variable roleName -> maybe change to role: authenticated
-			if (this.$store.getters['getActiveUser'].usertype != 'authenticated') {
-				if (this.$store.getters['getActiveUser'].usertype == 'woman')
+			if (this.$store.getters['getCurrentUser'].usertype != 'authenticated') {
+				if (this.$store.getters['getCurrentUser'].usertype == 'woman')
 					this.$router.push('/frauen');
 				this.userdata = this.$store.getters['getCurrentUser'];
 				this.stepper = 2;

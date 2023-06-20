@@ -21,7 +21,7 @@
 					KryptoNr.
 				</p>
 				<p class="font-weight-bold mb-0">
-					{{ item.users_permissions_users.data[0].attributes.username }}
+					{{ item.woman_name }}
 				</p>
 			</div>
 			<div>
@@ -50,7 +50,7 @@
 					abgelaufen
 				</v-chip>
 				<v-chip
-					v-else-if="item.status == 'newRequest'"
+					v-else-if="item.status == 'woman requested meeting'"
 					class="ma-2 flex-shrink-0 flex-grow-1"
 					color="error"
 					text-color="white"
@@ -58,7 +58,7 @@
 					unbearbeitet
 				</v-chip>
 				<v-chip
-					v-else-if="item.status == 'chooseDate'"
+					v-else-if="item.status == 'coach proposed timeslots'"
 					class="ma-2 flex-shrink-0 flex-grow-1"
 					color="orange"
 					text-color="white"
@@ -102,19 +102,6 @@
 								</p>
 							</v-sheet>
 						</v-col>
-						<v-col cols="3" sm="2" md="1">
-							<v-sheet v-if="id" color="grey lighten-5 pa-3 my-4">
-								<p
-									class="caption ma-0 grey--text"
-									style="transform: translateY(-22px); position: absolute"
-								>
-									ID
-								</p>
-								<p class="mb-0">
-									{{ id }}
-								</p>
-							</v-sheet>
-						</v-col>
 					</v-row>
 
 					<div v-if="item.status == 'deleted'">
@@ -122,10 +109,12 @@
 						<v-alert dark text dense color="primary"
 							>Der Termin
 							{{
-								item.acceptedDate
-									? `für
-                          ${formatDate(item.acceptedDate)} um
-                          ${formatTime(item.acceptedDate)}`
+								item.time_proposals_parsed[selected_time_index]
+									? `für ${formatDate(
+											item.time_proposals_parsed[selected_time_index]
+									  )} um ${formatTime(
+											item.time_proposals_parsed[selected_time_index]
+									  )}`
 									: ''
 							}}
 							wurde abgesagt.
@@ -141,10 +130,12 @@
 						<v-alert dark text dense color="primary"
 							>Die Frau hat noch keine Bezahlung für den Termin
 							{{
-								item.acceptedDate
-									? `am
-                          ${formatDate(item.acceptedDate)} um
-                          ${formatTime(item.acceptedDate)}`
+								item.time_proposals_parsed[selected_time_index]
+									? `am ${formatDate(
+											item.time_proposals_parsed[selected_time_index]
+									  )} um ${formatTime(
+											item.time_proposals_parsed[selected_time_index]
+									  )}`
 									: ''
 							}}
 							hinterlegt.
@@ -155,16 +146,18 @@
 						<v-alert dark text dense color="grey"
 							>Der Termin hat
 							{{
-								item.acceptedDate
-									? `am
-                          ${formatDate(item.acceptedDate)} um
-                          ${formatTime(item.acceptedDate)}`
+								item.time_proposals_parsed[selected_time_index]
+									? `am ${formatDate(
+											item.time_proposals_parsed[selected_time_index]
+									  )} um ${formatTime(
+											item.actime_proposals_parsed[selected_time_index]
+									  )}`
 									: ''
 							}}
 							stattgefunden.
 						</v-alert>
 					</div>
-					<div v-else-if="item.status == 'newRequest'">
+					<div v-else-if="item.status == 'woman requested meeting'">
 						<div class="d-flex">
 							<v-select
 								v-model="selectedVideoType"
@@ -224,17 +217,17 @@
 						</v-overlay>
 						<v-list>
 							<v-list-item-group>
-								<v-list-item v-for="(d, di) in item.suggestions" :key="di">
+								<v-list-item v-for="(d, di) in suggestionArray" :key="di">
 									<v-list-item-content>
 										<v-list-item-title
 											class="font-weight-bold"
 											style="font-size: 1em"
-											>{{ formatDate(d.date) }}
+											>{{ formatDate(d) }}
 										</v-list-item-title>
-										<p class="caption">{{ formatTime(d.date) }} Uhr</p>
+										<p class="caption">{{ formatTime(d) }} Uhr</p>
 									</v-list-item-content>
 									<v-list-item-icon>
-										<v-icon @click="eraseDate(di, item.suggestions)"
+										<v-icon @click="eraseDate(di, suggestionArray)"
 											>mdi-close
 										</v-icon>
 									</v-list-item-icon>
@@ -252,6 +245,7 @@
 						<UtilsDatePicker
 							v-if="selectedVideoType == 'normal'"
 							:item="item"
+							@suggestion="addToSuggestionList"
 						/>
 						<p class="mt-2 mb-0 pa-2 caption">
 							Bitte füge mind. 3 Termine hinzu.
@@ -260,8 +254,9 @@
 					<div v-else-if="payment ? payment.status == 'complete' : false">
 						<p class="caption">Bestätigter Termin</p>
 						<b
-							>{{ formatDate(item.acceptedDate) }} |
-							{{ formatTime(item.acceptedDate) }}
+							>{{ formatDate(item.time_proposals_parsed[selected_time_index]) }}
+							|
+							{{ formatTime(item.time_proposals_parsed[selected_time_index]) }}
 							<span class="caption">(50min)</span>
 						</b>
 						<v-divider></v-divider>
@@ -271,21 +266,21 @@
 							target="_blank"
 							:disabled="!videoStatus.ready"
 							:href="
-								item.videoType === 'normal' ? item.videoCoach : item.videoWoman
+								item.video_type === 'normal' ? item.videoCoach : item.videoWoman
 							"
 							>zum Videocall
 						</v-btn>
 						<v-btn
-							v-if="item.videoType === 'normal'"
+							v-if="item.video_type === 'normal'"
 							class="my-2"
 							color="secondary"
 							outlined
 							target="_blank"
-							:href="`https://meet.jit.si/coachtest-${id}-${new Date().getTime()}`"
+							:href="`https://meet.jit.si/coachtest-${new Date().getTime()}`"
 							>Video testen
 						</v-btn>
 						({{
-							item.videoType == 'normal'
+							item.video_type == 'normal'
 								? 'standard Videoanbieter '
 								: 'zertifizierter Videoanbieter'
 						}})
@@ -296,14 +291,17 @@
 							aktivieren. <a @click="reload">neu laden</a>
 						</p>
 					</div>
-					<div v-else-if="item.status == 'chooseDate'">
+					<div v-else-if="item.status == 'coach proposed timeslots'">
 						<v-banner>
 							Es wurde noch kein Termin bestätigt. Ihre vorgeschlagenen Termine
 							sind:<br /><br />
-							<span v-for="(d, di) in item.suggestions" :key="di" class="pt-4"
-								><b>{{ formatDate(d.date) }}</b
+							<span
+								v-for="(d, di) in item.time_proposals_parsed"
+								:key="di"
+								class="pt-4"
+								><b>{{ formatDate(d) }}</b
 								><br />
-								{{ formatTime(d.date) }} Uhr<br /><br
+								{{ formatTime(d) }} Uhr<br /><br
 							/></span>
 						</v-banner>
 					</div>
@@ -311,11 +309,14 @@
 
 				<v-card-actions class="d-flex justify-end">
 					<v-btn
-						v-if="selectedVideoType == 'normal' && !item.coachAnswered"
+						v-if="
+							selectedVideoType == 'normal' &&
+							item.status == 'woman requested meeting'
+						"
 						:loading="loading"
-						:disabled="item.suggestions.length < 3"
+						:disabled="suggestionArray.length < 3"
 						color="success"
-						@click="addSuggestions(item)"
+						@click="addSuggestions()"
 						>Termine vorschlagen
 					</v-btn>
 					<v-dialog
@@ -367,6 +368,7 @@
 			return {
 				requests: null,
 				newDate: new Date(new Date().setHours(new Date().getHours() - 1)),
+				suggestionArray: [],
 				selectedVideoType: 'normal',
 				videoTypes: [
 					{
@@ -395,8 +397,12 @@
 				let r = false;
 				let d = false;
 
-				if (this.item.acceptedDate) {
-					const startTime = new Date(this.item.acceptedDate);
+				console.log('videoStatus', this.item.selected_time_index);
+
+				if (this.item.selected_time_index != -1) {
+					const startTime = new Date(
+						this.item.time_proposals_parsed[selected_time_index]
+					);
 					const preTime = new Date();
 					const overTime = new Date();
 					const now = new Date();
@@ -416,31 +422,30 @@
 				};
 			},
 		},
-		async mounted() {
+		/*async mounted() {
 			this.payment = this.payment = await this.$getStripePaymentSession(
 				this.item.paymentID
 			);
-		},
+		},*/
 		methods: {
-			addSuggestions(request) {
+			addToSuggestionList(d) {
+				this.suggestionArray.push(new Date(d).toString());
+			},
+			addSuggestions() {
 				this.loading = true;
 				const data = {
-					coachAnswered: true,
-					suggestions: request.suggestions,
-					status: 'chooseDate',
-					updatedAt: new Date().toISOString(),
-					videoType: this.selectedVideoType,
+					time_proposals: this.suggestionArray,
+					video_type: this.selectedVideoType,
+					meeting_id: this.id,
 				};
-				this.$strapi.$meetings
-					.update(this.id, {
-						data,
-					})
-					.then(() => {
-						request.coachAnswered = true;
-						request.updatedAt = new Date();
-						request.status = 'chooseDate';
-						this.loading = false;
-					});
+				this.$func.coachGivesProposals(data).then(() => {
+					this.item.status = 'coach proposed timeslots';
+					this.item.time_proposals_parsed = this.suggestionArray;
+					this.item.video_type = this.selectedVideoType;
+					this.loading = false;
+					this.suggestionArray = [];
+					this.selectedVideoType = 'normal';
+				});
 			},
 			cancel(doc) {
 				//this.$deleteMeeting(informTo, this.id, doc.acceptedDate)

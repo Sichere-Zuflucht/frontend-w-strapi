@@ -9,7 +9,7 @@
 		<template #activator="{ on, attrs }">
 			<v-btn
 				v-bind="attrs"
-				:color="item.suggestions.length < 3 ? 'success' : null"
+				:color="item.time_proposals_parsed.length < 3 ? 'success' : null"
 				prepend-icon="mdi-calendar"
 				v-on="on"
 				>Datum/Uhrzeit auswählen</v-btn
@@ -98,11 +98,7 @@
 				>
 					Abbrechen
 				</v-btn>
-				<v-btn
-					:disabled="!time"
-					color="primary"
-					@click="addDates(item.suggestions)"
-				>
+				<v-btn :disabled="!time" color="primary" @click="addDates()">
 					Fertig
 				</v-btn>
 			</div>
@@ -120,11 +116,9 @@
 		},
 		data() {
 			return {
-				//hourRate: () => return for(var i=0, i<=24, i++) return //['07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19'],
 				minuteRate: ['00', '15', '30', '45'],
 				selHour: '07',
 				selMin: '00',
-				menu: false,
 				isSelectDate: true,
 				allowed: {
 					dates: (d) => {
@@ -144,18 +138,12 @@
 					},
 				},
 				date: '',
-				//time: '',
+				time: '',
 				modal: false,
 				today: new Date(new Date().getTime() + 1000 * 60 * 60 * 24),
 			};
 		},
 		computed: {
-			dateRangeText() {
-				return this.dates.join(' – ');
-			},
-			time() {
-				return this.selHour + ':' + this.selMin;
-			},
 			hourRate() {
 				const h = [];
 				for (var i = 6; i <= 22; i++) {
@@ -165,20 +153,18 @@
 				return h;
 			},
 		},
+		mounted() {
+			this.newTime();
+		},
 		methods: {
-			addDates(d) {
-				// $refs.dialog.save(date)
-				//const date = new Date(this.date +' '+this.time)
+			addDates() {
 				const date = new Date(this.date + ' ' + this.time).toISOString();
-				d.push({
-					date: date, //this.date+'T'+this.time+':00.000Z'
-				});
+				this.$emit('suggestion', date);
 				this.date = '';
-				this.time = '';
 				this.selHour = '07';
 				this.selMin = '00';
+				this.newTime();
 				this.isSelectDate = true;
-				// this.menu = false
 				this.$refs.dialog.save();
 			},
 			newTime() {

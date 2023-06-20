@@ -26,8 +26,8 @@
 						>
 							Profil
 						</v-stepper-step>
-						<v-divider v-if="!user.stripeID"></v-divider>
-						<v-stepper-step v-if="!user.stripeID" step="2" editable>
+						<v-divider v-if="!user.stripe"></v-divider>
+						<v-stepper-step v-if="!user.stripe" step="2" editable>
 							Zahlung aktivieren
 						</v-stepper-step>
 					</v-stepper-header>
@@ -156,33 +156,31 @@
 			};
 		},
 		async mounted() {
-			const u = await this.$strapi.$users.findOne(this.$strapi.user.id, {
-				populate: 'avatar',
-			});
-			this.avatarPreview = u.avatar;
-			this.user = this.$strapi.user;
+			this.user = this.$store.getters['getCurrentUser'];
+			this.avatarPreview = this.$store.getters['getCurrentUser'].avatar_url;
 		},
 		methods: {
 			updateAvatarPreview(img) {
 				this.avatarPreview = img;
 			},
 			updateProfile(data) {
-				this.$strapi.$users
-					.update(this.$strapi.user.id, {
-						topicArea: data.topicArea, // topic
-						description: data.description,
-						quote: data.quote,
-						history: data.history,
-						profession: data.profession,
+				this.$func
+					.updateMe({
+						topic_areas: data.topic_areas, // topic
+						profession_line: data.profession_line,
+						citation: data.citation,
+						personal_background: data.personal_background,
+						professional_background: data.professional_background,
 					})
 					.then((r) => {
 						this.loading = false;
 						this.success = true;
+						this.bioSaved = true;
 					})
 					.catch((e) => {
+						e.location = 'edit-profil updateMe';
 						this.$errorhandling(e);
 					});
-				this.bioSaved = true;
 				// this.$router.push('/berater/' + this.user.public.uid)
 			},
 			addStripe() {

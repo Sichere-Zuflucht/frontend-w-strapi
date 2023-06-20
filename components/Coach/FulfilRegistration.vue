@@ -2,7 +2,7 @@
 	<div class="pt-4">
 		<client-only v-if="userData">
 			<v-alert
-				v-if="!userData.topicArea"
+				v-if="!userData.topic_areas"
 				color="secondary"
 				icon="mdi-account-question"
 				outlined
@@ -35,7 +35,7 @@
 				</v-btn>
 			</v-alert>
 			<v-alert
-				v-if="userData.verification != 'done'"
+				v-if="userData.verification != 'verified'"
 				color="secondary"
 				icon="mdi-account-clock"
 				outlined
@@ -54,9 +54,9 @@
 			</v-alert>
 			<p
 				v-if="
-					!userData.topicArea ||
+					!userData.topic_areas ||
 					!stripeEnabled ||
-					userData.verification != 'done'
+					userData.verification != 'verified'
 				"
 				class="caption"
 			>

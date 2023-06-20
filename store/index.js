@@ -32,7 +32,7 @@ export const actions = {
 export const mutations = {
 	setUserData(state, user) {
 		state.user = user;
-		console.log('user', state.user);
+		console.log('setUserData', state.user);
 	},
 	setUserAvatar(state, newAvatar) {
 		this.$strapi.user.avatar = newAvatar;
