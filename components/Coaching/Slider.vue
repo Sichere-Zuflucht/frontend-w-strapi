@@ -65,22 +65,14 @@
   },*/
 		mounted() {
 			this.withoutid
-				? this.$strapi.$users
-						.find({
-							populate: 'avatar',
-							'filters[roleName]': 'coach',
-							'filters[verification]': 'done',
-							'filters[username][$ne]': this.withoutid,
-							'pagination[start]': 0,
-							'pagination[limit]': 3,
-						})
-						.then((d) => {
-							this.allCoaches = d;
-							/*d.forEach((single)=>{
+				? this.$func.loadAllCoaches().then((d) => {
+						console.log('coaches', d);
+						this.allCoaches = d;
+						/*d.forEach((single)=>{
             if (this.withoutid != single.id) this.allCoaches.push(single)
           })*/
-							this.loading = false;
-						})
+						this.loading = false;
+				  })
 				: this.$strapi.$users
 						.find({
 							populate: 'avatar',
