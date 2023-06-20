@@ -109,11 +109,11 @@
 						<v-alert dark text dense color="primary"
 							>Der Termin
 							{{
-								item.time_proposals_parsed[selected_time_index]
+								item.time_proposals_parsed[item.selected_time_index]
 									? `für ${formatDate(
-											item.time_proposals_parsed[selected_time_index]
+											item.time_proposals_parsed[item.selected_time_index]
 									  )} um ${formatTime(
-											item.time_proposals_parsed[selected_time_index]
+											item.time_proposals_parsed[item.selected_time_index]
 									  )}`
 									: ''
 							}}
@@ -130,11 +130,11 @@
 						<v-alert dark text dense color="primary"
 							>Die Frau hat noch keine Bezahlung für den Termin
 							{{
-								item.time_proposals_parsed[selected_time_index]
+								item.time_proposals_parsed[item.selected_time_index]
 									? `am ${formatDate(
-											item.time_proposals_parsed[selected_time_index]
+											item.time_proposals_parsed[item.selected_time_index]
 									  )} um ${formatTime(
-											item.time_proposals_parsed[selected_time_index]
+											item.time_proposals_parsed[item.selected_time_index]
 									  )}`
 									: ''
 							}}
@@ -146,11 +146,11 @@
 						<v-alert dark text dense color="grey"
 							>Der Termin hat
 							{{
-								item.time_proposals_parsed[selected_time_index]
+								item.time_proposals_parsed[item.selected_time_index]
 									? `am ${formatDate(
-											item.time_proposals_parsed[selected_time_index]
+											item.time_proposals_parsed[item.selected_time_index]
 									  )} um ${formatTime(
-											item.actime_proposals_parsed[selected_time_index]
+											item.time_proposals_parsed[item.selected_time_index]
 									  )}`
 									: ''
 							}}
@@ -254,9 +254,13 @@
 					<div v-else-if="payment ? payment.status == 'complete' : false">
 						<p class="caption">Bestätigter Termin</p>
 						<b
-							>{{ formatDate(item.time_proposals_parsed[selected_time_index]) }}
+							>{{
+								formatDate(item.time_proposals_parsed[item.selected_time_index])
+							}}
 							|
-							{{ formatTime(item.time_proposals_parsed[selected_time_index]) }}
+							{{
+								formatTime(item.time_proposals_parsed[item.selected_time_index])
+							}}
 							<span class="caption">(50min)</span>
 						</b>
 						<v-divider></v-divider>
@@ -356,7 +360,7 @@
 				default: {},
 			},
 			id: {
-				type: Number,
+				type: String,
 				default: null,
 			},
 			oldlist: {
@@ -401,7 +405,7 @@
 
 				if (this.item.selected_time_index != -1) {
 					const startTime = new Date(
-						this.item.time_proposals_parsed[selected_time_index]
+						this.item.time_proposals_parsed[this.item.selected_time_index]
 					);
 					const preTime = new Date();
 					const overTime = new Date();

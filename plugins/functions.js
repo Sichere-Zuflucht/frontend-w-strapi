@@ -31,13 +31,19 @@ function errorhandling(error) {
 	}
 }
 
-export default ({ $axios, redirect, store }, inject) => {
+export default ({ $axios, redirect, store, $cookies }, inject) => {
 	inject('errorhandling', errorhandling);
 
 	inject('rules', {
 		email: (v) =>
 			/[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+/.test(v) ||
 			'E-Mail muss gültig sein',
+	});
+	inject('functionalCookieAccepted', () => {
+		const cookie = $cookies.get('CookieScriptConsent');
+		if (!cookie) return false;
+		if (cookie.categories.length == 0) return false;
+		return cookie.categories.includes('functionality');
 	});
 	/****** API to Ruby on Rails */
 	inject('func', {

@@ -21,21 +21,28 @@
 			"
 		>
 			<h2 class="primary--text mb-2">Anfragen</h2>
-			<v-btn outlined color="primary" class="mb-4" @click="loadMeetings"
+			<v-btn
+				v-if="upcomingMeetings"
+				outlined
+				color="primary"
+				class="mb-4"
+				@click="loadMeetings"
 				><v-icon small class="mr-1">mdi-update</v-icon>Nach Updates
 				suchen</v-btn
 			>
-
-			<div v-if="requests">
-				<CoachingRequestList :list="requests" />
+			<CoachingRequestList
+				v-if="upcomingMeetings.length != 0"
+				:list="upcomingMeetings"
+			/>
+			<div>
+				<!-- v-if="completedMeetings.length != 0">-->
 				<div class="my-8 d-flex justify-center">
 					<v-btn text color="grey" @click="showOld = !showOld"
 						>vergangene Termine {{ showOld ? 'verbergen' : 'anzeigen' }}</v-btn
 					>
 				</div>
-				<CoachingRequestList :list="requests" oldlist :showold="showOld" />
+				<CoachingRequestList :list="completedMeetings" :showold="showOld" />
 			</div>
-			<div v-else><v-skeleton-loader type="article"></v-skeleton-loader></div>
 		</div>
 		<div v-else><v-skeleton-loader type="article"></v-skeleton-loader></div>
 	</v-container>
@@ -49,21 +56,38 @@
 				showOld: false,
 				//stripeEnabled: null,
 				requests: null,
+				completedMeetings: [],
+				upcomingMeetings: [],
 			};
 		},
 		async mounted() {
 			//this.stripeEnabled = await this.$func.getStripeAccData(); //.data.payouts_enabled;
+			//this.loadMeetings();
 			this.loadMeetings();
 		},
 		computed: {
 			user() {
 				return this.$store.getters['getCurrentUser'];
 			},
+			async test() {
+				await this.$func.loadAllMeetingsOfParticipant();
+			},
 		},
 		methods: {
 			async loadMeetings() {
-				this.requests = null;
-				this.requests = await this.$func.loadAllMeetingsOfParticipant();
+				var meetings = await this.$func.loadAllMeetingsOfParticipant();
+				console.log('meetings', meetings);
+				meetings.forEach((meeting) => {
+					if (
+						meeting.status == 'meeting canceled' ||
+						meeting.status == 'meeting completed'
+					)
+						this.completedMeetings.push(meeting);
+					else this.upcomingMeetings.push(meeting);
+				});
+				//this.requests = null;
+				//this.requests = await this.$func.loadAllMeetingsOfParticipant();
+
 				/*this.$strapi.$meetings
 					.find({
 						populate: '*',
