@@ -3,8 +3,9 @@
 		<v-sheet color="secondary pa-8">
 			<h1 class="text-h1 white--text">Willkommen bei<br />Sichere Zuflucht</h1>
 		</v-sheet>
-		<div v-if="responses">
-			<v-container v-if="responses.length > 0">
+		{{ this.completedMeetings }}
+		<div v-if="upcomingMeetings">
+			<v-container v-if="upcomingMeetings.length > 0">
 				<h2 class="text-h4 font-weight-bold primary--text mb-3">
 					Deine Korrespondenz
 				</h2>
@@ -14,18 +15,21 @@
 				>
 			</v-container>
 			<v-sheet class="mx-auto">
-				<v-slide-group :show-arrows="responses.length > 1" class="px-1 pb-4">
-					<v-slide-item v-for="(response, i) in upcomingResponses" :key="i">
+				<v-slide-group
+					:show-arrows="upcomingMeetings.length > 1"
+					class="px-1 pb-4"
+				>
+					<v-slide-item v-for="(meeting, i) in upcomingMeetings" :key="i">
 						<CoachingContactStatus
-							:coach="response.coach"
-							:response="response.attributes"
-							:id="response.id"
+							:coach="meeting.relationships.coach.data"
+							:meeting="meeting.attributes"
+							:id="meeting.id"
 							:clickable="false"
-							@cancel="cancel(response)"
+							@cancel="cancel(meeting)"
 						/>
 					</v-slide-item>
 				</v-slide-group>
-				<div v-if="oldResponses.length > 0" class="d-flex align-center">
+				<div v-if="completedMeetings.length > 0" class="d-flex align-center">
 					<v-btn text class="mx-auto" @click="showOld = !showOld"
 						>Alte Anfragen {{ !showOld ? 'anzeigen' : 'verbergen' }}</v-btn
 					>
@@ -33,28 +37,28 @@
 
 				<v-slide-group
 					v-if="showOld"
-					:show-arrows="responses.length > 1"
+					:show-arrows="completedMeetings.length > 1"
 					class="px-1 pb-4"
 				>
-					<v-slide-item v-for="(response, i) in oldResponses" :key="i">
+					<v-slide-item v-for="(meeting, i) in completedMeetings" :key="i">
 						<CoachingContactStatus
-							:coach="response.coach"
-							:response="response.attributes"
-							:id="response.id"
+							:coach="meeting.coach"
+							:response="meeting.attributes"
+							:id="meeting.id"
 							:clickable="false"
 							oldlist
-							@cancel="cancel(response)"
+							@cancel="cancel(meeting)"
 						/>
 					</v-slide-item>
 				</v-slide-group>
 			</v-sheet>
 			<UtilsBtn
-				v-if="responses.length != 0"
+				v-if="upcomingMeetings.length != 0"
 				text="Beratungsangebote ansehen"
 				link="/berater"
 			/>
 		</div>
-		<v-container v-else-if="responses == null">
+		<v-container v-else-if="upcomingMeetings == null">
 			<v-sheet elevation="2" class="pa-2">
 				<v-skeleton-loader
 					class="mx-auto"
@@ -85,75 +89,55 @@
 		middleware: 'authWoman',
 		data() {
 			return {
-				userData: null,
-				coachDeleted: false,
-				responses: null,
-				offers: [
-					{
-						title: 'Sichere Zuflucht-Magazin',
-						img: 'le-buzz-tVnm9I9jb8I-unsplash.jpg',
-						link: '/magazine',
-						btntext: 'Zum Magazin',
-					},
-					{
-						title: 'Berater*innen und Coaches',
-						img: 'le-buzz-tVnm9I9jb8I-unsplash.jpg',
-						link: '/berater',
-						btntext: 'Berater*innen Übersicht',
-					},
-				],
-				newWoman: false,
-				showOld: false,
+				completedMeetings: [],
+				upcomingMeetings: [],
 			};
 		},
 		async mounted() {
 			this.loadMeetings();
 
-			this.newWoman = window.localStorage.getItem('newWoman');
-			window.localStorage.removeItem('newWoman');
-		},
-		computed: {
-			upcomingResponses() {
-				return this.responses.filter((r) => {
-					if (r.attributes.acceptedDate) {
-						const startTime = new Date(r.attributes.acceptedDate);
-						const endTime = new Date().setTime(
-							startTime.getTime() + 60 * 60 * 1000
-						);
-						const now = new Date();
-						return now < endTime;
-					}
-					return true;
-				});
-			},
-			oldResponses() {
-				return this.responses.filter((r) => {
-					if (r.attributes.acceptedDate) {
-						const startTime = new Date(r.attributes.acceptedDate);
-						const endTime = new Date().setTime(
-							startTime.getTime() + 60 * 60 * 1000
-						);
-						const now = new Date();
-						return now >= endTime;
-					}
-					return false;
-				});
-			},
+			//this.newWoman = window.localStorage.getItem('newWoman');
+			//window.localStorage.removeItem('newWoman');
 		},
 		methods: {
+			async loadMeetings() {
+				var meetings = await this.$func.loadAllMeetingsOfParticipant();
+				this.upcomingMeetings = [];
+
+				const up = [];
+				const compl = [];
+				meetings.forEach((meeting) => {
+					if (
+						meeting.status == 'meeting canceled' ||
+						meeting.status == 'meeting completed'
+					)
+						compl.push(meeting);
+					else up.push(meeting);
+				});
+				this.upcomingMeetings = up;
+				this.completedMeetings = compl;
+				console.log('up', up);
+			},
+		},
+		/*methods: {
 			cancel(response) {
 				this.responses = this.responses.filter((r) => r !== response);
 			},
-			loadMeetings() {
-				this.responses = null;
-				this.$strapi.$meetings
-					.find({
-						populate: 'users_permissions_users, suggestions',
-						'filters[users_permissions_users]': this.$strapi.user.id,
-					})
-					.then(async (res) => {
-						//if Coach still existed and didn't deleted the account, search for coach
-						var collection = [];
+			async loadMeetings() {
+				var meetings = await this.$func.loadAllMeetingsOfParticipant();
+				console.log('meetings', meetings);
+				meetings.forEach((meeting) => {
+					if (
+						meeting.status == 'meeting canceled' ||
+						meeting.status == 'meeting completed'
+					)
+						this.completedMeetings.push(meeting);
+					else this.upcomingMeetings.push(meeting);
+				});
+				/*await this.$func.loadAllMeetingsOfParticipant().then((res) => {
+					//if Coach still existed and didn't deleted the account, search for coach
+					console.log('res', res);
+					/*var collection = [];
 						res.data.forEach((response) => {
 							if (!response.attributes.users_permissions_users.data[1])
 								return collection.push({
@@ -178,8 +162,8 @@
 								});
 						});
 						this.responses = collection;
-					});
+				});
 			},
-		},
+		},*/
 	};
 </script>

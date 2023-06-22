@@ -76,7 +76,6 @@
 		methods: {
 			async loadMeetings() {
 				var meetings = await this.$func.loadAllMeetingsOfParticipant();
-				console.log('meetings', meetings);
 				meetings.forEach((meeting) => {
 					if (
 						meeting.status == 'meeting canceled' ||
@@ -85,17 +84,6 @@
 						this.completedMeetings.push(meeting);
 					else this.upcomingMeetings.push(meeting);
 				});
-				//this.requests = null;
-				//this.requests = await this.$func.loadAllMeetingsOfParticipant();
-
-				/*this.$strapi.$meetings
-					.find({
-						populate: '*',
-						'filters[users_permissions_users]': this.$strapi.user.id,
-					})
-					.then((meetings) => {
-						this.requests = meetings.data;
-					});*/
 			},
 		},
 	};
