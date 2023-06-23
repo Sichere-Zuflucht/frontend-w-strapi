@@ -26,8 +26,8 @@
 						>
 							Profil
 						</v-stepper-step>
-						<v-divider v-if="!user.stripe"></v-divider>
-						<v-stepper-step v-if="!user.stripe" step="2" editable>
+						<v-divider v-if="!user.stripe_id"></v-divider>
+						<v-stepper-step v-if="!user.stripe_id" step="2" editable>
 							Zahlung aktivieren
 						</v-stepper-step>
 					</v-stepper-header>
@@ -49,11 +49,11 @@
 							/>
 							<v-btn
 								text
-								:to="user.stripeID ? '/berater/' + user.username : null"
+								:to="user.stripe_id ? '/berater/' + user.username : null"
 								color="grey"
-								@click="!user.stripeID ? stepper++ : null"
+								@click="!user.stripe_id ? stepper++ : null"
 								>{{
-									!user.stripeID ? 'Später' : 'Weiter ohne Speichern'
+									!user.stripe_id ? 'Später' : 'Weiter ohne Speichern'
 								}}</v-btn
 							>
 						</v-stepper-content>
@@ -61,7 +61,7 @@
 							<h2 class="text-h2 secondary--text pb-4">PROFIL erstellt</h2>
 							<p>
 								Sie können sich Ihr Profil ansehen{{
-									!user.stripeID
+									!user.stripe_id
 										? ' oder direkt weiter zur Zahlungsanbindung gehen.'
 										: '.'
 								}}
@@ -75,7 +75,7 @@
 									:to="'/berater/' + user.username"
 									>Profil ansehen</v-btn
 								><v-btn
-									v-if="!user.stripeID"
+									v-if="!user.stripe_id"
 									color="secondary"
 									class="mt-4"
 									@click="stepper++"

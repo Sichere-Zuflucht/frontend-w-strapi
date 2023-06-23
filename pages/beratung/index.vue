@@ -9,14 +9,14 @@
 		<CoachFulfilRegistration
 			v-if="
 				user.topic_areas == null ||
-				//user.stripe ||
+				user.stripe_id ||
 				user.verification_status != 'verified'
 			"
 		/>
 		<div
 			v-else-if="
 				user.topic_areas &&
-				//user.stripe &&
+				user.stripe_id &&
 				user.verification_status == 'verified'
 			"
 		>

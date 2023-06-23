@@ -94,12 +94,8 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 				throw err;
 			}
 		},
-		archiveMeeting: ({ meeting_id }) => {
-			return $axios.$put(`meetings/${meeting_id}/archive`, {
-				headers: {
-					Authorization,
-				},
-			});
+		archiveMeeting: (meeting_id) => {
+			return $axios.$put(`meetings/${meeting_id}/archive`, {}, config);
 		},
 		loadAllMeetingsOfParticipant: async () => {
 			return (

@@ -139,11 +139,11 @@
 			};
 		},
 		async mounted() {
-			//this.stripe = (await this.$getStripeAccData()).data;
+			this.stripe = (await this.$getStripeAccData()).data;
 		},
 		computed: {
 			user() {
-				return this.$store.getters['getCurrentUser'];
+				return this.$store.getters['getActiveUser'];
 			},
 		},
 		methods: {

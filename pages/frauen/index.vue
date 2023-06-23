@@ -3,7 +3,6 @@
 		<v-sheet color="secondary pa-8">
 			<h1 class="text-h1 white--text">Willkommen bei<br />Sichere Zuflucht</h1>
 		</v-sheet>
-		{{ this.completedMeetings }}
 		<div v-if="upcomingMeetings">
 			<v-container v-if="upcomingMeetings.length > 0">
 				<h2 class="text-h4 font-weight-bold primary--text mb-3">

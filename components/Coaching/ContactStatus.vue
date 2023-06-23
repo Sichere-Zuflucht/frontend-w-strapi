@@ -6,28 +6,13 @@
 		width="100%"
 		class="ma-2 d-flex flex-column"
 		:max-width="width"
-		:style="
-			'border: 1px solid ' +
-			(videoStatus.ready
-				? $vuetify.theme.themes.light.success
-				: videoStatus.done
-				? 'grey'
-				: $vuetify.theme.themes.light.primary)
-		"
+		:style="`border: 1px solid ${status.borderColor}`"
 	>
 		<nuxt-link
 			:to="'/berater/' + meeting.coach_slug"
 			style="text-decoration: none"
 			class="d-flex"
-			:style="
-				'border-bottom: 1px solid ' +
-				(videoStatus.ready
-					? $vuetify.theme.themes.light.success
-					: videoStatus.done
-					? 'grey'
-					: $vuetify.theme.themes.light.primary) +
-				' !important'
-			"
+			:style="`border-bottom: 1px solid ${status.borderColor} !important`"
 		>
 			<v-avatar color="primary ma-5" size="90" contain>
 				<v-img
@@ -58,7 +43,7 @@
 			</div>
 		</nuxt-link>
 		<v-card-text class="flex-grow-1 relative">
-			<div v-if="meeting.status == 'woman requested meeting'">
+			<div v-if="status.isRequest">
 				<p class="text-uppercase font-weight-bold mb-1 mt-2 caption">
 					Der Coach hat auf deine Anfrage noch nicht reagiert.
 				</p>
@@ -67,7 +52,7 @@
 					von 24h bei dir melden.
 				</p>
 			</div>
-			<div v-else-if="meeting.status == 'coach proposed timeslots'">
+			<div v-else-if="status.hasTimeslots">
 				<p class="text-uppercase font-weight-bold mb-1 mt-2 caption">
 					Vorschläge für einen Online-Beratungstermin
 				</p>
@@ -119,7 +104,7 @@
 					</v-col>
 				</v-row>
 			</div>
-			<div v-else-if="meeting.status == 'deleted'">
+			<div v-else-if="status.isArchived">
 				<p class="text-uppercase font-weight-bold mb-1 mt-2 caption">
 					Termin abgesagt
 				</p>
@@ -139,7 +124,8 @@
 					wurde abgesagt.
 				</v-alert>
 			</div>
-			<div v-else-if="videoStatus.done">
+			<div v-else-if="status.isPayed">Meeting läuft gerade</div>
+			<div v-else-if="status.isPassed">
 				<p class="text-uppercase font-weight-bold mb-1 mt-2 caption">
 					Vergangener Termin
 				</p>
@@ -148,7 +134,7 @@
 					{{ formatTime(meeting.acceptedDate) }} stattgefunden.
 				</v-alert>
 			</div>
-			<div v-else-if="meeting.payment_session_id">
+			<div v-else-if="status.hasCreditCard">
 				<p class="text-uppercase font-weight-bold mb-1 mt-2 caption">
 					Dein Online-Beratungstermin ist eingerichtet und startbereit.
 				</p>
@@ -184,7 +170,7 @@
 					Videocall-Button zu aktivieren. <a @click="reload">neu laden</a>
 				</p>
 			</div>
-			<div
+			<!----<div
 				v-else-if="
 					payment_session_id == null || payment
 						? payment.status == 'open'
@@ -212,11 +198,11 @@
 						>
 					</p>
 				</v-alert>
-			</div>
+			</div>-->
 		</v-card-text>
 		<v-card-actions style="position: relative">
 			<v-dialog
-				v-if="meeting.status != 'deleted' && !oldlist && videoStatus.before"
+				v-if="meeting.status != 'deleted' && !oldlist"
 				v-model="isDelete"
 				persistent
 				max-width="290"
@@ -228,11 +214,7 @@
 				</template>
 				<v-alert type="error" color="error" class="mt-2 ma-2">
 					<p>Wirklich absagen?</p>
-					<v-btn
-						light
-						class="mr-1"
-						:loading="eraseLoading"
-						@click="cancel(meeting)"
+					<v-btn light class="mr-1" :loading="eraseLoading" @click="cancel()"
 						>Ja, absagen
 					</v-btn>
 					<v-btn light @click="isDelete = false"> nein</v-btn>
@@ -312,12 +294,10 @@
 				const name = this.$store.getters['getCurrentUser'].username;
 				return `${this.meeting.videoCoach}#userInfo.displayName="${name}"`;
 			},
-			videoStatus() {
+			/*videoStatus() {
 				let b = true;
 				let r = false;
 				let d = false;
-
-				console.log('m', this.meeting);
 
 				if (this.meeting.selected_time_index != -1) {
 					const startTime = new Date(
@@ -342,6 +322,54 @@
 					ready: r,
 					done: d,
 				};
+			},*/
+			status() {
+				var isRequest = true;
+				var hasTimeslots = false;
+				var hasCreditCard = false;
+				var isAccessable = false;
+				var isPayed = false;
+				var isPassed = false;
+				var isArchived = false;
+				var borderColor = this.$vuetify.theme.themes.light.primary;
+
+				//** Matching Process */
+				if (this.meeting.status != 'woman requested meeting') isRequest = false;
+				else if (this.meeting.status == 'coach proposed timeslots')
+					hasTimeslots = true;
+				else if (this.meeting.status == 'woman payment method is valid')
+					hasCreditCard = true;
+				/** Meeting ready to start */ else if (
+					this.meeting.selected_meeting != 'not selected yet'
+				) {
+					const meetingTime = new Date(this.meeting.selected_meeting);
+					const meetingTimeEnd = new Date(
+						this.meeting.selected_meeting_expired
+					);
+					const entryTime = new Date(meetingTime.getTime() - 15 * 60 * 1000);
+					const currentTime = new Date();
+					if (currentTime >= entryTime && currentTime < meetingTimeEnd) {
+						isAccessable = true;
+					} else if (currentTime > meetingTimeEnd) isPassed = true;
+				} else if (this.meeting.status == 'woman fee was captchured')
+					isPayed = true;
+				//** Archived */
+				else if (this.meeting.status == 'archived') isArchived = true;
+
+				if (isAccessable)
+					borderColor = this.$vuetify.theme.themes.light.success;
+				if (isArchived || isPassed) borderColor = 'grey';
+
+				return {
+					isRequest,
+					hasTimeslots,
+					hasCreditCard,
+					isAccessable,
+					isPayed,
+					isPassed,
+					isArchived,
+					borderColor,
+				};
 			},
 		},
 		/*async mounted() {
@@ -350,12 +378,10 @@
 			);
 		},*/
 		methods: {
-			cancel(doc) {
+			cancel() {
 				this.eraseLoading = true;
-				const informTo = this.coach.email
-					? this.coach.email
-					: 'nouser@sichere-zuflucht.de';
-				this.$deleteMeeting(informTo, this.id, doc.acceptedDate)
+				this.$func
+					.archiveMeeting(this.id)
 					.then(() => {
 						this.isDelete = false;
 						this.eraseLoading = false;
@@ -366,7 +392,7 @@
 						this.isDelete = false;
 						this.eraseLoading = false;
 						this.error = err;
-						this.$errorhandling(err, 'ContactStatus $deleteMeeting');
+						this.$errorhandling(err, 'ContactStatus $archiveMeeting');
 					});
 			},
 			sendNotificationEmail({ date, time, id }) {
@@ -419,7 +445,7 @@
 					this.standardPayment(video, dateInput);
 				}
 			},
-			standardPayment(v, dI) {
+			/*standardPayment(v, dI) {
 				this.$stripePayment(this.coach.stripeID, this.id)
 					.then((paymentID) => {
 						const data = {
@@ -465,7 +491,7 @@
 						this.error = e.response.data.error.name;
 						this.redirectWarning = false;
 					});
-			},
+			},*/
 			formatDate(date) {
 				const d = new Date(date);
 				return d.toLocaleDateString('de-DE', {
