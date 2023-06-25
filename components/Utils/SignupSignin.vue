@@ -179,14 +179,6 @@
 							<v-btn color="primary" class="mb-4" href="/registration/signin"
 								>Einloggen</v-btn
 							>
-							<v-btn
-								color="primary"
-								outlined
-								:loading="loading"
-								class="mb-4"
-								@click="sendConfirmationAgain"
-								>Erneut senden</v-btn
-							>
 						</v-stepper-content>
 					</v-stepper-items>
 				</v-stepper>
@@ -319,25 +311,6 @@
 						this.loading = false;
 						this.$errorhandling(err);
 					});
-			},
-			sendConfirmationAgain() {
-				this.loading = true;
-				/*this.$strapi.sendEmailConfirmation({ email: this.email }).then(() => {
-					this.loading = false;
-				});*/
-			},
-			sendResetPasswortCode() {
-				this.resetLoading = true;
-				/*this.$strapi
-					.forgotPassword({ email: this.email })
-					.then(() => {
-						this.resetLoading = false;
-						this.codeSent.status = true;
-					})
-					.catch((error) => {
-						this.error.status = true;
-						this.error.message = error.code + ': ' + error.message;
-					});*/
 			},
 		},
 	};

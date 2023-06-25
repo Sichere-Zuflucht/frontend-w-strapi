@@ -5,6 +5,8 @@ export default function ({ redirect, store, route }) {
 	} else {
 		if (store.getters['getCurrentUser'].usertype != 'coach') {
 			redirect('/frauen');
+		} else if (!store.getters['getCurrentUser'].display_name) {
+			redirect('/registration/membership-selection');
 		}
 	}
 }
