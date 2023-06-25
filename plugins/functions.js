@@ -38,6 +38,10 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 		email: (v) =>
 			/[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+/.test(v) ||
 			'E-Mail muss gültig sein',
+		password: (v) =>
+			/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/.test(
+				v
+			) || 'Ihr Passwort erfüllt nicht alle Vorgaben.',
 	});
 	inject('functionalCookieAccepted', () => {
 		const cookie = $cookies.get('CookieScriptConsent');
@@ -179,18 +183,23 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 			}
 		},
 		register: async ({ usertype, email, password }) => {
-			const data = {
-				usertype,
-				email,
-				password,
-			};
-
-			return await $axios.$post('authentication/register', {
-				headers: {
-					Authorization,
-				},
-				body: JSON.stringify(data),
-			});
+			try {
+				const data = JSON.stringify({
+					user: {
+						usertype,
+						email,
+						password,
+					},
+				});
+				const register = await $axios.$post(
+					'authentication/register',
+					data,
+					config
+				);
+				return register;
+			} catch (err) {
+				throw err;
+			}
 		},
 		login: async ({ email, password }) => {
 			const expirationDate = new Date();
