@@ -72,7 +72,7 @@
 									class="mt-4 mr-3"
 									outlined
 									target="_blank"
-									:to="'/berater/' + user.username"
+									:to="'/berater/' + user.slug"
 									>Profil ansehen</v-btn
 								><v-btn
 									v-if="!user.stripe_id"

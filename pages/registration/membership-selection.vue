@@ -229,14 +229,8 @@
 		methods: {
 			updateProfile() {
 				this.loading = true;
-
-				var username =
-					this.input.firstName.toLowerCase().replace(' ', '-') +
-					'-' +
-					this.input.lastName.toLowerCase().replace(' ', '-');
-
 				const data = {
-					display_name: username,
+					display_name: `${this.input.firstName} ${this.input.lastName}`,
 					phone: this.input.phone,
 					website: this.input.www,
 					alt_email: this.input.altEmail,

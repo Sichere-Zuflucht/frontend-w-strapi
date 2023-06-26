@@ -89,12 +89,7 @@
 				password2: '',
 				hidePassword: true,
 				rules: {
-					passwordRules: [
-						(v) =>
-							/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/.test(
-								v
-							) || 'Ihr Passwort erfüllt nicht alle Vorgaben.',
-					],
+					passwordRules: [this.$rules.password],
 					passwordRules2: [
 						(v) => !!v || 'Passwortüberprüfung nicht vergessen',
 						(v) =>
@@ -130,11 +125,11 @@
 		methods: {
 			resetPassword() {
 				this.loading = true;
-				this.$strapi
+				this.$func
 					.resetPassword({
-						code: this.$route.query.code,
+						token: this.$route.query.code,
 						password: this.password,
-						passwordConfirmation: this.password2,
+						password_confirmation: this.password2,
 					})
 					.then(() => {
 						// Email sent.

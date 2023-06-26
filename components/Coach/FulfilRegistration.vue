@@ -18,7 +18,7 @@
 				<v-btn color="white" to="beratung/edit-profil">Profil erstellen </v-btn>
 			</v-alert>
 			<v-alert
-				v-if="!stripeEnabled"
+				v-if="!userData.stripe_id"
 				color="secondary"
 				icon="mdi-credit-card-off-outline"
 				outlined
@@ -55,7 +55,7 @@
 			<p
 				v-if="
 					!userData.topic_areas ||
-					!stripeEnabled ||
+					!userData.stripe_id ||
 					userData.verification != 'verified'
 				"
 				class="caption"
@@ -71,7 +71,7 @@
 	export default {
 		data() {
 			return {
-				stripeEnabled: true,
+				//stripeEnabled: true,
 			};
 		},
 		/*async mounted() {

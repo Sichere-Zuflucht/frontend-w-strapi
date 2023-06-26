@@ -98,7 +98,7 @@
 							<v-list-item
 								v-for="(sub, n) in item.subgroup"
 								:key="n"
-								:to="sub.appendUser ? sub.to + user.username : sub.to"
+								:to="sub.appendUser ? sub.to + user.slug : sub.to"
 								nuxt
 								exact
 								active-class="white--text"

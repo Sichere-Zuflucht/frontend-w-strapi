@@ -7,19 +7,9 @@
 			</h1>
 		</client-only>
 		<CoachFulfilRegistration
-			v-if="
-				user.topic_areas == null ||
-				user.stripe_id ||
-				user.verification_status != 'verified'
-			"
+			v-if="user.topic_areas == null || user.stripe_id || user.verified"
 		/>
-		<div
-			v-else-if="
-				user.topic_areas &&
-				user.stripe_id &&
-				user.verification_status == 'verified'
-			"
-		>
+		<div v-else-if="user.topic_areas && user.stripe_id && user.verified">
 			<h2 class="primary--text mb-2">Anfragen</h2>
 			<v-btn
 				v-if="upcomingMeetings"

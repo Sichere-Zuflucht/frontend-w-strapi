@@ -55,22 +55,6 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 	/****** API to Ruby on Rails */
 	inject('func', {
 		/** MEETINGS */
-		womanSelectsProposalAndPays: ({ selected_time_index, meeting_id }) => {
-			// change Ruby Route, so that the payment id is happening in the backend!
-
-			const data = {
-				meeting: {
-					selected_time_index,
-				},
-			};
-
-			return $axios.$put(`meetings/${meeting_id}`, {
-				headers: {
-					Authorization,
-				},
-				body: JSON.stringify(data),
-			});
-		},
 		womanCreatesNewMeeting: ({ message, woman_id, coach_id }) => {
 			const data = {
 				meeting: {
@@ -87,7 +71,6 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 				body: JSON.stringify(data),
 			});
 		},
-
 		coachGivesProposals: async ({ video_type, time_proposals, meeting_id }) => {
 			try {
 				const data = JSON.stringify({
@@ -101,6 +84,23 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 				throw err;
 			}
 		},
+		womanSelectsProposalAndPays: ({ selected_time_index, meeting_id }) => {
+			// change Ruby Route, so that the payment id is happening in the backend!
+
+			const data = {
+				meeting: {
+					selected_time_index,
+				},
+			};
+
+			return $axios.$put(`meetings/${meeting_id}/start_payment_session`, {
+				headers: {
+					Authorization,
+				},
+				body: JSON.stringify(data),
+			});
+		},
+
 		archiveMeeting: (meeting_id) => {
 			return $axios.$put(`meetings/${meeting_id}/archive`, {}, config);
 		},
@@ -122,7 +122,7 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 				},
 			});
 		},
-		updateCurrentCoachProfil: ({
+		/*updateCurrentCoachProfil: ({
 			avatar,
 			display_name,
 			topic_areas,
@@ -149,11 +149,11 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 				},
 				body: JSON.stringify(data),
 			});
-		},
+		},*/
 		loadAllCoaches: () => {
-			return $axios.$get('users');
+			return $axios.$get('users/coaches');
 		},
-		loadSingleCoaches: (user_id) => {
+		loadSingleCoach: (user_id) => {
 			return $axios.$get(`users/${user_id}`);
 		},
 
@@ -166,12 +166,16 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 
 		/** AUTH + CURRENT USER*/
 		me: async () => {
-			const me = await $axios.$get('users/me', {
-				headers: {
-					Authorization,
-				},
-			});
-			return me.data.attributes;
+			try {
+				const me = await $axios.$get('users/me', {
+					headers: {
+						Authorization,
+					},
+				});
+				return me.data.attributes;
+			} catch {
+				localStorage.removeItem('ruby_jwt');
+			}
 		},
 		updateMe: async (user) => {
 			try {
@@ -237,6 +241,38 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 			localStorage.removeItem('ruby_jwt');
 			store.dispatch('changeData', null);
 			location.href = 'registration/signin';
+		},
+		forgotPassword: async () => {
+			try {
+				const data = JSON.stringify({
+					user: {
+						email: store.getters['getCurrentUser'].email,
+					},
+				});
+				const config = {
+					headers: {
+						'Content-Type': 'application/json',
+					},
+				};
+				const sendPasswordForgot = await $axios.$post(
+					'authentication/forgot_password',
+					data,
+					config
+				);
+				return sendPasswordForgot;
+			} catch (err) {
+				return err;
+			}
+		},
+		resetPassword: async ({ token, password, password_confirmation }) => {
+			try {
+				const resetPassword = await $axios.$post(
+					`authentication/reset_password?token=${token}&password=${password}&password_confirmation=${password_confirmation}`
+				);
+				return resetPassword;
+			} catch (err) {
+				return err;
+			}
 		},
 	});
 

@@ -1,11 +1,8 @@
 <template>
 	<div>
 		<UtilsBanner icon="mdi-credit-card-plus-outline" />
-		<v-container>
-			<div v-if="stripe === null">
-				<v-skeleton-loader type="article"></v-skeleton-loader>
-			</div>
-			<div v-else-if="!stripe || !stripe.charges_enabled">
+		<v-container v-if="user">
+			<div v-if="!user.stripe_id">
 				<h1 class="text-h1 primary--text mb-4">Bezahlung<br />verwalten</h1>
 
 				<p>
@@ -23,7 +20,7 @@
 					Person, können Sie direkt starten.
 				</p>
 
-				<div v-if="!stripe">
+				<div v-if="!user.stripe_id">
 					<div class="d-flex justify-center mb-2 mt-12">
 						<v-btn
 							:loading="loading"
@@ -40,7 +37,7 @@
 				</div>
 				<div v-else>
 					<v-alert
-						v-if="!stripe.charges_enabled"
+						v-if="!user.stripe_id"
 						color="error"
 						icon="mdi-clock-fast"
 						outlined
@@ -64,7 +61,7 @@
 						</v-btn>
 					</v-alert>
 					<v-alert
-						v-else-if="stripe.charges_enabled && !stripe.payouts_enabled"
+						v-else-if="user.stripe_id"
 						color="error"
 						icon="mdi-clock-fast"
 						outlined
@@ -122,6 +119,9 @@
 				<a :href="stripeRegisterURL" target="_blank">{{ stripeRegisterURL }}</a>
 			</p>
 		</v-container>
+		<div v-else>
+			<v-skeleton-loader type="article"></v-skeleton-loader>
+		</div>
 	</div>
 </template>
 
@@ -135,15 +135,15 @@
 				loading: false,
 				disabled: false,
 
-				stripe: null,
+				//stripe: null,
 			};
 		},
 		async mounted() {
-			this.stripe = (await this.$getStripeAccData()).data;
+			//this.stripe = (await this.$getStripeAccData()).data;
 		},
 		computed: {
 			user() {
-				return this.$store.getters['getActiveUser'];
+				return this.$store.getters['getCurrentUser'];
 			},
 		},
 		methods: {

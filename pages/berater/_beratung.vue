@@ -1,18 +1,18 @@
 <template>
-	<div v-if="pubData">
+	<div v-if="coachData">
 		<v-sheet class="d-flex justify-center pt-8" style="position: relative"
 			><v-avatar color="primary" size="162">
 				<v-img
-					v-if="pubData.avatar && functionalCookieAccepted"
+					v-if="coachData.avatar && functionalCookieAccepted"
 					:lazy-src="
-						(pubData.avatar.url.includes('https')
+						(coachData.avatar.url.includes('https')
 							? ''
-							: 'http://localhost:1337') + pubData.avatar.url
+							: 'http://localhost:1337') + coachData.avatar.url
 					"
 					:src="
-						(pubData.avatar.url.includes('https')
+						(coachData.avatar.url.includes('https')
 							? ''
-							: 'http://localhost:1337') + pubData.avatar.url
+							: 'http://localhost:1337') + coachData.avatar.url
 					"
 					data-cookiescript="accepted"
 					data-cookiecategory="functionality"
@@ -23,72 +23,72 @@
 		</v-sheet>
 		<v-container>
 			<h1 class="text-center text-h1 primary--text text-uppercase">
-				{{ pubData.display_name }}
+				{{ coachData.display_name }}
 			</h1>
 			<h2 class="text-center text-h4 mb-4">
-				{{ pubData.profession }}
+				{{ coachData.profession }}
 			</h2>
 			<div
-				v-if="pubData.topicArea"
+				v-if="coachData.topicArea"
 				class="d-flex flex-wrap justify-center mb-4"
 			>
 				<v-chip class="mx-1" color="primary">
-					{{ pubData.topicArea }}
+					{{ coachData.topicArea }}
 				</v-chip>
 			</div>
-			<div v-if="pubData.quote" class="text-center">
+			<div v-if="coachData.quote" class="text-center">
 				<p>
-					<b>"{{ pubData.quote }}"</b>
+					<b>"{{ coachData.quote }}"</b>
 				</p>
 			</div>
 
-			<div v-if="pubData.since">
+			<div v-if="coachData.since">
 				<p class="font-weight-bold mb-0 mt-4 caption">
 					Ich bin Coach/Berater*in seit dem Jahr:
 				</p>
 				<div class="d-flex flex-wrap">
-					{{ pubData.since }}
+					{{ coachData.since }}
 				</div>
 			</div>
 
-			<div v-if="pubData.history">
+			<div v-if="coachData.history">
 				<p class="font-weight-bold mb-0 mt-4 caption">
 					Mein beruflicher Hintergrund:
 				</p>
 				<div class="d-flex flex-wrap">
-					{{ pubData.history }}
+					{{ coachData.history }}
 				</div>
 			</div>
-			<div v-if="pubData.focus">
+			<div v-if="coachData.focus">
 				<p class="font-weight-bold mb-0 mt-4 caption">
 					Meine Schwerpunkte sind:
 				</p>
 				<div class="d-flex flex-wrap">
-					{{ pubData.focus }}
+					{{ coachData.focus }}
 				</div>
 			</div>
-			<div v-if="pubData.coachingTopics">
+			<div v-if="coachData.coachingTopics">
 				<p class="font-weight-bold mb-0 mt-4 caption">
 					Meine Beratungs-/Coaching-Themen sind:
 				</p>
 				<div class="d-flex flex-wrap">
-					{{ pubData.coachingTopics }}
+					{{ coachData.coachingTopics }}
 				</div>
 			</div>
-			<div v-if="pubData.description">
+			<div v-if="coachData.description">
 				<p class="font-weight-bold mb-0 mt-4 caption">
 					Etwas Persönliches über mich:
 				</p>
 				<div class="d-flex flex-wrap">
-					{{ pubData.description }}
+					{{ coachData.description }}
 				</div>
 			</div>
-			<div v-if="pubData.assistance">
+			<div v-if="coachData.assistance">
 				<p class="font-weight-bold mb-0 mt-4 caption">
 					Ich kann diese konkrete Hilfestellung anbieten:
 				</p>
 				<div class="d-flex flex-wrap">
-					{{ pubData.info.assistance }}
+					{{ coachData.info.assistance }}
 				</div>
 			</div>
 		</v-container>
@@ -197,7 +197,7 @@
 						>
 							<p class="mb-0">
 								Fertig! Deine Anfrage wurde gesendet,
-								{{ pubData.display_name }} wird sich in den nächsten Tagen bei
+								{{ coachData.display_name }} wird sich in den nächsten Tagen bei
 								dir melden. Suche daher bitte regelmäßig nach Updates.
 							</p>
 							<v-btn to="/beratung" class="mt-2" color="secondary"
@@ -260,7 +260,7 @@
 			></v-text-field>
 		</v-container>
 	</div>
-	<div v-else-if="pubData !== false">
+	<div v-else-if="coachData !== false">
 		<v-container>
 			<v-skeleton-loader
 				class="mx-auto"
@@ -290,17 +290,6 @@
 
 <script>
 	export default {
-		async asyncData({ params, $strapi }) {
-			const pubData = await $strapi.$users
-				.find({
-					populate: 'avatar',
-					'filters[username]': params.beratung,
-				})
-				.then((data) => data[0]);
-			if (pubData === undefined) window.location.replace('/');
-			return { pubData };
-		},
-
 		data() {
 			return {
 				requestForm: false,
@@ -321,7 +310,7 @@
 				linkVal: window.location.href, //this.$route.fullPath,
 				copied: false,
 				Latinise: {},
-				//pubData: undefined,
+				coachData: undefined,
 			};
 		},
 		computed: {
@@ -329,44 +318,29 @@
 				return this.$functionalCookieAccepted();
 			},
 		},
-		/*created () {
-    this.getCoachContent()
-  },*/
+		created() {
+			this.loadCoach();
+		},
+		async asyncData({ params, $func }) {
+			console.log('params', params.beratung);
+			const coachData = await $func.loadSingleCoach(params.beratung);
+			if (coachData === undefined) window.location.replace('/');
+			this.coachData = coachData;
+		},
 		methods: {
-			/*async getCoachContent () {
-      /*const userIdPromise = await fetch(`https://sample.api.com/users/id/${this.$route.params.users}`)
-      const userIdJson = userIdPromise.json()
-      userIdJson.then((res) => {
-        this.users = res.data
-      })*/
-			/*
-          this.$strapi.$users
-            .find({
-              populate: "avatar",
-              "filters[id]": this.$route.params.beratung,
-            })
-            .then((r) => {
-              this.pubData = r[0];
-              if (this.pubData === undefined) this.pubData = false;
-            });
-        },*/
 			createMeeting() {
 				this.loading = true;
 				const woman = this.$store.getters['getCurrentUser'];
-				const coach = this.pubData;
+				const coach = this.coachData;
 				const usernameWithoutUmlaut = this.runLatinize('Köhler'); //this.$route.params.beratung)
 				const data = {
 					message: this.msgTitle + ': ' + this.message,
-					//coachID: this.$route.params.beratung,
-					//womanID: this.$store.getters["getCurrentUser"].id.toString(),
-					//coachEmail: this.pubData.email,
-					users_permissions_users: [woman, coach],
-					meetingId: `w${woman.id.toString()}-c${usernameWithoutUmlaut}-${new Date().getTime()}`,
-					informViaEmail: coach.email,
+					woman_id: woman.id,
+					coach_id: coach.id,
 				};
 
-				this.$strapi.$meetings
-					.create({ data })
+				this.$func
+					.womanCreatesNewMeeting(data)
 					.then(() => {
 						this.buttonText = 'versendet';
 						this.loading = false;

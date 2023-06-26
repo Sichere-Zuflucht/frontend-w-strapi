@@ -64,28 +64,14 @@
     return { allCoaches }
   },*/
 		mounted() {
-			this.withoutid
-				? this.$func.loadAllCoaches().then((d) => {
-						console.log('coaches', d);
-						this.allCoaches = d;
-						/*d.forEach((single)=>{
+			this.$func.loadAllCoaches().then((d) => {
+				console.log('coaches', d);
+				this.allCoaches = d;
+				/*d.forEach((single)=>{
             if (this.withoutid != single.id) this.allCoaches.push(single)
           })*/
-						this.loading = false;
-				  })
-				: this.$strapi.$users
-						.find({
-							populate: 'avatar',
-							'filters[roleName]': 'coach',
-							'filters[verification]': 'done',
-						})
-						.then((d) => {
-							this.allCoaches = d;
-							/*d.forEach((single)=>{
-            if (this.withoutid != single.id) this.allCoaches.push(single)
-          })*/
-							this.loading = false;
-						});
+				this.loading = false;
+			});
 		},
 	};
 </script>

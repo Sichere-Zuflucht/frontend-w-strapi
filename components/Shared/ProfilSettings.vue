@@ -5,17 +5,13 @@
 			<h1 class="text-h1 primary--text mb-4">Einstellungen<br />einsehen</h1>
 			<small>Name:</small>
 			<p>
-				{{ pubData.display_name }}
+				{{ user.display_name }}
 			</p>
-			<small>NutzerID:</small>
-			<p>{{ pubData.id }}</p>
 			<small>E-Mail:</small>
-			<p>{{ pubData.email }}</p>
+			<p>{{ user.email }}</p>
 			<small>Mitglied als:</small>
-			<p v-if="pubData.usertype">
-				{{
-					pubData.usertype == 'woman' ? 'gewaltbetroffene Frau' : 'Berater:in'
-				}}
+			<p v-if="user.usertype">
+				{{ user.usertype == 'woman' ? 'gewaltbetroffene Frau' : 'Berater:in' }}
 			</p>
 
 			<v-btn
@@ -25,12 +21,6 @@
 				@click="resetPassword"
 				>Passwort ändern</v-btn
 			>
-			<div v-if="btn.success">
-				<v-alert type="success" color="success"
-					>Es wurde eine E-Mail an {{ pubData.email }} geschickt. Bitte folgen
-					Sie den dort beschriebenen Anweisungen.</v-alert
-				>
-			</div>
 			<v-dialog v-model="overlay" width="300">
 				<template #activator="{ on }">
 					<v-btn color="error" text v-on="on">Account löschen</v-btn>
@@ -77,6 +67,12 @@
 					></v-card
 				>
 			</v-dialog>
+			<div v-if="btn.success" class="mt-2">
+				<v-alert type="success" color="success"
+					>Es wurde eine E-Mail an {{ user.email }} geschickt. Bitte folgen Sie
+					den dort beschriebenen Anweisungen.</v-alert
+				>
+			</div>
 			<v-alert
 				v-if="err.status && !overlay"
 				type="error"
@@ -98,12 +94,7 @@
 <script>
 	export default {
 		name: 'Settings',
-		middleware({ store, redirect }) {
-			// If the user is not authenticated
-			if (!store.getters['modules/user/isAuthenticated']) {
-				return redirect('/');
-			}
-		},
+		middleware: 'auth',
 		data() {
 			return {
 				btn: {
@@ -129,15 +120,15 @@
 		},
 
 		computed: {
-			pubData() {
+			user() {
 				return this.$store.getters['getCurrentUser'];
 			},
 		},
 		methods: {
 			resetPassword() {
 				this.btn.loading = true;
-				this.$strapi
-					.forgotPassword({ email: this.$strapi.user.email })
+				this.$func
+					.forgotPassword()
 					.then(() => {
 						this.btn.loading = false;
 						this.btn.disabled = true;
