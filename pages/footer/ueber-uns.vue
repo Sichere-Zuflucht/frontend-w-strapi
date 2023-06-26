@@ -87,6 +87,5 @@
 			</p>
 			<SharedStayTuned />
 		</v-container>
-		<UtilsNews />
 	</div>
 </template>

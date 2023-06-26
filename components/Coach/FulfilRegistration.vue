@@ -35,7 +35,7 @@
 				</v-btn>
 			</v-alert>
 			<v-alert
-				v-if="userData.verification != 'verified'"
+				v-if="!userData.verified"
 				color="secondary"
 				icon="mdi-account-clock"
 				outlined
@@ -54,9 +54,7 @@
 			</v-alert>
 			<p
 				v-if="
-					!userData.topic_areas ||
-					!userData.stripe_id ||
-					userData.verification != 'verified'
+					!userData.topic_areas || !userData.stripe_id || !userData.verified
 				"
 				class="caption"
 			>
