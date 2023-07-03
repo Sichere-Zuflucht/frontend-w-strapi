@@ -24,7 +24,7 @@ const FilePond = vueFilePond(
 
 setOptions({
 	server: {
-		url: 'https://zuflucht.workspace-001.de/api/v1',
+		url: process.env.RUBY_URL,
 		timeout: 7000,
 		process: {
 			url: '/users/avatar',
@@ -36,6 +36,14 @@ setOptions({
 			onerror: (response) => response.data,
 			ondata: (formData) => formData,
 		},
+		/*fetch: {
+			url: '/users/avatar',
+			method: 'GET',
+			headers: {
+				Authorization: `Bearer ${localStorage.getItem('ruby_jwt')}`,
+			},
+		}*/
 	},
 });
+
 Vue.component('FilePond', FilePond);
