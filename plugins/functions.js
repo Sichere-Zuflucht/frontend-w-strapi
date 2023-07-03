@@ -150,11 +150,11 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 				body: JSON.stringify(data),
 			});
 		},*/
-		loadAllCoaches: () => {
-			return $axios.$get('users/coaches');
+		loadAllCoaches: async () => {
+			return (await $axios.$get('users/coaches')).data;
 		},
-		loadSingleCoach: (slug) => {
-			return $axios.$get(`users/coach_by_slug/${slug}`);
+		loadSingleCoach: async (slug) => {
+			return (await $axios.$get(`users/coach_by_slug/${slug}`)).data;
 		},
 
 		/** STRIPE */

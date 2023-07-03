@@ -8,10 +8,7 @@
 					:src="coachData.avatar_content_url"
 					data-cookiescript="accepted"
 					data-cookiecategory="functionality"
-				/><v-icon v-else-if="!functionalCookieAccepted" color="white"
-					>mdi-cookie-alert</v-icon
-				></v-avatar
-			>
+			/></v-avatar>
 		</v-sheet>
 		<v-container>
 			<h1 class="text-center text-h1 primary--text text-uppercase">
@@ -268,29 +265,24 @@
 				linkVal: window.location.href, //this.$route.fullPath,
 				copied: false,
 				Latinise: {},
-				//coachData: 'Helli World',
 			};
-		},
-		computed: {
-			functionalCookieAccepted() {
-				return this.$functionalCookieAccepted();
-			},
 		},
 		async asyncData({ params, $func, store }) {
 			var coachData = null;
 			var ownProfil = false;
-			if (params.beratung == store.getters['getCurrentUser'].slug) {
+			if (
+				store.getters['getCurrentUser'] &&
+				params.beratung == store.getters['getCurrentUser'].slug
+			) {
 				coachData = store.getters['getCurrentUser'];
 				ownProfil = true;
 			} else
-				coachData = await $func
-					.loadSingleCoach(params.beratung)
-					.then((data) => {
-						this.coachData = data;
-					})
-					.catch(() => {
-						window.location.replace('/');
-					});
+				try {
+					coachData = (await $func.loadSingleCoach(params.beratung)).attributes;
+					console.log('coachData single', coachData);
+				} catch (err) {
+					window.location.replace('/');
+				}
 			return { coachData, ownProfil };
 		},
 		methods: {

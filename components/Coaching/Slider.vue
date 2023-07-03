@@ -2,7 +2,7 @@
 	<v-slide-group v-if="!loading" show-arrows class="py-4">
 		<v-slide-item v-for="(coaching, n) in allCoaches" :key="n" class="my-4">
 			<CoachingProfileWrapper
-				:pub-coach-data="coaching"
+				:pub-coach-data="coaching.attributes"
 				:class="
 					(n == 0
 						? 'ml-8 mr-2'
@@ -33,7 +33,7 @@
 		},
 		data() {
 			return {
-				//allCoaches: [],
+				allCoaches: [],
 				loading: true,
 				error: {
 					status: false,
@@ -66,10 +66,11 @@
 		mounted() {
 			this.$func.loadAllCoaches().then((d) => {
 				console.log('coaches', d);
-				this.allCoaches = d;
-				/*d.forEach((single)=>{
-            if (this.withoutid != single.id) this.allCoaches.push(single)
-          })*/
+				//this.allCoaches = d;
+				d.forEach((single) => {
+					if (this.withoutid != single.attributes.slug)
+						this.allCoaches.push(single);
+				});
 				this.loading = false;
 			});
 		},
