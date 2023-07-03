@@ -150,8 +150,8 @@
 			addStripe() {
 				this.loading = true;
 
-				this.$createStripeAcc().then((d) => {
-					this.stripeRegisterURL = d.url;
+				this.$func.createStripeAcc().then((url) => {
+					this.stripeRegisterURL = url;
 					this.loading = false;
 					this.disabled = true;
 				});
