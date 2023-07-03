@@ -156,13 +156,6 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 		loadSingleCoach: async (slug) => {
 			return (await $axios.$get(`users/coach_by_slug/${slug}`)).data;
 		},
-
-		/** STRIPE */
-		/*getStripeAccData: () => {
-			return $axios.$get('stripe-account').catch((e) => {
-				errorhandling(e);
-			});
-		},*/
 		createStripeAcc: async () => {
 			try {
 				const createAccUrl = await $axios.$get(
