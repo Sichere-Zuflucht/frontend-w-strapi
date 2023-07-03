@@ -43,6 +43,7 @@ jobs:
           DONATION_2: ${{ vars.DONATION_2 }}
           DONATION_3: ${{ vars.DONATION_3 }}
           DONATION_4: ${{ vars.DONATION_4 }}
+          RUBY_URL: ${{ vars.RUBY_URL }}
         run: |
           echo "env : ${{ env.ENVIRONMENT }}"
           npm install --global yarn
