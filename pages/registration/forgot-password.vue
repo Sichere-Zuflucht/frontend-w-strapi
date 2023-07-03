@@ -5,14 +5,14 @@
 			<v-sheet color="secondary" dark height="100%">
 				<v-container style="max-width: 450px" class="ma-auto py-16">
 					<h3 class="h2--text white--text text-uppercase pb-8">
-						LOGIN<br />SICHERE ZUFLUCHT
+						SICHERE ZUFLUCHT
 					</h3>
 					<UtilsOfferOverview />
 				</v-container> </v-sheet
 		></v-col>
 		<v-col cols="12" md="6" class="pa-0">
 			<v-container style="max-width: 450px" class="ma-auto py-16">
-				<h1 class="text-h1 mt-4 primary--text">Einloggen</h1>
+				<h1 class="text-h1 mt-4 primary--text">Passwort vergessen</h1>
 				<v-form
 					v-model="valid"
 					style="width: 100%"
@@ -20,7 +20,6 @@
 					autocomplete="on"
 					@submit.prevent="next"
 				>
-					<h2 class="text-h3 secondary--text">E-Mail-Adresse</h2>
 					<v-text-field
 						v-model="email"
 						type="email"
@@ -30,33 +29,15 @@
 						name="email"
 						autocomplete="email"
 					></v-text-field>
-					<v-text-field
-						:disabled="!email"
-						v-model="password"
-						:rules="rules.password"
-						label="Passwort"
-						:type="hidePassword ? 'password' : 'text'"
-						:append-icon="hidePassword ? 'mdi-eye' : 'mdi-eye-off'"
-						name="current-password"
-						required
-						autocomplete="current-password"
-						@click:append="() => (hidePassword = !hidePassword)"
-					></v-text-field>
 					<div class="d-flex justify-end pt-0">
-						<v-btn plain class="grey--text" text to="/registration/signup"
-							>Registrieren?</v-btn
-						><v-btn
-							plain
-							class="grey--text"
-							text
-							to="/registration/forgot-password"
-							>Passwort vergessen?</v-btn
+						<v-btn plain class="grey--text" text to="/registration/signin"
+							>Zum Login</v-btn
 						><v-btn
 							color="primary"
 							:loading="loading"
 							:disabled="!valid"
-							@click="login"
-							>Einloggen</v-btn
+							@click="resetPassword"
+							>Neues Passwort anfragen</v-btn
 						>
 					</div>
 				</v-form>
@@ -95,18 +76,17 @@
 			};
 		},
 		methods: {
-			login() {
+			resetPassword() {
 				this.loading = true;
-				if (!process.client) return;
 				this.$func
-					.login({
-						email: this.email,
-						password: this.password,
-					})
-					.catch((err) => {
+					.forgotPassword({ email: this.email })
+					.then(() => {
 						this.loading = false;
+					})
+					.catch((error) => {
 						this.error.status = true;
-						this.error.message = err;
+						this.error.message = error.code + ': ' + error.message;
+						// ..
 					});
 			},
 		},

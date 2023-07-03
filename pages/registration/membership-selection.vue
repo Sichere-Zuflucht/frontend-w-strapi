@@ -239,9 +239,7 @@
 					.updateMe(data)
 					.then((updatedUser) => {
 						this.$store.dispatch('changeData', updatedUser).then(() => {
-							this.loading = false;
-							this.userdata = this.$store.getters['getCurrentUser'];
-							this.window.href = '/beratung';
+							window.location.href = '/beratung';
 						});
 					})
 					.catch((err) => {

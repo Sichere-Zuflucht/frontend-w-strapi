@@ -3,17 +3,9 @@
 		<v-sheet class="d-flex justify-center pt-8" style="position: relative"
 			><v-avatar color="primary" size="162">
 				<v-img
-					v-if="coachData.avatar && functionalCookieAccepted"
-					:lazy-src="
-						(coachData.avatar.url.includes('https')
-							? ''
-							: 'http://localhost:1337') + coachData.avatar.url
-					"
-					:src="
-						(coachData.avatar.url.includes('https')
-							? ''
-							: 'http://localhost:1337') + coachData.avatar.url
-					"
+					v-if="coachData.avatar_content_url"
+					:lazy-src="coachData.avatar_content_url"
+					:src="coachData.avatar_content_url"
 					data-cookiescript="accepted"
 					data-cookiecategory="functionality"
 				/><v-icon v-else-if="!functionalCookieAccepted" color="white"
@@ -26,69 +18,35 @@
 				{{ coachData.display_name }}
 			</h1>
 			<h2 class="text-center text-h4 mb-4">
-				{{ coachData.profession }}
+				{{ coachData.profession_line }}
 			</h2>
 			<div
-				v-if="coachData.topicArea"
+				v-if="coachData.topic_areas"
 				class="d-flex flex-wrap justify-center mb-4"
 			>
 				<v-chip class="mx-1" color="primary">
-					{{ coachData.topicArea }}
+					{{ coachData.topic_areas }}
 				</v-chip>
 			</div>
 			<div v-if="coachData.quote" class="text-center">
 				<p>
-					<b>"{{ coachData.quote }}"</b>
+					<b>"{{ coachData.citation }}"</b>
 				</p>
 			</div>
-
-			<div v-if="coachData.since">
-				<p class="font-weight-bold mb-0 mt-4 caption">
-					Ich bin Coach/Berater*in seit dem Jahr:
-				</p>
-				<div class="d-flex flex-wrap">
-					{{ coachData.since }}
-				</div>
-			</div>
-
-			<div v-if="coachData.history">
+			<div v-if="coachData.professional_background">
 				<p class="font-weight-bold mb-0 mt-4 caption">
 					Mein beruflicher Hintergrund:
 				</p>
 				<div class="d-flex flex-wrap">
-					{{ coachData.history }}
+					{{ coachData.professional_background }}
 				</div>
 			</div>
-			<div v-if="coachData.focus">
-				<p class="font-weight-bold mb-0 mt-4 caption">
-					Meine Schwerpunkte sind:
-				</p>
-				<div class="d-flex flex-wrap">
-					{{ coachData.focus }}
-				</div>
-			</div>
-			<div v-if="coachData.coachingTopics">
-				<p class="font-weight-bold mb-0 mt-4 caption">
-					Meine Beratungs-/Coaching-Themen sind:
-				</p>
-				<div class="d-flex flex-wrap">
-					{{ coachData.coachingTopics }}
-				</div>
-			</div>
-			<div v-if="coachData.description">
+			<div v-if="coachData.personal_background">
 				<p class="font-weight-bold mb-0 mt-4 caption">
 					Etwas Persönliches über mich:
 				</p>
 				<div class="d-flex flex-wrap">
-					{{ coachData.description }}
-				</div>
-			</div>
-			<div v-if="coachData.assistance">
-				<p class="font-weight-bold mb-0 mt-4 caption">
-					Ich kann diese konkrete Hilfestellung anbieten:
-				</p>
-				<div class="d-flex flex-wrap">
-					{{ coachData.info.assistance }}
+					{{ coachData.personal_background }}
 				</div>
 			</div>
 		</v-container>
@@ -240,7 +198,7 @@
 		</div>
 		<v-container v-else class="mt-16">
 			<v-btn
-				v-if="$route.params.beratung == $strapi.user.username ? true : false"
+				v-if="ownProfil"
 				to="/beratung/edit-profil"
 				outlined
 				nuxt
@@ -310,7 +268,7 @@
 				linkVal: window.location.href, //this.$route.fullPath,
 				copied: false,
 				Latinise: {},
-				coachData: undefined,
+				//coachData: 'Helli World',
 			};
 		},
 		computed: {
@@ -318,14 +276,22 @@
 				return this.$functionalCookieAccepted();
 			},
 		},
-		created() {
-			this.loadCoach();
-		},
-		async asyncData({ params, $func }) {
-			console.log('params', params.beratung);
-			const coachData = await $func.loadSingleCoach(params.beratung);
-			if (coachData === undefined) window.location.replace('/');
-			this.coachData = coachData;
+		async asyncData({ params, $func, store }) {
+			var coachData = null;
+			var ownProfil = false;
+			if (params.beratung == store.getters['getCurrentUser'].slug) {
+				coachData = store.getters['getCurrentUser'];
+				ownProfil = true;
+			} else
+				coachData = await $func
+					.loadSingleCoach(params.beratung)
+					.then((data) => {
+						this.coachData = data;
+					})
+					.catch(() => {
+						window.location.replace('/');
+					});
+			return { coachData, ownProfil };
 		},
 		methods: {
 			createMeeting() {

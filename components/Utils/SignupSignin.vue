@@ -65,7 +65,7 @@
 									v-model="email"
 									type="email"
 									:rules="rules.email"
-									label="E-mail-Adresse"
+									label="E-Mail-Adresse"
 									required
 									name="email"
 									autocomplete="email"

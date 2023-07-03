@@ -153,8 +153,8 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 		loadAllCoaches: () => {
 			return $axios.$get('users/coaches');
 		},
-		loadSingleCoach: (user_id) => {
-			return $axios.$get(`users/${user_id}`);
+		loadSingleCoach: (slug) => {
+			return $axios.$get(`users/coach_by_slug/${slug}`);
 		},
 
 		/** STRIPE */
@@ -163,6 +163,18 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 				errorhandling(e);
 			});
 		},*/
+		createStripeAcc: async () => {
+			try {
+				const createAccUrl = await $axios.$get(
+					'users/coach_create_stripe_account',
+					config
+				);
+				location.href = createAccUrl.account_form_url;
+				return createAccUrl.account_form_url;
+			} catch (err) {
+				errorhandling(err);
+			}
+		},
 
 		/** AUTH + CURRENT USER*/
 		me: async () => {
@@ -185,6 +197,16 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 					},
 				});
 				$axios.$put('users/me', data, config);
+			} catch (err) {
+				throw err;
+			}
+		},
+		updateAvatar: async (image) => {
+			try {
+				console.log('image in func', image);
+				let data = new FormData();
+				data.append('user[avatar]', image);
+				$axios.$post('users/avatar', data, config);
 			} catch (err) {
 				throw err;
 			}
@@ -242,11 +264,14 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 			store.dispatch('changeData', null);
 			location.href = 'registration/signin';
 		},
-		forgotPassword: async () => {
+		forgotPassword: async ({ email }) => {
+			const send_to_email = email
+				? email
+				: store.getters['getCurrentUser'].email;
 			try {
 				const data = JSON.stringify({
 					user: {
-						email: store.getters['getCurrentUser'].email,
+						email: send_to_email,
 					},
 				});
 				const config = {

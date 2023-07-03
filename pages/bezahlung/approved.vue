@@ -18,30 +18,3 @@
 				<SharedServiceOverview wrap class="py-16" /> </v-container></v-col
 	></v-row>
 </template>
-
-<script>
-	export default {
-		name: 'Approved',
-		/*mounted() {
-    if (this.$store.getters["getCurrentUser"].roleName == "woman") {
-      const meetingID = window.localStorage.getItem("meetingID");
-      const sessionID = window.localStorage.getItem("sessionID");
-      if (!sessionID) return;
-      this.$getStripePaymentSession(sessionID)
-        .then((sessionData) => {
-          const data = {
-            payed: sessionData.payment_status == "paid" ? true : false,
-          };
-          this.$strapi.$meetings
-            .update(meetingID, {
-              data,
-            })
-            .then(() => {
-              window.localStorage.removeItem("meetingID");
-              window.localStorage.removeItem("sessionID");
-            });
-        });
-    }
-  },*/
-	};
-</script>

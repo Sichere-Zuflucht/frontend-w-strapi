@@ -26,8 +26,12 @@
 						>
 							Profil
 						</v-stepper-step>
-						<v-divider v-if="!user.stripe_id"></v-divider>
-						<v-stepper-step v-if="!user.stripe_id" step="2" editable>
+						<v-divider v-if="!user.stripe_account_success"></v-divider>
+						<v-stepper-step
+							v-if="!user.stripe_account_success"
+							step="2"
+							editable
+						>
 							Zahlung aktivieren
 						</v-stepper-step>
 					</v-stepper-header>
@@ -45,15 +49,20 @@
 								:info="user"
 								:avatar="avatarPreview ? avatarPreview : user.avatar"
 								@selection="updateProfile"
-								@changeAvatarPreview="updateAvatarPreview"
 							/>
 							<v-btn
 								text
-								:to="user.stripe_id ? '/berater/' + user.username : null"
+								:to="
+									user.stripe_account_success
+										? '/berater/' + user.username
+										: null
+								"
 								color="grey"
-								@click="!user.stripe_id ? stepper++ : null"
+								@click="!user.stripe_account_success ? stepper++ : null"
 								>{{
-									!user.stripe_id ? 'Später' : 'Weiter ohne Speichern'
+									!user.stripe_account_success
+										? 'Später'
+										: 'Weiter ohne Speichern'
 								}}</v-btn
 							>
 						</v-stepper-content>
@@ -61,7 +70,7 @@
 							<h2 class="text-h2 secondary--text pb-4">PROFIL erstellt</h2>
 							<p>
 								Sie können sich Ihr Profil ansehen{{
-									!user.stripe_id
+									!user.stripe_account_success
 										? ' oder direkt weiter zur Zahlungsanbindung gehen.'
 										: '.'
 								}}
@@ -75,7 +84,7 @@
 									:to="'/berater/' + user.slug"
 									>Profil ansehen</v-btn
 								><v-btn
-									v-if="!user.stripe_id"
+									v-if="!user.stripe_account_success"
 									color="secondary"
 									class="mt-4"
 									@click="stepper++"
@@ -160,9 +169,6 @@
 			this.avatarPreview = this.$store.getters['getCurrentUser'].avatar_url;
 		},
 		methods: {
-			updateAvatarPreview(img) {
-				this.avatarPreview = img;
-			},
 			updateProfile(data) {
 				this.$func
 					.updateMe({
@@ -172,7 +178,7 @@
 						personal_background: data.personal_background,
 						professional_background: data.professional_background,
 					})
-					.then((r) => {
+					.then(() => {
 						this.loading = false;
 						this.success = true;
 						this.bioSaved = true;
@@ -186,8 +192,8 @@
 			addStripe() {
 				this.loading = true;
 
-				this.$createStripeAcc().then((d) => {
-					this.stripeRegisterURL = d.url;
+				this.$func.createStripeAcc().then((url) => {
+					this.stripeRegisterURL = url;
 					this.loading = false;
 					this.disabled = true;
 				});

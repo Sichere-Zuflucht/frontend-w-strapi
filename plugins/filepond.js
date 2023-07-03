@@ -2,6 +2,7 @@ import Vue from 'vue';
 import vueFilePond, { setOptions } from 'vue-filepond';
 import 'filepond/dist/filepond.min.css';
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css';
+import FilePondPluginFileEncode from 'filepond-plugin-file-encode';
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
 import FilePondPluginImageCrop from 'filepond-plugin-image-crop';
@@ -11,6 +12,7 @@ import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orien
 import FilePondPluginImageResize from 'filepond-plugin-image-resize';
 
 const FilePond = vueFilePond(
+	FilePondPluginFileEncode,
 	FilePondPluginFileValidateType,
 	FilePondPluginImagePreview,
 	FilePondPluginImageCrop,
@@ -19,4 +21,21 @@ const FilePond = vueFilePond(
 	FilePondPluginImageExifOrientation,
 	FilePondPluginImageResize
 );
+
+setOptions({
+	server: {
+		url: 'https://zuflucht.workspace-001.de/api/v1',
+		timeout: 7000,
+		process: {
+			url: '/users/avatar',
+			method: 'POST',
+			headers: {
+				Authorization: `Bearer ${localStorage.getItem('ruby_jwt')}`,
+			},
+			onload: (response) => response.key,
+			onerror: (response) => response.data,
+			ondata: (formData) => formData,
+		},
+	},
+});
 Vue.component('FilePond', FilePond);
