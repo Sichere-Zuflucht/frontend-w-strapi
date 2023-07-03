@@ -2,7 +2,7 @@
 	<div>
 		<UtilsBanner icon="mdi-credit-card-plus-outline" />
 		<v-container v-if="user">
-			<div v-if="!user.stripe_id">
+			<div v-if="!user.stripe_account_success">
 				<h1 class="text-h1 primary--text mb-4">Bezahlung<br />verwalten</h1>
 
 				<p>
@@ -20,7 +20,7 @@
 					Person, können Sie direkt starten.
 				</p>
 
-				<div v-if="!user.stripe_id">
+				<div v-if="!user.stripe_account_success">
 					<div class="d-flex justify-center mb-2 mt-12">
 						<v-btn
 							:loading="loading"
@@ -37,7 +37,7 @@
 				</div>
 				<div v-else>
 					<v-alert
-						v-if="!user.stripe_id"
+						v-if="!user.stripe_account_success"
 						color="error"
 						icon="mdi-clock-fast"
 						outlined
@@ -61,7 +61,7 @@
 						</v-btn>
 					</v-alert>
 					<v-alert
-						v-else-if="user.stripe_id"
+						v-else-if="user.stripe_account_success"
 						color="error"
 						icon="mdi-clock-fast"
 						outlined

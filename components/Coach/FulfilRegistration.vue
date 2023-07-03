@@ -15,10 +15,12 @@
 					Profil.
 				</p>
 				<v-divider class="my-4 error" style="opacity: 0.22" />
-				<v-btn color="white" to="beratung/edit-profil">Profil erstellen </v-btn>
+				<v-btn color="white" to="/beratung/edit-profil"
+					>Profil erstellen
+				</v-btn>
 			</v-alert>
 			<v-alert
-				v-if="!userData.stripe_id"
+				v-if="!userData.stripe_account_success"
 				color="secondary"
 				icon="mdi-credit-card-off-outline"
 				outlined
@@ -30,7 +32,7 @@
 					Sie sich bei Stripe.
 				</p>
 				<v-divider class="my-4 error" style="opacity: 0.22" />
-				<v-btn color="white" to="beratung/bezahlung"
+				<v-btn color="white" to="/beratung/bezahlung"
 					>Stripe-Konto anlegen
 				</v-btn>
 			</v-alert>
@@ -48,13 +50,15 @@
 					ansehen.
 				</p>
 				<v-divider class="my-4 error" style="opacity: 0.22" />
-				<v-btn color="white" to="beratung/personenverifizierung"
+				<v-btn color="white" to="/beratung/personenverifizierung"
 					>Status ansehen
 				</v-btn>
 			</v-alert>
 			<p
 				v-if="
-					!userData.topic_areas || !userData.stripe_id || !userData.verified
+					!userData.topic_areas ||
+					!userData.stripe_account_success ||
+					!userData.verified
 				"
 				class="caption"
 			>
