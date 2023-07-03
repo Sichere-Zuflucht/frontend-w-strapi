@@ -45,7 +45,9 @@ export default {
 	// Global CSS: https://go.nuxtjs.dev/config-css
 	css: [],
 
-	env: {},
+	env: {
+		RUBY_URL: process.env.RUBY_URL,
+	},
 
 	// Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
 	plugins: ['~/plugins/cropper', '~/plugins/filepond', '~/plugins/functions'],
@@ -116,12 +118,6 @@ export default {
 		// proxy: true,
 		//baseURL: process.env.STRAPI_URL, // || 'http://localhost:1337', // Used as fallback if no runtime config is provided
 	},
-	/*
-  publicRuntimeConfig: {
-    axios: {
-      browserBaseURL: process.env.STRAPI_URL + '/api' || 'http://localhost:1337/api',
-    }
-  }, */
 
 	strapi: {
 		url: 'http://localhost:1337/api', // process.env.STRAPI_URL, //process.env.STRAPI_URL, //|| 'http://localhost:1337/api', // erased + '/api'
@@ -137,11 +133,7 @@ export default {
 	},
 
 	publicRuntimeConfig: {
-		ruby: {
-			users: `${process.env.RUBY_URL}/users`,
-			meetings: `${process.env.RUBY_URL}/meetings`,
-			auth: `${process.env.RUBY_URL}/authentication`,
-		},
+		rubyurl: process.env.RUBY_URL,
 		strapi: {
 			url: process.env.STRAPI_URL,
 		},
@@ -159,8 +151,7 @@ export default {
 	generate: {
 		// create an array of all routes for generating static pages
 		// careful, this is only used by `npm run generate`. These must match SPA mode routes
-
-		routes: async function () {
+		/*routes: async function () {
 			const userRoute = await axios
 				.get(process.env.STRAPI_URL + '/users')
 				.then(async (response) => {
@@ -184,7 +175,7 @@ export default {
 					return [...magazines];
 				});
 			return [...userRoute, ...magazineRoute];
-		},
+		},*/
 	},
 
 	// Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify

@@ -123,7 +123,7 @@
 				</v-stepper-step>
 				<v-stepper-content step="3">
 					<div class="mb-4 d-flex flex-column align-center">
-						<v-avatar v-if="avatar.length > 0" size="200">
+						<v-avatar v-if="typeof avatar == 'string'" size="200">
 							<v-img :src="avatar"
 								><div
 									class="d-flex justify-center align-end pb-2"
@@ -268,7 +268,7 @@
 			this.changeProfessionalBackground = user.professional_background;
 			this.changeCitation = user.citation;
 		},
-		fetchOnServer: false,
+		//fetchOnServer: false,
 		methods: {
 			async uploadDone(error, file) {
 				//const b64 = await file.getFileEncodeBase64String;
@@ -281,7 +281,7 @@
 				//this.$func.updateAvatar(file);
 			},
 			removeImage() {
-				this.avatar = '';
+				this.avatar = [];
 				/*this.$strapi.$http
 					.$delete('upload/files/' + this.avatar.id)
 					.then(() => {
