@@ -33,13 +33,13 @@ export default {
 			{ rel: 'icon', sizes: '32x32', href: '/favicon-32x32.png' },
 			{ rel: 'icon', sizes: '16x16', href: '/favicon-16x16.png' },
 		],
-		script: [
+		/*script: [
 			{
 				src: '//cdn.cookie-script.com/s/82dfb0411595d1e11442ab034e524cac.js',
 				type: 'text/javascript',
 				charset: 'UTF-8',
 			},
-		],
+		],*/
 	},
 
 	// Global CSS: https://go.nuxtjs.dev/config-css
