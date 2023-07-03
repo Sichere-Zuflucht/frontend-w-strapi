@@ -223,7 +223,7 @@
 				},
 				topics: ['psychosoziale Beratung', 'Coaching', 'Rechtsberatung'],
 				additionalValid: false,
-				avatar: '',
+				avatar: [],
 				selectedTopic: null,
 				changeProfession: null,
 				changeCitation: null,
