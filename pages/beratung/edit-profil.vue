@@ -54,7 +54,7 @@
 								text
 								:to="
 									user.stripe_account_success
-										? '/berater/' + user.username
+										? '/berater/me?name=' + user.username
 										: null
 								"
 								color="grey"
@@ -81,7 +81,7 @@
 									class="mt-4 mr-3"
 									outlined
 									target="_blank"
-									:to="'/berater/' + user.slug"
+									:to="'/berater/me?name=' + user.slug"
 									>Profil ansehen</v-btn
 								><v-btn
 									v-if="!user.stripe_account_success"

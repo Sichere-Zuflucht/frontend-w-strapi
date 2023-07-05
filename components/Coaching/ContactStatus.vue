@@ -9,7 +9,7 @@
 		:style="`border: 1px solid ${status.borderColor}`"
 	>
 		<nuxt-link
-			:to="'/berater/' + meeting.coach_slug"
+			:to="'/berater/me?name=' + meeting.coach_slug"
 			style="text-decoration: none"
 			class="d-flex"
 			:style="`border-bottom: 1px solid ${status.borderColor} !important`"
@@ -226,7 +226,7 @@
 				color="primary"
 				outlined
 				nuxt
-				:to="'/berater/' + coach.username"
+				:to="'/berater/me?name=' + coach.username"
 				>Neue Anfrage stellen
 			</v-btn>
 		</v-card-actions>
