@@ -245,7 +245,7 @@
 							{
 								icon: 'mdi-account-box',
 								title: 'Mein Profil',
-								to: '/berater/',
+								to: '/berater/me?name=',
 								appendUser: true,
 							},
 							{

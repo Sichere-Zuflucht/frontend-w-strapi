@@ -238,7 +238,7 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 				const data = await $axios.$post(
 					`authentication?email=${email}&password=${password}`
 				);
-				//store.dispatch('changeData', data.user.attributes);
+				store.dispatch('changeData', data.user.attributes);
 
 				localStorage.setItem('ruby_jwt', data.token);
 

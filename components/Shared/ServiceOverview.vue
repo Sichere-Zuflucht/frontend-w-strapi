@@ -19,7 +19,10 @@
 						><v-col cols="12" sm="8" class="py-8 px-10"
 							><h3 class="text-h5 primary--text pb-4">{{ offer.title }}</h3>
 							<p
-								v-if="$store.getters['getCurrentUser'].usertype == 'coach'"
+								v-if="
+									$store.getters['getCurrentUser'] &&
+									$store.getters['getCurrentUser'].usertype == 'coach'
+								"
 								class="caption pr-0"
 							>
 								{{ offer.text }}

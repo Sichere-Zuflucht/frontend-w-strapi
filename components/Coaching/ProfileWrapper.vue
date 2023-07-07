@@ -42,7 +42,7 @@
 				absolute
 				right
 				color="primary"
-				:to="'/berater/me?name=' + pubCoachData.slug"
+				:href="'/berater/me?name=' + pubCoachData.slug"
 				>Profil ansehen</v-btn
 			>
 		</v-card-actions>
