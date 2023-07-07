@@ -22,7 +22,7 @@ const FilePond = vueFilePond(
 	FilePondPluginImageResize
 );
 
-setOptions({
+/*setOptions({
 	server: {
 		url: process.env.RUBY_URL,
 		timeout: 7000,
@@ -34,16 +34,12 @@ setOptions({
 			},
 			onload: (response) => response.key,
 			onerror: (response) => response.data,
-			ondata: (formData) => formData,
-		},
-		/*fetch: {
-			url: '/users/avatar',
-			method: 'GET',
-			headers: {
-				Authorization: `Bearer ${localStorage.getItem('ruby_jwt')}`,
+			ondata: (formData) => {
+				formData.append('Hello', 'World');
+				return formData;
 			},
-		}*/
+		},
 	},
-});
+});*/
 
 Vue.component('FilePond', FilePond);

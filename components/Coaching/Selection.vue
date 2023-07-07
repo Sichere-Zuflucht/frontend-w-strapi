@@ -123,7 +123,7 @@
 				</v-stepper-step>
 				<v-stepper-content step="3">
 					<div class="mb-4 d-flex flex-column align-center">
-						<v-avatar v-if="typeof avatar == 'string'" size="200">
+						<!----<v-avatar v-if="avatar.length > 0" size="200">
 							<v-img :src="avatar"
 								><div
 									class="d-flex justify-center align-end pb-2"
@@ -132,13 +132,11 @@
 									<v-btn fab x-small class="mx-1" @click="removeImage"
 										><v-icon>mdi-cached</v-icon></v-btn
 									>
-									<!----<v-btn fab x-small class="mx-1" @click="removeImage"
-										><v-icon>mdi-delete</v-icon></v-btn
-									>-->
 								</div></v-img
 							>
-						</v-avatar>
-						<file-pond
+						</v-avatar>-->
+						<UtilsFileUpload :file="avatar" />
+						<!----<file-pond
 							v-else
 							name="user[avatar]"
 							ref="pond"
@@ -146,7 +144,6 @@
 							label-idle="<span class='filepond--label-action'>Tippe hier</span> oder ziehe ein Foto einfach in den Kreis."
 							acceptedFileTypes="image/jpeg, image/png"
 							v-model="avatar"
-							v-bind:files="avatar"
 							imagePreviewHeight="200"
 							imageCropAspectRatio="1:1"
 							imageResizeTargetWidth="200"
@@ -156,10 +153,9 @@
 							styleProgressIndicatorPosition="center"
 							styleButtonProcessItemPosition="center"
 							styleLoadIndicatorPosition="center"
-							maxFileSize="2MB"
 							style="width: 200px; height: 200px"
 							@processfile="uploadDone"
-						/>
+						/>-->
 					</div>
 					<!----
 						## crop image
@@ -247,21 +243,11 @@
 				yearsAgo: new Date().getFullYear() - 100,
 			};
 		},
-		computed: {
-			imgServerUrl() {
-				return this.$config.strapi.url.includes('https')
-					? this.$config.strapi.url
-					: 'http://localhost:1337/api';
-			},
-			imgUrl() {
-				return this.$config.strapi.url.includes('https')
-					? ''
-					: 'http://localhost:1337';
-			},
-		},
 		mounted() {
 			const user = this.$store.getters['getCurrentUser'];
-			this.avatar = user.avatar_content_url;
+			console.log('a length', user.avatar_content_url.length);
+			if (user.avatar_content_url.length > 0)
+				this.avatar = user.avatar_content_url;
 			this.selectedTopic = user.topic_areas;
 			this.changeProfession = user.profession_line;
 			this.changePersonalBackground = user.personal_background;
@@ -271,6 +257,8 @@
 		//fetchOnServer: false,
 		methods: {
 			async uploadDone(error, file) {
+				this.$func.updateAvatar(file);
+				this.avatar = file;
 				//const b64 = await file.getFileEncodeBase64String;
 				//console.log('b64', b64);
 				//const { data } = await file.getFileEncodeDataURL();

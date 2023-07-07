@@ -175,6 +175,15 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 				errorhandling(err);
 			}
 		},
+		loginStripeAccLink: async () => {
+			try {
+				const loginUrl = await $axios.$get('stripe-account/login', config);
+				location.href = createAccUrl.data.url;
+				return loginUrl.data.url;
+			} catch (err) {
+				errorhandling(err);
+			}
+		},
 
 		/** AUTH + CURRENT USER*/
 		me: async () => {
@@ -198,6 +207,17 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 				});
 				$axios.$put('users/me', data, config);
 			} catch (err) {
+				throw err;
+			}
+		},
+		archiveMe: async () => {
+			try {
+				await $axios.$post('users/delete', config);
+				//localStorage.removeItem('ruby_jwt');
+				//store.dispatch('changeData', null);
+				//location.href = 'registration/signin';
+			} catch (err) {
+				console.log('err', errorhandling(err));
 				throw err;
 			}
 		},

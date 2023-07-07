@@ -142,22 +142,7 @@
 			},
 			async deleteUser() {
 				this.deleteLoading = true;
-				this.$strapi.$meetings
-					.find({
-						'filters[users_permissions_users]': this.$strapi.user.id,
-					})
-					.then(async (res) => {
-						const meetings = res.data.map((meeting) =>
-							this.deleteMeeting(meeting)
-						);
-						Promise.all(meetings).then(() => {
-							if (this.$strapi.user.stripeID) {
-								this.deleteStripeUser();
-							} else {
-								this.deleteStrapiUser();
-							}
-						});
-					});
+				this.$func.archiveMe();
 			},
 			async deleteMeeting(doc) {
 				this.$deleteMeeting(
