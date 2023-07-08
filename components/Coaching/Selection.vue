@@ -123,39 +123,7 @@
 				</v-stepper-step>
 				<v-stepper-content step="3">
 					<div class="mb-4 d-flex flex-column align-center">
-						<!----<v-avatar v-if="avatar.length > 0" size="200">
-							<v-img :src="avatar"
-								><div
-									class="d-flex justify-center align-end pb-2"
-									style="width: 100%"
-								>
-									<v-btn fab x-small class="mx-1" @click="removeImage"
-										><v-icon>mdi-cached</v-icon></v-btn
-									>
-								</div></v-img
-							>
-						</v-avatar>-->
 						<UtilsFileUpload :file="avatar" />
-						<!----<file-pond
-							v-else
-							name="user[avatar]"
-							ref="pond"
-							class="filepond"
-							label-idle="<span class='filepond--label-action'>Tippe hier</span> oder ziehe ein Foto einfach in den Kreis."
-							acceptedFileTypes="image/jpeg, image/png"
-							v-model="avatar"
-							imagePreviewHeight="200"
-							imageCropAspectRatio="1:1"
-							imageResizeTargetWidth="200"
-							imageResizeTargetHeight="200"
-							stylePanelLayout="compact circle"
-							styleButtonRemoveItemPosition="left bottom"
-							styleProgressIndicatorPosition="center"
-							styleButtonProcessItemPosition="center"
-							styleLoadIndicatorPosition="center"
-							style="width: 200px; height: 200px"
-							@processfile="uploadDone"
-						/>-->
 					</div>
 					<!----
 						## crop image
