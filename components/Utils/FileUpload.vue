@@ -23,7 +23,11 @@
 				ein Foto einfach in den Kreis.
 			</div>
 			<div v-else style="position: relative">
-				<img :src="file.name ? filePreview : file" alt="Preview" />
+				<img
+					v-if="isImage"
+					:src="file.name ? filePreview : file"
+					alt="Preview"
+				/>
 				<div v-if="file" class="input--button d-flex align-end justify-center">
 					<v-btn fab x-small @click="deleteImage"
 						><v-icon small>mdi-reload</v-icon></v-btn
@@ -54,6 +58,7 @@
 			return {
 				filePreview: '',
 				size_error: false,
+				isImage: false,
 			};
 		},
 		methods: {
@@ -95,15 +100,18 @@
 						reader.onload = () => {
 							this.file = file;
 							this.filePreview = reader.result;
+							this.isImage = true;
 							this.$func.updateAvatar(file);
 						};
 						reader.readAsDataURL(file);
 						this.size_error = false;
 					} else {
 						this.size_error = true;
+						this.isImage = false;
 					}
 				} else {
 					this.file = file;
+					this.isImage = false;
 				}
 			},
 			deleteImage() {
