@@ -16,26 +16,28 @@
 					<small>{{ coach.helpSubtitle }}</small>
 				</v-stepper-step>
 				<v-stepper-content step="1">
-					<v-chip-group v-model="selectedTopic" column>
-						<v-chip
-							v-for="(t, i) in topics"
-							:key="i"
-							:value="t"
-							active-class="primary primary--text"
-							outlined
-							filter
-							>{{ t }}
-						</v-chip>
-					</v-chip-group>
-					<v-btn
-						color="primary"
-						block
-						:disabled="!selectedTopic"
-						@click="step++"
-					>
-						<v-icon class="pr-1">mdi-arrow-down</v-icon>
-						Weiter
-					</v-btn>
+					<v-form v-model="selectedTopic" @submit.prevent="step++">
+						<v-chip-group v-model="selectedTopic" column>
+							<v-chip
+								v-for="(t, i) in topics"
+								:key="i"
+								:value="t"
+								active-class="primary primary--text"
+								outlined
+								filter
+								>{{ t }}
+							</v-chip>
+						</v-chip-group>
+						<v-btn
+							color="primary"
+							block
+							:disabled="!selectedTopic"
+							type="submit"
+						>
+							<v-icon class="pr-1">mdi-arrow-down</v-icon>
+							Weiter
+						</v-btn>
+					</v-form>
 				</v-stepper-content>
 				<v-stepper-step
 					:complete="step > 2"
@@ -52,20 +54,20 @@
 					<small>{{ coach.bioSubtitle }}</small>
 				</v-stepper-step>
 				<v-stepper-content step="2">
-					<v-form v-model="additionalValid">
+					<v-form v-model="valid.additional" @submit.prevent="step++">
 						<v-text-field
 							v-model="changeProfession"
 							outlined
 							class="pt-2"
 							label="Beruf:"
-							:rules="[(v) => !!v || 'Bitte ausfüllen']"
+							:rules="rules.obligatory"
 							placeholder="Jobbezeichnung"
 						></v-text-field>
 						<v-textarea
 							v-model="changeCitation"
 							outlined
 							label="Persönliches Zitat:"
-							:rules="[(v) => !!v || 'Bitte ausfüllen']"
+							:rules="rules.obligatory"
 							placeholder="Ein Zitat, mit dem Sie Ihre Weltsicht oder Arbeitweise umschreiben."
 							height="100"
 						></v-textarea>
@@ -75,10 +77,7 @@
 							label="Beruflicher Hintergrund / Schwerpunkte:"
 							placeholder="z.B. was Sie vorher gemacht haben oder was Sie bewegt"
 							counter="600"
-							:rules="[
-								(v) => !!v || 'Bitte ausfüllen',
-								(v) => (v && v.length) <= 600 || 'Zu viele Buchstaben',
-							]"
+							:rules="rules.to_long"
 						></v-textarea>
 						<v-textarea
 							v-model="changePersonalBackground"
@@ -92,16 +91,13 @@
 
 … was Sie wollen"
 							counter="600"
-							:rules="[
-								(v) => !!v || 'Bitte ausfüllen',
-								(v) => (v && v.length) <= 600 || 'Zu viele Buchstaben',
-							]"
+							:rules="rules.to_long"
 						></v-textarea>
 						<v-btn
 							color="primary"
-							:disabled="!additionalValid"
+							:disabled="!valid.additional"
 							block
-							@click="step++"
+							type="submit"
 						>
 							<v-icon class="pr-1">mdi-arrow-down</v-icon>
 							weiter
@@ -122,10 +118,11 @@
 					<small>{{ coach.picSubtitle }}</small>
 				</v-stepper-step>
 				<v-stepper-content step="3">
-					<div class="mb-4 d-flex flex-column align-center">
-						<UtilsFileUpload :file="avatar" />
-					</div>
-					<!----
+					<v-form @submit.prevent="finish">
+						<div class="mb-4 d-flex flex-column align-center">
+							<UtilsFileUpload :file="avatar" />
+						</div>
+						<!----
 						## crop image
 						<v-overlay
 						v-if="cropImage"
@@ -161,9 +158,10 @@
 							</div>
 						</v-card>
 					</v-overlay>-->
-					<v-btn color="primary" block @click="finish">
-						<v-icon class="pr-1">mdi-content-save</v-icon> Profil speichern
-					</v-btn>
+						<v-btn color="primary" block type="submit">
+							<v-icon class="pr-1">mdi-content-save</v-icon> Profil speichern
+						</v-btn>
+					</v-form>
 				</v-stepper-content>
 			</v-stepper>
 		</v-expand-transition>
@@ -186,7 +184,9 @@
 						'Damit die Frauen Ihr Angebot besser einschätzen können.',
 				},
 				topics: ['psychosoziale Beratung', 'Coaching', 'Rechtsberatung'],
-				additionalValid: false,
+				valid: {
+					additional: false,
+				},
 				avatar: [],
 				selectedTopic: null,
 				changeProfession: null,
@@ -194,21 +194,17 @@
 				changePersonalBackground: null,
 				changeProfessionalBackground: null,
 				step: 1,
-				panel: [0],
-				imageFile: null,
 				cropImage: false,
-				cropImg: '',
 				cropData: null,
 				isLoading: false,
 				overlay: false,
-				rules: [
-					(value) =>
-						!value ||
-						value.size < 2000000 ||
-						'Fotogröße sollte kleiner als 2 MB sein.',
-					(value) => !!value || 'Lade ein Foto hoch.',
-				],
-				yearsAgo: new Date().getFullYear() - 100,
+				rules: {
+					to_long: [
+						this.$rules.obligatory,
+						(v) => (v && v.length) <= 600 || 'Zu viele Buchstaben',
+					],
+					obligatory: [this.$rules.obligatory],
+				},
 			};
 		},
 		mounted() {
@@ -238,13 +234,6 @@
 			},
 			removeImage() {
 				this.avatar = [];
-				/*this.$strapi.$http
-					.$delete('upload/files/' + this.avatar.id)
-					.then(() => {
-						this.$store.dispatch('changeAvatar', null);
-						this.$emit('changeAvatarPreview', null);
-						// did it happend accidently??? this.user.avatar = null
-					});*/
 			},
 			/*croppingImage() {
 				this.removeImage();
@@ -270,26 +259,6 @@
 				this.$store.dispatch('changeData', data);
 				this.$emit('selection', data);
 			},
-			/*upload(file, close = false) {
-				const form = new FormData();
-				form.append('files', file);
-				this.$strapi.$http.$post('upload', form).then((res) => {
-					this.$strapi.$users
-						.update(user.id, {
-							avatar: res[0],
-						})
-						.then(() => {
-							this.$emit('changeAvatarPreview', res[0]);
-							this.isLoading = false;
-							//this.changeImg = false;
-							this.overlay = !close;
-						})
-						.catch((e) => {
-							this.$errorhandling(e);
-						});
-					this.$store.dispatch('changeAvatar', res[0]);
-				});
-			},*/
 		},
 	};
 </script>

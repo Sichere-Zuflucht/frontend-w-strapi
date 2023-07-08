@@ -45,6 +45,7 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 		phone: (v) =>
 			/^(?:\+\d{2}|0|00\d{2})(?:\s*\d{3}){2}\s*\d{4,10}/.test(v) ||
 			'Ungültiges Format',
+		obligatory: (v) => !!v || 'Bitte ausfüllen',
 	});
 	inject('functionalCookieAccepted', () => {
 		const cookie = $cookies.get('CookieScriptConsent');

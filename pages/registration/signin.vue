@@ -18,7 +18,7 @@
 					style="width: 100%"
 					class="mb-4"
 					autocomplete="on"
-					@submit.prevent="next"
+					@submit.prevent="login"
 				>
 					<h2 class="text-h3 secondary--text">E-Mail-Adresse</h2>
 					<v-text-field
@@ -55,7 +55,7 @@
 							color="primary"
 							:loading="loading"
 							:disabled="!valid"
-							@click="login"
+							type="submit"
 							>Einloggen</v-btn
 						>
 					</div>

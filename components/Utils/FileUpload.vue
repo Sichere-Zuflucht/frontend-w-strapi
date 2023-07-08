@@ -24,7 +24,7 @@
 			</div>
 			<div v-else style="position: relative">
 				<img :src="file.name ? filePreview : file" alt="Preview" />
-				<div v-if="file" class="input--button">
+				<div v-if="file" class="input--button d-flex align-end justify-center">
 					<v-btn fab x-small @click="deleteImage"
 						><v-icon small>mdi-reload</v-icon></v-btn
 					>
@@ -133,11 +133,8 @@
 		max-height: 200px;
 	}
 	.drop-zone .input--button {
-		display: flex;
 		width: 200px;
 		height: 200px;
-		justify-content: center;
-		align-items: end;
 		position: absolute;
 		top: 0;
 		left: 0;

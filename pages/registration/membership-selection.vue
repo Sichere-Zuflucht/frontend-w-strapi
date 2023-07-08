@@ -69,7 +69,7 @@
 									style="float: right"
 									:loading="loading"
 									:disabled="!valid.username"
-									@click="() => stepper++"
+									type="submit"
 									>Weiter</v-btn
 								></v-form
 							>
@@ -147,7 +147,7 @@
 										:disabled="!valid.phone"
 										class="mt-4"
 										style="float: right"
-										@click="updateProfile"
+										type="submit"
 										>Verifizierung starten</v-btn
 									>
 								</v-form>
