@@ -1,8 +1,11 @@
 <template>
 	<div v-if="list != null">
 		<v-expansion-panels v-if="list.length != 0">
-			<v-expansion-panel v-for="(item, i) in list" :key="i">
-				<CoachingRequestSingleTab :item="item.attributes" :id="item.id" />
+			<v-expansion-panel v-for="(meeting, i) in list" :key="i">
+				<CoachingRequestSingleTab
+					:meeting="meeting.attributes"
+					:id="meeting.id"
+				/>
 			</v-expansion-panel>
 		</v-expansion-panels>
 		<p v-else-if="list.length == 0" class="caption">
@@ -26,7 +29,7 @@
 				type: Array,
 				default: null,
 			},
-			showold: {
+			oldlist: {
 				type: Boolean,
 				default: false,
 			},

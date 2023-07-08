@@ -281,10 +281,15 @@
 				ownProfil = true;
 			} else
 				try {
-					coachData = (await $func.loadSingleCoach(query.name)).attributes;
+					const coach = await $func.loadSingleCoach(query.name);
+					coachData = {
+						id: coach.id,
+						...coach.attributes,
+					};
 				} catch (err) {
 					//window.location.replace('/');
-					console.log('noCoach');
+
+					console.log('noCoach', err);
 					//coachData = false;
 				}
 			return { coachData, ownProfil };
@@ -292,11 +297,9 @@
 		methods: {
 			createMeeting() {
 				this.loading = true;
-				const woman = this.$store.getters['getCurrentUser'];
 				const coach = this.coachData; //this.$route.params.beratung)
 				const data = {
 					message: this.msgTitle + ': ' + this.message,
-					woman_id: woman.id,
 					coach_id: coach.id,
 				};
 

@@ -32,6 +32,24 @@ function errorhandling(error) {
 }
 
 export default ({ $axios, redirect, store, $cookies }, inject) => {
+	inject('format', {
+		date: (date) => {
+			const d = new Date(date);
+			return d.toLocaleDateString('de-DE', {
+				weekday: 'long',
+				year: 'numeric',
+				month: 'long',
+				day: 'numeric',
+			});
+		},
+		time: (date) => {
+			const d = new Date(date);
+			return d.toLocaleTimeString('de-DE', {
+				hour: 'numeric',
+				minute: 'numeric',
+			});
+		},
+	});
 	inject('errorhandling', errorhandling);
 
 	inject('rules', {
@@ -56,21 +74,16 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 	/****** API to Ruby on Rails */
 	inject('func', {
 		/** MEETINGS */
-		womanCreatesNewMeeting: ({ message, woman_id, coach_id }) => {
-			const data = {
+
+		womanCreatesNewMeeting: ({ message, coach_id }) => {
+			const data = JSON.stringify({
 				meeting: {
 					message,
-					woman_id,
+					woman_id: store.getters['getCurrentUser'].id,
 					coach_id,
 				},
-			};
-
-			return $axios.$post('meetings', {
-				headers: {
-					Authorization,
-				},
-				body: JSON.stringify(data),
 			});
+			return $axios.$post('meetings', data, config);
 		},
 		coachGivesProposals: async ({ video_type, time_proposals, meeting_id }) => {
 			try {
@@ -85,21 +98,25 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 				throw err;
 			}
 		},
-		womanSelectsProposalAndPays: ({ selected_time_index, meeting_id }) => {
-			// change Ruby Route, so that the payment id is happening in the backend!
-
-			const data = {
-				meeting: {
-					selected_time_index,
-				},
-			};
-
-			return $axios.$put(`meetings/${meeting_id}/start_payment_session`, {
-				headers: {
-					Authorization,
-				},
-				body: JSON.stringify(data),
-			});
+		womanSelectsProposalAndPays: async ({
+			selected_time_index,
+			meeting_id,
+		}) => {
+			try {
+				const data = JSON.stringify({
+					meeting: {
+						selected_time_index,
+					},
+				});
+				const meeting = await $axios.$put(
+					`meetings/${meeting_id}/start_payment_session`,
+					data,
+					config
+				);
+				return meeting.data.attributes.payment_url;
+			} catch (err) {
+				errorhandling(err);
+			}
 		},
 
 		archiveMeeting: (meeting_id) => {
@@ -194,7 +211,10 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 						Authorization,
 					},
 				});
-				return me.data.attributes;
+				return {
+					id: me.data.id,
+					...me.data.attributes,
+				};
 			} catch {
 				localStorage.removeItem('ruby_jwt');
 			}

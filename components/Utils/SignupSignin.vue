@@ -28,7 +28,6 @@
 									>
 										<v-item v-slot="{ active, toggle }" :value="n">
 											<v-card
-												:disabled="i == 0 ? true : false"
 												:color="active ? 'primary' : 'blue-grey lighten-5'"
 												class="d-flex flex-column justify-center align-center pa-8"
 												:dark="active"
@@ -37,9 +36,7 @@
 											>
 												<v-icon large class="pr-2">{{ n.icon }}</v-icon>
 												<p class="ma-0 text-center" style="padding-top: 2px">
-													{{ n.description }}<br /><span class="caption">{{
-														n.notyet
-													}}</span>
+													{{ n.description }}
 												</p>
 											</v-card></v-item
 										></v-col
@@ -80,7 +77,7 @@
 										color="primary"
 										:loading="loading"
 										:disabled="!valid.email"
-										@click="next"
+										type="submit"
 										>Weiter ></v-btn
 									>
 								</div>
@@ -264,7 +261,6 @@
 				memberships: [
 					{
 						description: 'Ich suche Beratung',
-						notyet: '(wird demnächst freigeschaltet)',
 						icon: 'mdi-face-woman',
 						id: 'Woman',
 						roleName: 'woman',

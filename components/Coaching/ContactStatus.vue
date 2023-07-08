@@ -16,29 +16,17 @@
 		>
 			<v-avatar color="primary ma-5" size="90" contain>
 				<v-img
-					v-if="meeting.coach_avatar && functionalCookieAccepted"
-					:lazy-src="
-						(meeting.coach_avatar.url.includes('https')
-							? ''
-							: 'http://localhost:1337') + meeting.coach_avatar.url
-					"
-					:src="
-						(meeting.coach_avatar.url.includes('https')
-							? ''
-							: 'http://localhost:1337') + meeting.coach_avatar.url
-					"
-					data-cookiescript="accepted"
-					data-cookiecategory="functionality"
-				/><v-icon v-else-if="!functionalCookieAccepted" color="white"
-					>mdi-cookie-alert</v-icon
-				>
+					v-if="meeting.coach_avatar_content_url"
+					:lazy-src="meeting.coach_avatar_content_url"
+					:src="meeting.coach_avatar_content_url"
+				/>
 			</v-avatar>
 			<div class="ma-5 ml-2 d-flex flex-column justify-center">
 				<h2 class="secondary--text text-h2">
 					{{ meeting.coach_name }}
 				</h2>
 				<h3 class="mt-2 text-h5">
-					{{ meeting.coach_profession }}
+					{{ meeting.coach_profession_line }}
 				</h3>
 			</div>
 		</nuxt-link>
@@ -90,7 +78,7 @@
 							:loading="btn.payButtonLoading"
 							:disabled="!selectedDate || btn.isDisabled"
 							block
-							@click="pay(selectedDate)"
+							@click="pay()"
 							>Termin verbindlich buchen
 							<v-icon small class="ml-1">mdi-open-in-new</v-icon>
 						</v-btn>
@@ -113,12 +101,8 @@
 					{{
 						meeting.acceptedDate
 							? `für
-                  ${formatDate(
-										meeting.time_proposals_parsed[meeting.selected_time_index]
-									)} um
-                  ${formatTime(
-										meeting.time_proposals_parsed[meeting.selected_time_index]
-									)}`
+                  ${formatDate(meeting.selected_meeting)} um
+                  ${formatTime(meeting.selected_meeting)}`
 							: ''
 					}}
 					wurde abgesagt.
@@ -130,8 +114,8 @@
 					Vergangener Termin
 				</p>
 				<v-alert dark text dense color="grey"
-					>Das Meeting hat am {{ formatDate(meeting.acceptedDate) }} um
-					{{ formatTime(meeting.acceptedDate) }} stattgefunden.
+					>Das Meeting hat am {{ formatDate(meeting.selected_meeting) }} um
+					{{ formatTime(meeting.selected_meeting) }} stattgefunden.
 				</v-alert>
 			</div>
 			<div v-else-if="status.hasCreditCard">
@@ -142,15 +126,11 @@
 					class="my-2"
 					color="success"
 					target="_blank"
-					:disabled="!videoStatus.ready"
-					:href="
-						meeting.videoType === 'normal'
-							? jitsiWithWomanName
-							: meeting.videoWoman
-					"
-					@click="startPaySession"
+					:disabled="!status.isAccessable"
+					:href="meeting.personal_videolink"
 					>zum Videocall
 				</v-btn>
+				<!---</v-btn>:disabled="!videoStatus.ready" @click="startPaySession"-->
 				<v-btn
 					v-if="meeting.videoType === 'normal'"
 					class="my-2"
@@ -161,8 +141,8 @@
 					>Video testen
 				</v-btn>
 				<v-alert dark text dense color="success"
-					>Zugesagt für {{ formatDate(meeting.acceptedDate) }} um
-					{{ formatTime(meeting.acceptedDate) }}
+					>Zugesagt für {{ formatDate(meeting.selected_meeting) }} um
+					{{ formatTime(meeting.selected_meeting) }}
 				</v-alert>
 				<p class="caption">
 					Der Zugang zum Videocall wird <b>15min vor Beginn</b> freigeschaltet.
@@ -214,7 +194,7 @@
 				</template>
 				<v-alert type="error" color="error" class="mt-2 ma-2">
 					<p>Wirklich absagen?</p>
-					<v-btn light class="mr-1" :loading="eraseLoading" @click="cancel()"
+					<v-btn light class="mr-1" :loading="eraseLoading" @click="cancel"
 						>Ja, absagen
 					</v-btn>
 					<v-btn light @click="isDelete = false"> nein</v-btn>
@@ -226,7 +206,7 @@
 				color="primary"
 				outlined
 				nuxt
-				:to="'/berater/me?name=' + coach.username"
+				:to="'/berater/me?name=' + meeting.coach_slug"
 				>Neue Anfrage stellen
 			</v-btn>
 		</v-card-actions>
@@ -261,6 +241,9 @@
 				type: Boolean,
 				default: true,
 			},
+			position: {
+				type: Number,
+			},
 			oldlist: {
 				type: Boolean,
 				default: false,
@@ -287,44 +270,20 @@
 			};
 		},
 		computed: {
-			functionalCookieAccepted() {
-				return this.$functionalCookieAccepted();
+			selectedItemIndex() {
+				return this.meeting.time_proposals_parsed.indexOf(this.selectedDate);
 			},
 			jitsiWithWomanName() {
 				const name = this.$store.getters['getCurrentUser'].username;
 				return `${this.meeting.videoCoach}#userInfo.displayName="${name}"`;
 			},
-			/*videoStatus() {
-				let b = true;
-				let r = false;
-				let d = false;
-
-				if (this.meeting.selected_time_index != -1) {
-					const startTime = new Date(
-						this.meeting.time_proposals_parsed[this.meeting.selected_time_index]
-					);
-					const preTime = new Date();
-					const overTime = new Date();
-					const now = new Date();
-
-					preTime.setTime(startTime.getTime() - 15 * 60 * 1000);
-					overTime.setTime(startTime.getTime() + 60 * 60 * 1000);
-
-					b = now < preTime;
-					r = overTime >= now && now >= preTime;
-					d = overTime < now;
-				}
-
-				console.log('brd', b, r, d);
-
-				return {
-					before: b,
-					ready: r,
-					done: d,
-				};
-			},*/
 			status() {
-				var isRequest = true;
+				return this.setStatus();
+			},
+		},
+		methods: {
+			setStatus() {
+				var isRequest = false;
 				var hasTimeslots = false;
 				var hasCreditCard = false;
 				var isAccessable = false;
@@ -334,14 +293,25 @@
 				var borderColor = this.$vuetify.theme.themes.light.primary;
 
 				//** Matching Process */
-				if (this.meeting.status != 'woman requested meeting') isRequest = false;
-				else if (this.meeting.status == 'coach proposed timeslots')
-					hasTimeslots = true;
-				else if (this.meeting.status == 'woman payment method is valid')
-					hasCreditCard = true;
-				/** Meeting ready to start */ else if (
-					this.meeting.selected_meeting != 'not selected yet'
-				) {
+				switch (this.meeting.status) {
+					case 'woman requested meeting':
+						isRequest = true;
+						break;
+					case 'coach proposed timeslots':
+						hasTimeslots = true;
+						break;
+					case 'woman payment method is valid':
+						hasCreditCard = true;
+						break;
+					case 'woman fee was captchured':
+						isPayed = true;
+						break;
+					case 'archived':
+						isArchived = true;
+						break;
+				}
+
+				if (this.meeting.selected_meeting != 'not selected yet') {
 					const meetingTime = new Date(this.meeting.selected_meeting);
 					const meetingTimeEnd = new Date(
 						this.meeting.selected_meeting_expired
@@ -350,11 +320,10 @@
 					const currentTime = new Date();
 					if (currentTime >= entryTime && currentTime < meetingTimeEnd) {
 						isAccessable = true;
-					} else if (currentTime > meetingTimeEnd) isPassed = true;
-				} else if (this.meeting.status == 'woman fee was captchured')
-					isPayed = true;
-				//** Archived */
-				else if (this.meeting.status == 'archived') isArchived = true;
+					} else if (currentTime > meetingTimeEnd) {
+						isPassed = true;
+					}
+				}
 
 				if (isAccessable)
 					borderColor = this.$vuetify.theme.themes.light.success;
@@ -371,13 +340,6 @@
 					borderColor,
 				};
 			},
-		},
-		/*async mounted() {
-			this.payment = await this.$getStripePaymentSession(
-				this.meeting.paymentID
-			);
-		},*/
-		methods: {
 			cancel() {
 				this.eraseLoading = true;
 				this.$func
@@ -386,6 +348,7 @@
 						this.isDelete = false;
 						this.eraseLoading = false;
 						this.error = null;
+						this.meeting.status = 'archived';
 						this.$emit('cancel');
 					})
 					.catch((err) => {
@@ -395,29 +358,14 @@
 						this.$errorhandling(err, 'ContactStatus $archiveMeeting');
 					});
 			},
-			sendNotificationEmail({ date, time, id }) {
-				const email = this.coach.email
-					? this.coach.email
-					: 'nouser@sichere-zuflucht.de';
-				const body = {
-					date: date,
-					time: time,
-					id: id,
-				};
-				this.$meetingConfirmationEmail({ email, ...body })
-					.then(() => {
-						this.loading = false;
-						this.success = true;
-					})
-					.catch((err) => {
-						this.$errorhandling(err, 'ContactStatus $meetingConfirmationEmail');
-					});
-			},
-			/*startPaySession() {
-				this.$retrieveStripePaymentSetup(this.payment.id, id);
-			},*/
-			async pay(dateInput) {
-				this.btn.payButtonLoading = true;
+			async pay() {
+				const pay_url = await this.$func.womanSelectsProposalAndPays({
+					selected_time_index: this.selectedItemIndex,
+					meeting_id: this.id,
+				});
+				console.log(pay_url);
+				location.href = pay_url;
+				/*this.btn.payButtonLoading = true;
 				let redReq, data, video;
 				if (this.meeting.videoType === 'secure') {
 					data = {
@@ -443,7 +391,7 @@
 					};
 					this.redirectWarning = true;
 					this.standardPayment(video, dateInput);
-				}
+				}*/
 			},
 			/*standardPayment(v, dI) {
 				this.$stripePayment(this.coach.stripeID, this.id)
@@ -493,20 +441,10 @@
 					});
 			},*/
 			formatDate(date) {
-				const d = new Date(date);
-				return d.toLocaleDateString('de-DE', {
-					weekday: 'long',
-					year: 'numeric',
-					month: 'long',
-					day: 'numeric',
-				});
+				return this.$format.date(date);
 			},
 			formatTime(date) {
-				const d = new Date(date);
-				return d.toLocaleTimeString('de-DE', {
-					hour: 'numeric',
-					minute: 'numeric',
-				});
+				return this.$format.time(date);
 			},
 			reload() {
 				window.location.reload();

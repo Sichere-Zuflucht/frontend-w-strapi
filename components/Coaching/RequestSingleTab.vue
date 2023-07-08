@@ -3,6 +3,7 @@
 		<v-expansion-panel-header
 			color="grey lighten-5"
 			class="d-flex align-center justify-start"
+			:style="`border: 1px solid ${status.borderColor}`"
 		>
 			<v-avatar
 				class="mr-2 flex-shrink-1 flex-grow-0"
@@ -21,12 +22,12 @@
 					KryptoNr.
 				</p>
 				<p class="font-weight-bold mb-0">
-					{{ item.woman_name }}
+					{{ meeting.woman_name }}
 				</p>
 			</div>
 			<div>
 				<v-chip
-					v-if="item.status == 'deleted'"
+					v-if="status.isArchived"
 					class="ma-2 flex-shrink-0 flex-grow-1"
 					color="error"
 					text-color="white"
@@ -34,7 +35,7 @@
 					abgesagt
 				</v-chip>
 				<v-chip
-					v-else-if="videoStatus.ready"
+					v-else-if="status.isPayed"
 					class="ma-2 flex-shrink-0 flex-grow-1"
 					color="success"
 					text-color="white"
@@ -42,7 +43,7 @@
 					laufend...
 				</v-chip>
 				<v-chip
-					v-else-if="videoStatus.done"
+					v-else-if="status.isPassed"
 					class="ma-2 flex-shrink-0 flex-grow-1"
 					color="grey"
 					text-color="white"
@@ -50,7 +51,7 @@
 					abgelaufen
 				</v-chip>
 				<v-chip
-					v-else-if="item.status == 'woman requested meeting'"
+					v-else-if="status.isRequest"
 					class="ma-2 flex-shrink-0 flex-grow-1"
 					color="error"
 					text-color="white"
@@ -58,7 +59,7 @@
 					unbearbeitet
 				</v-chip>
 				<v-chip
-					v-else-if="item.status == 'coach proposed timeslots'"
+					v-else-if="status.hasTimeslots"
 					class="ma-2 flex-shrink-0 flex-grow-1"
 					color="orange"
 					text-color="white"
@@ -66,22 +67,12 @@
 					Antwort abwarten
 				</v-chip>
 				<v-chip
-					v-else-if="payment ? payment.status == 'complete' : false"
+					v-else-if="status.hasCreditCard || status.isAccessable"
 					class="ma-2 flex-shrink-0 flex-grow-1"
 					color="success"
 					text-color="white"
 				>
 					bereit
-				</v-chip>
-				<v-chip
-					v-else-if="
-						payment == false || payment ? payment.status == 'open' : false
-					"
-					class="ma-2 flex-shrink-0 flex-grow-1"
-					color="success"
-					text-color="white"
-				>
-					bezahlung offen
 				</v-chip>
 			</div>
 		</v-expansion-panel-header>
@@ -90,7 +81,7 @@
 				<v-card-text>
 					<v-row>
 						<v-col cols="9" sm="10" md="11">
-							<v-sheet v-if="item.message" color="grey lighten-5 pa-3 my-4">
+							<v-sheet v-if="meeting.message" color="grey lighten-5 pa-3 my-4">
 								<p
 									class="caption ma-0 grey--text"
 									style="transform: translateY(-22px); position: absolute"
@@ -98,66 +89,40 @@
 									Nachricht
 								</p>
 								<p class="mb-0">
-									{{ item.message }}
+									{{ meeting.message }}
 								</p>
 							</v-sheet>
 						</v-col>
 					</v-row>
-
-					<div v-if="item.status == 'deleted'">
+					<div v-if="status.isArchived">
 						<p class="caption">Termin abgesagt</p>
 						<v-alert dark text dense color="primary"
 							>Der Termin
 							{{
-								item.time_proposals_parsed[item.selected_time_index]
+								meeting.selected_meeting
 									? `für ${formatDate(
-											item.time_proposals_parsed[item.selected_time_index]
-									  )} um ${formatTime(
-											item.time_proposals_parsed[item.selected_time_index]
-									  )}`
+											meeting.selected_meeting
+									  )} um ${formatTime(meeting.selected_meeting)}`
 									: ''
 							}}
 							wurde abgesagt.
 						</v-alert>
 					</div>
-
-					<div
-						v-else-if="
-							payment == false || payment ? payment.status == 'open' : false
-						"
-					>
-						<p class="caption">Bezahlung noch nicht eingerichtet</p>
-						<v-alert dark text dense color="primary"
-							>Die Frau hat noch keine Bezahlung für den Termin
-							{{
-								item.time_proposals_parsed[item.selected_time_index]
-									? `am ${formatDate(
-											item.time_proposals_parsed[item.selected_time_index]
-									  )} um ${formatTime(
-											item.time_proposals_parsed[item.selected_time_index]
-									  )}`
-									: ''
-							}}
-							hinterlegt.
-						</v-alert>
-					</div>
-					<div v-else-if="videoStatus.done">
+					<div v-else-if="status.isPassed">
 						<p class="caption">Termin abgelaufen</p>
 						<v-alert dark text dense color="grey"
 							>Der Termin hat
 							{{
-								item.time_proposals_parsed[item.selected_time_index]
-									? `am ${formatDate(
-											item.time_proposals_parsed[item.selected_time_index]
-									  )} um ${formatTime(
-											item.time_proposals_parsed[item.selected_time_index]
+								meeting.selected_meeting
+									? `am ${formatDate(meeting.selected_meeting)} um ${formatTime(
+											meeting.selected_meeting
 									  )}`
 									: ''
 							}}
 							stattgefunden.
 						</v-alert>
 					</div>
-					<div v-else-if="item.status == 'woman requested meeting'">
+					<div v-else-if="status.isRequest">
 						<div class="d-flex">
 							<v-select
 								v-model="selectedVideoType"
@@ -244,23 +209,19 @@
 						>
 						<UtilsDatePicker
 							v-if="selectedVideoType == 'normal'"
-							:item="item"
+							:meeting="meeting"
 							@suggestion="addToSuggestionList"
 						/>
 						<p class="mt-2 mb-0 pa-2 caption">
 							Bitte füge mind. 3 Termine hinzu.
 						</p>
 					</div>
-					<div v-else-if="payment ? payment.status == 'complete' : false">
+					<div v-else-if="status.hasCreditCard || status.isAccessable">
 						<p class="caption">Bestätigter Termin</p>
 						<b
-							>{{
-								formatDate(item.time_proposals_parsed[item.selected_time_index])
-							}}
+							>{{ formatDate(meeting.selected_meeting) }}
 							|
-							{{
-								formatTime(item.time_proposals_parsed[item.selected_time_index])
-							}}
+							{{ formatTime(meeting.selected_meeting) }}
 							<span class="caption">(50min)</span>
 						</b>
 						<v-divider></v-divider>
@@ -268,14 +229,12 @@
 							class="my-2"
 							color="success"
 							target="_blank"
-							:disabled="!videoStatus.ready"
-							:href="
-								item.video_type === 'normal' ? item.videoCoach : item.videoWoman
-							"
+							:disabled="!status.isAccessable"
+							:href="meeting.personal_videolink"
 							>zum Videocall
 						</v-btn>
 						<v-btn
-							v-if="item.video_type === 'normal'"
+							v-if="meeting.video_type === 'normal'"
 							class="my-2"
 							color="secondary"
 							outlined
@@ -284,7 +243,7 @@
 							>Video testen
 						</v-btn>
 						({{
-							item.video_type == 'normal'
+							meeting.video_type == 'normal'
 								? 'standard Videoanbieter '
 								: 'zertifizierter Videoanbieter'
 						}})
@@ -295,12 +254,26 @@
 							aktivieren. <a @click="reload">neu laden</a>
 						</p>
 					</div>
-					<div v-else-if="item.status == 'coach proposed timeslots'">
-						<v-banner>
+					<div v-else-if="status.hasTimeslots">
+						<div v-if="meeting.selected_meeting">
+							<p class="caption">Bezahlung noch nicht eingerichtet</p>
+							<v-alert dark text dense color="primary"
+								>Die Frau hat noch keine Bezahlung für den Termin
+								{{
+									meeting.selected_meeting
+										? `am ${formatDate(
+												meeting.selected_meeting
+										  )} um ${formatTime(meeting.selected_meeting)}`
+										: ''
+								}}
+								hinterlegt.
+							</v-alert>
+						</div>
+						<v-banner v-else>
 							Es wurde noch kein Termin bestätigt. Ihre vorgeschlagenen Termine
 							sind:<br /><br />
 							<span
-								v-for="(d, di) in item.time_proposals_parsed"
+								v-for="(d, di) in meeting.time_proposals_parsed"
 								:key="di"
 								class="pt-4"
 								><b>{{ formatDate(d) }}</b
@@ -313,10 +286,7 @@
 
 				<v-card-actions class="d-flex justify-end">
 					<v-btn
-						v-if="
-							selectedVideoType == 'normal' &&
-							item.status == 'woman requested meeting'
-						"
+						v-if="selectedVideoType == 'normal' && status.isRequest"
 						:loading="loading"
 						:disabled="suggestionArray.length < 3"
 						color="success"
@@ -324,7 +294,7 @@
 						>Termine vorschlagen
 					</v-btn>
 					<v-dialog
-						v-if="item.status != 'deleted' && !oldlist"
+						v-if="!status.isArchived && !oldlist"
 						v-model="isDelete"
 						persistent
 						max-width="290"
@@ -340,7 +310,7 @@
 								light
 								class="mr-1"
 								:loading="eraseLoading"
-								@click="cancel(item)"
+								@click="cancel()"
 								>Ja, absagen
 							</v-btn>
 							<v-btn light @click="isDelete = false"> nein</v-btn>
@@ -355,7 +325,7 @@
 <script>
 	export default {
 		props: {
-			item: {
+			meeting: {
 				type: Object,
 				default: {},
 			},
@@ -396,42 +366,72 @@
 			};
 		},
 		computed: {
-			videoStatus() {
-				let b = true;
-				let r = false;
-				let d = false;
-
-				console.log('videoStatus', this.item.selected_time_index);
-
-				if (this.item.selected_time_index != -1) {
-					const startTime = new Date(
-						this.item.time_proposals_parsed[this.item.selected_time_index]
-					);
-					const preTime = new Date();
-					const overTime = new Date();
-					const now = new Date();
-
-					preTime.setTime(startTime.getTime() - 15 * 60 * 1000);
-					overTime.setTime(startTime.getTime() + 60 * 60 * 1000);
-
-					b = now < preTime;
-					r = overTime >= now && now >= preTime;
-					d = overTime < now;
-				}
-
-				return {
-					before: b,
-					ready: r,
-					done: d,
-				};
+			status() {
+				return this.setStatus();
 			},
 		},
-		/*async mounted() {
-			this.payment = this.payment = await this.$getStripePaymentSession(
-				this.item.paymentID
-			);
-		},*/
+		mounted() {
+			console.log(this.meeting);
+		},
 		methods: {
+			setStatus() {
+				var isRequest = false;
+				var hasTimeslots = false;
+				var hasCreditCard = false;
+				var isAccessable = false;
+				var isPayed = false;
+				var isPassed = false;
+				var isArchived = false;
+				var borderColor = this.$vuetify.theme.themes.light.primary;
+
+				//** Matching Process */
+				switch (this.meeting.status) {
+					case 'woman requested meeting':
+						isRequest = true;
+						break;
+					case 'coach proposed timeslots':
+						hasTimeslots = true;
+						break;
+					case 'woman payment method is valid':
+						hasCreditCard = true;
+						break;
+					case 'woman fee was captchured':
+						isPayed = true;
+						break;
+					case 'archived':
+						isArchived = true;
+						break;
+				}
+
+				if (this.meeting.selected_meeting != 'not selected yet') {
+					const meetingTime = new Date(this.meeting.selected_meeting);
+					const meetingTimeEnd = new Date(
+						this.meeting.selected_meeting_expired
+					);
+					const entryTime = new Date(meetingTime.getTime() - 15 * 60 * 1000);
+					const currentTime = new Date();
+					if (currentTime >= entryTime && currentTime < meetingTimeEnd) {
+						isAccessable = true;
+					} else if (currentTime > meetingTimeEnd) {
+						isPassed = true;
+					}
+				}
+
+				if (isAccessable)
+					borderColor = this.$vuetify.theme.themes.light.success;
+				if (isArchived || isPassed) borderColor = 'grey';
+
+				return {
+					isRequest,
+					hasTimeslots,
+					hasCreditCard,
+					isAccessable,
+					isPayed,
+					isPassed,
+					isArchived,
+					borderColor,
+				};
+			},
 			addToSuggestionList(d) {
 				this.suggestionArray.push(new Date(d).toString());
 			},
@@ -443,47 +443,42 @@
 					meeting_id: this.id,
 				};
 				this.$func.coachGivesProposals(data).then(() => {
-					this.item.status = 'coach proposed timeslots';
-					this.item.time_proposals_parsed = this.suggestionArray;
-					this.item.video_type = this.selectedVideoType;
+					this.meeting.status = 'coach proposed timeslots';
+					this.meeting.time_proposals_parsed = this.suggestionArray;
+					this.meeting.video_type = this.selectedVideoType;
 					this.loading = false;
 					this.suggestionArray = [];
 					this.selectedVideoType = 'normal';
 				});
 			},
-			cancel(doc) {
-				//this.$deleteMeeting(informTo, this.id, doc.acceptedDate)
-				this.$deleteMeeting(
-					this.$store.getters['getCurrentUser'].email,
-					this.id,
-					doc.acceptedDate,
-					doc.paymentID
-				).then((r) => {
-					this.isDelete = false;
-					this.eraseLoading = false;
-					location.reload();
-					//this.requests = this.requests.filter((request) => request.id !== r.data.data.id);
-				});
+			cancel() {
+				this.eraseLoading = true;
+				this.$func
+					.archiveMeeting(this.id)
+					.then(() => {
+						this.isDelete = false;
+						this.eraseLoading = false;
+						this.error = null;
+						this.meeting.status = 'archived';
+						//location.reload();
+						//this.$emit('cancel');
+					})
+					.catch((err) => {
+						this.isDelete = false;
+						this.eraseLoading = false;
+						this.error = err;
+						this.$errorhandling(err, 'ContactStatus $archiveMeeting');
+					});
 			},
 			eraseDate(d, list) {
 				const d2 = d + 1;
 				list.splice(d, d2);
 			},
 			formatDate(date) {
-				const d = new Date(date);
-				return d.toLocaleDateString('de-DE', {
-					weekday: 'long',
-					year: 'numeric',
-					month: 'long',
-					day: 'numeric',
-				});
+				return this.$format.date(date);
 			},
 			formatTime(date) {
-				const d = new Date(date);
-				return d.toLocaleTimeString('de-DE', {
-					hour: 'numeric',
-					minute: 'numeric',
-				});
+				return this.$format.time(date);
 			},
 			getCodeQuery(d) {
 				const n = d.replace('//', '').split('/');

@@ -6,12 +6,9 @@
 		persistent
 		width="290px"
 	>
+		{{ item }}
 		<template #activator="{ on, attrs }">
-			<v-btn
-				v-bind="attrs"
-				:color="item.time_proposals_parsed.length < 3 ? 'success' : null"
-				prepend-icon="mdi-calendar"
-				v-on="on"
+			<v-btn v-bind="attrs" prepend-icon="mdi-calendar" v-on="on"
 				>Datum/Uhrzeit auswählen</v-btn
 			>
 		</template>

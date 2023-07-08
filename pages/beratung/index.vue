@@ -39,7 +39,7 @@
 						>vergangene Termine {{ showOld ? 'verbergen' : 'anzeigen' }}</v-btn
 					>
 				</div>
-				<CoachingRequestList :list="completedMeetings" :showold="showOld" />
+				<CoachingRequestList v-if="showOld" :list="completedMeetings" oldlist />
 			</div>
 		</div>
 		<div v-else><v-skeleton-loader type="article"></v-skeleton-loader></div>
@@ -52,35 +52,41 @@
 		data() {
 			return {
 				showOld: false,
-				//stripeEnabled: null,
-				requests: null,
 				completedMeetings: [],
 				upcomingMeetings: [],
+				fetchDataIntervalId: null,
 			};
 		},
 		async mounted() {
-			//this.stripeEnabled = await this.$func.getStripeAccData(); //.data.payouts_enabled;
-			//this.loadMeetings();
 			this.loadMeetings();
+
+			this.fetchDataIntervalId = setInterval(() => {
+				this.loadMeetings();
+			}, 5 * 60 * 1000);
+		},
+		beforeDestroy() {
+			// Clear the interval when the component is destroyed to prevent memory leaks
+			clearInterval(this.fetchDataIntervalId);
 		},
 		computed: {
 			user() {
 				return this.$store.getters['getCurrentUser'];
 			},
-			async test() {
-				await this.$func.loadAllMeetingsOfParticipant();
-			},
 		},
 		methods: {
 			async loadMeetings() {
+				this.completedMeetings = [];
+				this.upcomingMeetings = [];
 				var meetings = await this.$func.loadAllMeetingsOfParticipant();
-				meetings.forEach((meeting) => {
+				meetings.forEach((meeting, i) => {
+					const meetingStatus = meeting.attributes.status;
 					if (
-						meeting.status == 'meeting canceled' ||
-						meeting.status == 'meeting completed'
+						meetingStatus == 'meeting canceled' ||
+						meetingStatus == 'meeting completed' ||
+						meetingStatus == 'archived'
 					)
-						this.completedMeetings.push(meeting);
-					else this.upcomingMeetings.push(meeting);
+						this.completedMeetings.push({ ...meeting, position: i });
+					else this.upcomingMeetings.push({ ...meeting, position: i });
 				});
 			},
 		},

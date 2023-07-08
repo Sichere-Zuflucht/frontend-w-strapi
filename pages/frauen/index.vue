@@ -3,8 +3,8 @@
 		<v-sheet color="secondary pa-8">
 			<h1 class="text-h1 white--text">Willkommen bei<br />Sichere Zuflucht</h1>
 		</v-sheet>
-		<div v-if="upcomingMeetings">
-			<v-container v-if="upcomingMeetings.length > 0">
+		<div v-if="upcomingMeetings.length != 0 || completedMeetings.length != 0">
+			<v-container v-if="upcomingMeetings.length == 1">
 				<h2 class="text-h4 font-weight-bold primary--text mb-3">
 					Deine Korrespondenz
 				</h2>
@@ -24,11 +24,16 @@
 							:meeting="meeting.attributes"
 							:id="meeting.id"
 							:clickable="false"
+							:position="meeting.position"
 							@cancel="cancel(meeting)"
 						/>
 					</v-slide-item>
 				</v-slide-group>
-				<div v-if="completedMeetings.length > 0" class="d-flex align-center">
+
+				<div
+					v-if="completedMeetings.length > 0"
+					class="d-flex align-center mb-2"
+				>
 					<v-btn text class="mx-auto" @click="showOld = !showOld"
 						>Alte Anfragen {{ !showOld ? 'anzeigen' : 'verbergen' }}</v-btn
 					>
@@ -41,12 +46,11 @@
 				>
 					<v-slide-item v-for="(meeting, i) in completedMeetings" :key="i">
 						<CoachingContactStatus
-							:coach="meeting.coach"
-							:response="meeting.attributes"
+							:coach="meeting.relationships.coach.data"
+							:meeting="meeting.attributes"
 							:id="meeting.id"
 							:clickable="false"
 							oldlist
-							@cancel="cancel(meeting)"
 						/>
 					</v-slide-item>
 				</v-slide-group>
@@ -57,7 +61,7 @@
 				link="/berater"
 			/>
 		</div>
-		<v-container v-else-if="upcomingMeetings == null">
+		<v-container v-if="loading">
 			<v-sheet elevation="2" class="pa-2">
 				<v-skeleton-loader
 					class="mx-auto"
@@ -88,40 +92,57 @@
 		middleware: 'authWoman',
 		data() {
 			return {
+				showOld: false,
+				newWoman: false,
 				completedMeetings: [],
 				upcomingMeetings: [],
+				loading: true,
+				fetchDataIntervalId: null,
 			};
 		},
 		async mounted() {
 			this.loadMeetings();
 
-			//this.newWoman = window.localStorage.getItem('newWoman');
-			//window.localStorage.removeItem('newWoman');
+			this.newWoman = window.localStorage.getItem('newWoman');
+			window.localStorage.removeItem('newWoman');
+
+			this.fetchDataIntervalId = setInterval(() => {
+				this.loadMeetings();
+			}, 5 * 60 * 1000);
+			console.log('loaded');
+		},
+		beforeDestroy() {
+			// Clear the interval when the component is destroyed to prevent memory leaks
+			clearInterval(this.fetchDataIntervalId);
 		},
 		methods: {
 			async loadMeetings() {
-				var meetings = await this.$func.loadAllMeetingsOfParticipant();
+				this.completedMeetings = [];
 				this.upcomingMeetings = [];
-
-				const up = [];
-				const compl = [];
-				meetings.forEach((meeting) => {
+				var meetings = await this.$func.loadAllMeetingsOfParticipant();
+				meetings.forEach((meeting, i) => {
+					const meetingStatus = meeting.attributes.status;
 					if (
-						meeting.status == 'meeting canceled' ||
-						meeting.status == 'meeting completed'
+						meetingStatus == 'meeting canceled' ||
+						meetingStatus == 'meeting completed' ||
+						meetingStatus == 'archived'
 					)
-						compl.push(meeting);
-					else up.push(meeting);
+						this.completedMeetings.push({ ...meeting, position: i });
+					else this.upcomingMeetings.push({ ...meeting, position: i });
 				});
-				this.upcomingMeetings = up;
-				this.completedMeetings = compl;
-				console.log('up', up);
+				this.loading = false;
+			},
+			cancel({ position }) {
+				console.log('position 2', this.upcomingMeetings[position]);
+				const getEl = this.upcomingMeetings.splice(position, 1)[0];
+				this.completedMeetings.push(getEl);
+				console.log(this.completedMeetings);
+				//console.log(this.completedMeetings.inArray(position));
+				//this.responses = this.responses.filter((r) => r !== response);
 			},
 		},
 		/*methods: {
-			cancel(response) {
-				this.responses = this.responses.filter((r) => r !== response);
-			},
+			
 			async loadMeetings() {
 				var meetings = await this.$func.loadAllMeetingsOfParticipant();
 				console.log('meetings', meetings);
