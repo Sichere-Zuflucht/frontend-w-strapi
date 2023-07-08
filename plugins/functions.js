@@ -340,6 +340,31 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 				return err;
 			}
 		},
+		/** MAGAZINE */
+		loadAllArticles: async () => {
+			try {
+				return await $axios.$get('articles');
+			} catch (err) {
+				errorhandling(err);
+				return null;
+			}
+		},
+		loadSingleArticle: async (article_id) => {
+			try {
+				return await $axios.$get(`articles/${article_id}`);
+			} catch (err) {
+				errorhandling(err);
+				return null;
+			}
+		},
+		loadRelatedArticles: async (article_id) => {
+			try {
+				return await $axios.$get(`articles/${article_id}/related`);
+			} catch (err) {
+				errorhandling(err);
+				return null;
+			}
+		},
 	});
 
 	/**
