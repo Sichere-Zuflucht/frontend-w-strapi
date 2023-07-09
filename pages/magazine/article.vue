@@ -1,17 +1,19 @@
 <template>
 	<div v-if="article">
-		<UtilsBanner :url="article.attributes.cover.data.attributes.url" />
+		<UtilsBanner :url="article.cover.url" />
 		<v-container style="margin-top: -45px">
 			<v-avatar color="white"
-				><v-icon>{{
-					article.attributes.tags.data[0].attributes.icon
-				}}</v-icon></v-avatar
+				><v-icon v-if="article.category == 'sehen'">mdi-youtube</v-icon>
+				<v-icon v-if="article.category == 'hören'">mdi-podcast</v-icon>
+				<v-icon v-if="article.category == 'lesen'"
+					>mdi-book-open</v-icon
+				></v-avatar
 			>
-			<h1 class="text-h1 primary--text pt-2">{{ article.attributes.title }}</h1>
-			<p class="font-weight-bold pb-6">{{ article.attributes.subtitle }}</p>
-			<p class="caption">von {{ article.attributes.author }}</p>
+			<h1 class="text-h1 primary--text pt-2">{{ article.title }}</h1>
+			<p class="font-weight-bold pb-6">{{ article.subtitle }}</p>
+			<p class="caption">von {{ article.author }}</p>
 			<div>
-				<iframe
+				<!----<iframe
 					v-if="article.attributes.spotifylink"
 					:src="
 						'https://open.spotify.com/embed/' +
@@ -44,7 +46,7 @@
 					frameborder="0"
 					allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
 					allowfullscreen
-				></iframe>
+				></iframe>-->
 				<!--<a
         v-if="article.attributes.youtubelink"
         class="caption"
@@ -54,7 +56,7 @@
         {{ article.attributes.youtubelink.slice(0, 50)
         }}{{ article.attributes.youtubelink.length > 50 ? "..." : "" }}
       </a>-->
-				<iframe
+				<!----<iframe
 					v-if="article.attributes.soundcloudlink"
 					:src="
 						'https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/' +
@@ -67,19 +69,19 @@
 					scrolling="no"
 					frameborder="no"
 					allow="autoplay"
-				></iframe>
+				></iframe>-->
 			</div>
 			<div
 				class="singleArticleText mt-8"
 				:style="cssVars"
-				v-html="$md.render(article.attributes.text)"
+				v-html="article.content"
 			></div>
 		</v-container>
 		<v-divider />
 		<v-container>
 			<h2 class="text-h2 secondary--text mb-4 mt-12">Neueste Einträge</h2>
 			<v-row v-if="relatedArticles" class="pt-8" style="z-index: 1">
-				<v-col
+				<!----<v-col
 					v-for="relatedArticle in relatedArticles"
 					:key="relatedArticle.attributes.id"
 					cols="12"
@@ -88,7 +90,8 @@
 					class="pb-4"
 				>
 					<MagazineTeaserBox :magazine-data="relatedArticle" /> </v-col
-			></v-row>
+			>--></v-row
+			>
 		</v-container>
 	</div>
 </template>

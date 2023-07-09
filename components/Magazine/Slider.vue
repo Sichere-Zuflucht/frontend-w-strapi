@@ -3,8 +3,6 @@
 		<v-slide-item v-for="(magazine, n) in list" :key="n" class="my-4">
 			<MagazineTeaserBox
 				:magazine-data="magazine"
-				:append-url="append"
-				:change-url="change"
 				:class="
 					(n == 0 ? 'ml-8 mr-2' : n == list.length - 1 ? 'ml-2 mr-8' : 'mx-2') +
 					' my-2'
@@ -26,8 +24,6 @@
 				type: Array,
 				default: null,
 			},
-			append: { type: Boolean, default: false },
-			change: { type: Boolean, default: false },
 		},
 	};
 </script>

@@ -343,15 +343,19 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 		/** MAGAZINE */
 		loadAllArticles: async () => {
 			try {
-				return await $axios.$get('articles');
+				return (
+					await $axios.$get('https://prod-zuflucht.work12.de/api/v1/articles')
+				).data;
 			} catch (err) {
 				errorhandling(err);
 				return null;
 			}
 		},
-		loadSingleArticle: async (article_id) => {
+		loadSingleArticle: async (article_slug) => {
 			try {
-				return await $axios.$get(`articles/${article_id}`);
+				return await $axios.$get(
+					`https://sizu-content.work12.de/${article_slug}`
+				); //article/ich-dachte-er-bringt-mich-um
 			} catch (err) {
 				errorhandling(err);
 				return null;

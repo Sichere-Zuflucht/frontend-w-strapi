@@ -38,9 +38,9 @@
 			<v-alert v-if="error">{{ error }}</v-alert>
 			<v-row v-else-if="!error && allArticles" class="pt-8" style="z-index: 1">
 				<v-col
-					v-for="article in allArticles.filter((m) =>
+					v-for="article in allArticles.filter((singleArticle) =>
 						tagsSelected != null
-							? tagsSelected == m.attributes.tags.data[0].attributes.name
+							? tagsSelected == singleArticle.attributes.category
 								? true
 								: false
 							: true
@@ -51,7 +51,7 @@
 					md="4"
 					class="pb-4"
 				>
-					<MagazineTeaserBox :article="article" :append-url="true" />
+					<MagazineTeaserBox :article="article.attributes" />
 				</v-col>
 			</v-row>
 		</div>

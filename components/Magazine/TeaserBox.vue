@@ -1,43 +1,34 @@
 <template>
 	<v-card v-if="article" width="300" height="93%" class="d-flex flex-column">
 		<v-img
-			v-if="this.article.attributes.cover.data && functionalCookieAccepted"
+			v-if="article.cover_url"
 			height="200"
-			:lazy-src="
-				imgUrl +
-				this.article.attributes.cover.data.attributes.formats.thumbnail.url
-			"
-			:src="imgUrl + this.article.attributes.cover.data.attributes.url"
+			:lazy-src="article.cover_url"
+			:src="article.cover_url"
 			class="flex-grow-0 flex-shrink-1"
 		/>
-		<UtilsBanner
-			v-else-if="!functionalCookieAccepted"
-			icon="mdi-cookie-alert"
-		/>
-		<v-card-actions v-if="article.attributes.tags.data != 0">
+		<v-card-actions v-if="article.category">
 			<v-avatar style="margin-top: -30px" color="white"
-				><v-icon>{{
-					article.attributes.tags.data[0].attributes.icon
-				}}</v-icon></v-avatar
+				><v-icon v-if="article.category == 'sehen'">mdi-youtube</v-icon>
+				<v-icon v-if="article.category == 'hören'">mdi-podcast</v-icon>
+				<v-icon v-if="article.category == 'lesen'"
+					>mdi-book-open</v-icon
+				></v-avatar
 			></v-card-actions
 		>
 		<v-card-text class="flex-column align-start pt-0 flex-grow-1 flex-shrink-0">
 			<h2 class="text-h2 secondary--text pt-0">
-				{{ article.attributes.title }}
+				{{ article.title }}
 			</h2>
 			<p class="font-weight-bold">
-				{{ article.attributes.subtitle }}
+				{{ article.subtitle }}
 			</p>
 			<p class="caption mb-2" style="line-height: 1em">
-				von {{ article.attributes.author }}
+				von {{ article.author }}
 			</p></v-card-text
 		>
 		<v-card-actions class="pt-4"
-			><v-btn
-				:to="(changeUrl ? '/magazine/' : '') + article.attributes.slug"
-				:append="appendUrl"
-				outlined
-				color="primary"
+			><v-btn :to="`/magazine/${article.url_label}`" outlined color="primary"
 				>zum Eintrag</v-btn
 			></v-card-actions
 		>
