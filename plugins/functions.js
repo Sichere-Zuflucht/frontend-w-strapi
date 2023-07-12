@@ -354,7 +354,18 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 		loadSingleArticle: async (article_slug) => {
 			try {
 				return await $axios.$get(
-					`https://sizu-content.work12.de/${article_slug}`
+					`https://sizu-content.work12.de/article/ich-dachte-er-bringt-mich-um`,
+					(config = {
+						headers: {
+							Accept: 'application/json, text/plain, */*',
+							'Access-Control-Allow-Origin': '*',
+							'Access-Control-Allow-Credentials': true,
+							'Access-Control-Allow-Methods':
+								'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+							responseType: 'json',
+							crossorigin: true,
+						},
+					}) //${article_slug}
 				); //article/ich-dachte-er-bringt-mich-um
 			} catch (err) {
 				errorhandling(err);

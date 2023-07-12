@@ -28,7 +28,10 @@
 			</p></v-card-text
 		>
 		<v-card-actions class="pt-4"
-			><v-btn :to="`/magazine/${article.url_label}`" outlined color="primary"
+			><v-btn
+				:to="`/magazine/article?title=${article.url_label}`"
+				outlined
+				color="primary"
 				>zum Eintrag</v-btn
 			></v-card-actions
 		>

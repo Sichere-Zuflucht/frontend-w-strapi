@@ -80,8 +80,8 @@
 		<v-divider />
 		<v-container>
 			<h2 class="text-h2 secondary--text mb-4 mt-12">Neueste Einträge</h2>
-			<v-row v-if="relatedArticles" class="pt-8" style="z-index: 1">
-				<!----<v-col
+			<!----<v-row v-if="relatedArticles" class="pt-8" style="z-index: 1">
+				<v-col
 					v-for="relatedArticle in relatedArticles"
 					:key="relatedArticle.attributes.id"
 					cols="12"
@@ -90,8 +90,8 @@
 					class="pb-4"
 				>
 					<MagazineTeaserBox :magazine-data="relatedArticle" /> </v-col
-			>--></v-row
-			>
+			></v-row
+			>-->
 		</v-container>
 	</div>
 </template>
@@ -105,11 +105,11 @@
 		},
 		async asyncData({ query, $func }) {
 			const article = await $func.loadSingleArticle(query.title);
-			const relatedArticles = await $func.loadAllArticles();
+			//const relatedArticles = await $func.loadAllArticles();
 
 			return {
 				article,
-				relatedArticles,
+				//relatedArticles,
 			};
 		},
 		computed: {
