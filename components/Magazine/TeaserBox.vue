@@ -32,12 +32,12 @@
 				v-if="!useRedirect"
 				outlined
 				color="primary"
-				:to="`article?title=${article.url_label}`"
+				:to="`/magazine/article?title=${article.url_label}`"
 				>zum Eintrag</v-btn
 			><a
 				v-else
 				class="v-btn v-btn--outlined theme--light v-size--default primary--text"
-				:href="`magazine/article?title=${article.url_label}`"
+				:href="`/magazine/article?title=${article.url_label}`"
 				>zum Eintrag</a
 			></v-card-actions
 		>
