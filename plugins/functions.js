@@ -354,19 +354,8 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 		loadSingleArticle: async (article_slug) => {
 			try {
 				return await $axios.$get(
-					`https://sizu-content.work12.de/article/ich-dachte-er-bringt-mich-um`,
-					(config = {
-						headers: {
-							Accept: 'application/json, text/plain, */*',
-							'Access-Control-Allow-Origin': '*',
-							'Access-Control-Allow-Credentials': true,
-							'Access-Control-Allow-Methods':
-								'GET,PUT,POST,DELETE,PATCH,OPTIONS',
-							responseType: 'json',
-							crossorigin: true,
-						},
-					}) //${article_slug}
-				); //article/ich-dachte-er-bringt-mich-um
+					`https://sizu-content.work12.de/article/${article_slug}`
+				);
 			} catch (err) {
 				errorhandling(err);
 				return null;
@@ -374,7 +363,32 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 		},
 		loadRelatedArticles: async (article_id) => {
 			try {
-				return await $axios.$get(`articles/${article_id}/related`);
+				const allArticles = (
+					await $axios.$get('https://prod-zuflucht.work12.de/api/v1/articles')
+				).data;
+
+				const max = allArticles.length;
+				var numbers = [];
+				const relatedArticles = [];
+
+				while (numbers.length < 3) {
+					var randomNumber = Math.floor(Math.random() * max);
+					console.log(
+						'randomNumber',
+						allArticles[randomNumber].id,
+						article_id,
+						randomNumber
+					);
+					if (
+						!numbers.includes(randomNumber) &&
+						allArticles[randomNumber].id !== article_id
+					) {
+						numbers.push(randomNumber);
+						relatedArticles.push(allArticles[randomNumber]);
+					}
+				}
+
+				return relatedArticles;
 			} catch (err) {
 				errorhandling(err);
 				return null;

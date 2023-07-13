@@ -80,18 +80,21 @@
 		<v-divider />
 		<v-container>
 			<h2 class="text-h2 secondary--text mb-4 mt-12">Neueste Einträge</h2>
-			<!----<v-row v-if="relatedArticles" class="pt-8" style="z-index: 1">
+			<v-row v-if="relatedArticles" class="pt-8" style="z-index: 1">
 				<v-col
-					v-for="relatedArticle in relatedArticles"
-					:key="relatedArticle.attributes.id"
+					v-for="(relatedArticle, index) in relatedArticles"
+					:key="index"
 					cols="12"
 					sm="6"
 					md="4"
 					class="pb-4"
 				>
-					<MagazineTeaserBox :magazine-data="relatedArticle" /> </v-col
-			></v-row
-			>-->
+					<MagazineTeaserBox
+						:article="relatedArticle.attributes"
+						:use-redirect="true"
+						@redirect="redirect"
+					/> </v-col
+			></v-row>
 		</v-container>
 	</div>
 </template>
@@ -105,11 +108,13 @@
 		},
 		async asyncData({ query, $func }) {
 			const article = await $func.loadSingleArticle(query.title);
-			//const relatedArticles = await $func.loadAllArticles();
+			const relatedArticles = await $func.loadRelatedArticles(article.id);
+			console.log(article);
+			console.log(relatedArticles);
 
 			return {
 				article,
-				//relatedArticles,
+				relatedArticles,
 			};
 		},
 		computed: {
@@ -118,6 +123,12 @@
 					'--primary': this.$vuetify.theme.themes.light.primary,
 					'--secondary': this.$vuetify.theme.themes.light.secondary,
 				};
+			},
+		},
+		methods: {
+			redirect(url) {
+				console.log('a', url);
+				location.href = `/magazine/article?title=${url}`;
 			},
 		},
 	};
@@ -161,5 +172,8 @@
 
 	.singleArticleText p {
 		line-height: 2em;
+	}
+	.singleArticleText img {
+		width: 100%;
 	}
 </style>

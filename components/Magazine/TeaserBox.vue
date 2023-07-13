@@ -29,10 +29,16 @@
 		>
 		<v-card-actions class="pt-4"
 			><v-btn
-				:to="`/magazine/article?title=${article.url_label}`"
+				v-if="!useRedirect"
 				outlined
 				color="primary"
+				:to="`article?title=${article.url_label}`"
 				>zum Eintrag</v-btn
+			><a
+				v-else
+				class="v-btn v-btn--outlined theme--light v-size--default primary--text"
+				:href="`magazine/article?title=${article.url_label}`"
+				>zum Eintrag</a
 			></v-card-actions
 		>
 	</v-card>
@@ -49,7 +55,7 @@
 				type: Boolean,
 				default: false,
 			},
-			changeUrl: {
+			useRedirect: {
 				type: Boolean,
 				default: false,
 			},
@@ -64,6 +70,12 @@
 				)
 					? ''
 					: 'http://localhost:1337';
+			},
+		},
+		methods: {
+			redirect() {
+				console.log('t', this.article.url_label);
+				this.$emit('redirect', this.article.url_label);
 			},
 		},
 	};
