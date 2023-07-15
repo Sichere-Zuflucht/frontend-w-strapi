@@ -235,10 +235,10 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 		},
 		archiveMe: async () => {
 			try {
-				await $axios.$post('users/me/delete', config);
-				//localStorage.removeItem('ruby_jwt');
-				//store.dispatch('changeData', null);
-				//location.href = 'registration/signin';
+				const data = {};
+				await $axios.$post('users/me/delete', data, config);
+				localStorage.removeItem('ruby_jwt');
+				store.dispatch('changeData', null);
 			} catch (err) {
 				console.log('err', errorhandling(err));
 				throw err;
@@ -270,7 +270,16 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 				);
 				return register;
 			} catch (err) {
-				throw err;
+				err.location = 'register';
+				console.log('err', errorhandling(err));
+
+				var msg = '';
+				if (err.response.data.errors)
+					msg = err.response.data.errors[0].includes('Invalid email')
+						? 'Ungültige E-Mail-Adresse oder ungültiges Passwort'
+						: err.response.data.errors[0];
+				else msg = err.response.data.message;
+				throw msg;
 			}
 		},
 		login: async ({ email, password }) => {
@@ -295,10 +304,15 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 				window.localStorage.removeItem('redirectBackTo');
 				location.href = route;
 			} catch (err) {
+				err.location = 'login';
 				console.log('err', errorhandling(err));
-				const msg = err.response.data.errors[0].includes('Invalid email')
-					? 'Ungültige E-Mail-Adresse oder ungültiges Passwort'
-					: err.response.data.errors[0];
+
+				var msg = '';
+				if (err.response.data.errors)
+					msg = err.response.data.errors[0].includes('Invalid email')
+						? 'Ungültige E-Mail-Adresse oder ungültiges Passwort'
+						: err.response.data.errors[0];
+				else msg = err.response.data.message;
 				throw msg;
 			}
 		},

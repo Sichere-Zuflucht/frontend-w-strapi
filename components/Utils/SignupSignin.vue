@@ -244,8 +244,8 @@
 						rule: (v) => /^(?=.*?[0-9]).{1,}$/.test(v),
 					},
 					{
-						title: 'Sonderzeichen (#?!@$ %^&*-)',
-						rule: (v) => /^(?=.*?[#?!@$ %^&*-]).{1,}$/.test(v),
+						title: 'Sonderzeichen (#?!@$%{}_^&*-)',
+						rule: (v) => /^(?=.*?[#?!@$%{}_^&*-]).{1,}$/.test(v),
 					},
 					{
 						title: 'mind. 8 Zeichen',

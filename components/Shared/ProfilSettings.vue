@@ -142,7 +142,9 @@
 			},
 			async deleteUser() {
 				this.deleteLoading = true;
-				this.$func.archiveMe();
+				this.$func.archiveMe().then(() => {
+					location.href = '/';
+				});
 			},
 			async deleteMeeting(doc) {
 				this.$deleteMeeting(
