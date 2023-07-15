@@ -157,8 +157,9 @@
 				});
 			},
 			stripeLogin() {
-				this.$func.loginStripeAccLink().then((body) => {
-					window.open(body.data.url, '_blank');
+				this.$func.loginStripeAccLink().then((url) => {
+					this.loading = true;
+					window.open(url, '_blank');
 				});
 			},
 		},

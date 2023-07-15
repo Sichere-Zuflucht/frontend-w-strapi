@@ -195,9 +195,11 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 		},
 		loginStripeAccLink: async () => {
 			try {
-				const loginUrl = await $axios.$get('stripe-account/login', config);
-				location.href = createAccUrl.data.url;
-				return loginUrl.data.url;
+				const loginData = await $axios.$get(
+					'users/coach_login_stripe_account',
+					config
+				);
+				return loginData.url;
 			} catch (err) {
 				errorhandling(err);
 			}
@@ -233,7 +235,7 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 		},
 		archiveMe: async () => {
 			try {
-				await $axios.$post('users/delete', config);
+				await $axios.$post('users/me/delete', config);
 				//localStorage.removeItem('ruby_jwt');
 				//store.dispatch('changeData', null);
 				//location.href = 'registration/signin';
