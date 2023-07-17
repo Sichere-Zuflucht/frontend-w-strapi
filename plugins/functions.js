@@ -288,7 +288,9 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 
 			try {
 				const data = await $axios.$post(
-					`authentication?email=${email}&password=${password}`
+					`authentication?email=${encodeURIComponent(
+						email
+					)}&password=${password}`
 				);
 				store.dispatch('changeData', data.user.attributes);
 
