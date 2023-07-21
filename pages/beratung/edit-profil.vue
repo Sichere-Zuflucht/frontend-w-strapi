@@ -54,7 +54,7 @@
 								text
 								:to="
 									user.stripe_account_success
-										? '/berater/me?name=' + user.username
+										? '/berater/me?name=' + user.slug
 										: null
 								"
 								color="grey"

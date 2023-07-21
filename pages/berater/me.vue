@@ -178,7 +178,7 @@
 				><v-container> <WomanPriceInfo /> </v-container
 			></v-sheet>
 			<v-container>
-				<SharedFaq /><!-- filter="???price" price onlinecoaching />-->
+				<SharedFaq coaches price coaching />
 			</v-container>
 			<v-divider class="mt-16 mb-6" />
 			<v-container>

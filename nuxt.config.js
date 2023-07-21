@@ -66,6 +66,7 @@ export default {
 		'@nuxtjs/axios',
 		'@nuxtjs/strapi',
 		'@nuxtjs/markdownit',
+		'@nuxt/content',
 		'nuxt-stripe-module',
 		'@dansmaculotte/nuxt-security',
 	],
