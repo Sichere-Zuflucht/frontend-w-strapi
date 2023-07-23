@@ -1,7 +1,7 @@
 <template>
 	<div class="inner-steps">
 		<v-expand-transition class="px-0">
-			<v-stepper v-model="step" :vertical="false" class="mx-auto" elevation="0">
+			<v-stepper v-model="step" vertical="false" class="mx-auto" elevation="0">
 				<v-stepper-step
 					:complete="step > 1"
 					:editable="step > 1"
@@ -16,7 +16,7 @@
 					<small>{{ coach.helpSubtitle }}</small>
 				</v-stepper-step>
 				<v-stepper-content step="1">
-					<v-form @submit.prevent="step++">
+					<v-form v-model="selectedTopic" @submit.prevent="step++">
 						<v-chip-group v-model="selectedTopic" column>
 							<v-chip
 								v-for="(t, i) in topics"
@@ -54,7 +54,7 @@
 					<small>{{ coach.bioSubtitle }}</small>
 				</v-stepper-step>
 				<v-stepper-content step="2">
-					<v-form v-model="valid.additional" @submit.prevent="saveSteps">
+					<v-form v-model="valid.additional" @submit.prevent="step++">
 						<v-text-field
 							v-model="changeProfession"
 							outlined
@@ -118,7 +118,50 @@
 					<small>{{ coach.picSubtitle }}</small>
 				</v-stepper-step>
 				<v-stepper-content step="3">
-					<UtilsFileUpload :file="initialAvatar" @done="next" />
+					<v-form @submit.prevent="finish">
+						<div class="mb-4 d-flex flex-column align-center">
+							<UtilsFileUpload :file="avatar" />
+						</div>
+						<!----
+						## crop image
+						<v-overlay
+						v-if="cropImage"
+						:absolute="true"
+						:value="overlay"
+						color="white"
+					>
+						<v-card width="300" light>
+							<vue-cropper
+								ref="cropper"
+								:aspect-ratio="1 / 1"
+								alt="Source Image"
+								:src="avatar.url"
+								:zoomable="false"
+							></vue-cropper>
+							<div class="d-flex align-center">
+								<v-btn
+									color="grey"
+									small
+									icon
+									class="my-2 mx-1"
+									@click="overlay = !overlay"
+									><v-icon small>mdi-close</v-icon></v-btn
+								>
+								<v-btn
+									color="success"
+									small
+									class="my-2 mx-1 ml-auto"
+									@click="croppingImage"
+									><v-icon small class="mr-1">mdi-crop</v-icon
+									>Zuschneiden</v-btn
+								>
+							</div>
+						</v-card>
+					</v-overlay>-->
+						<v-btn color="primary" block type="submit">
+							<v-icon class="pr-1">mdi-content-save</v-icon> Profil speichern
+						</v-btn>
+					</v-form>
 				</v-stepper-content>
 			</v-stepper>
 		</v-expand-transition>
@@ -144,13 +187,13 @@
 				valid: {
 					additional: false,
 				},
-				avatar: '',
+				avatar: [],
 				selectedTopic: null,
 				changeProfession: null,
 				changeCitation: null,
 				changePersonalBackground: null,
 				changeProfessionalBackground: null,
-				step: 3,
+				step: 1,
 				cropImage: false,
 				cropData: null,
 				isLoading: false,
@@ -164,16 +207,11 @@
 				},
 			};
 		},
-		computed: {
-			initialAvatar() {
-				const user = this.$store.getters['getCurrentUser'];
-				return user.avatar_content_url.length > 0
-					? (this.avatar = user.avatar_content_url)
-					: null;
-			},
-		},
 		mounted() {
 			const user = this.$store.getters['getCurrentUser'];
+			console.log('a length', user.avatar_content_url.length);
+			if (user.avatar_content_url.length > 0)
+				this.avatar = user.avatar_content_url;
 			this.selectedTopic = user.topic_areas;
 			this.changeProfession = user.profession_line;
 			this.changePersonalBackground = user.personal_background;
@@ -182,10 +220,33 @@
 		},
 		//fetchOnServer: false,
 		methods: {
+			async uploadDone(error, file) {
+				this.$func.updateAvatar(file);
+				this.avatar = file;
+				//const b64 = await file.getFileEncodeBase64String;
+				//console.log('b64', b64);
+				//const { data } = await file.getFileEncodeDataURL();
+				//console.log('url', data);
+				//const user = this.$store.getters['getCurrentUser'];
+				//this.$func.me();
+				//this.cropImage = true;
+				//this.$func.updateAvatar(file);
+			},
 			removeImage() {
 				this.avatar = [];
 			},
-			saveSteps() {
+			/*croppingImage() {
+				this.removeImage();
+				this.cropData = JSON.stringify(
+					this.$refs.cropper.getCropBoxData(),
+					null,
+					4
+				);
+				this.$refs.cropper.getCroppedCanvas(this.cropData).toBlob((blob) => {
+					this.upload(blob, true);
+				});
+			},*/
+			finish() {
 				const data = {
 					...this.$store.getters['getCurrentUser'],
 					topic_areas: this.selectedTopic,
@@ -197,10 +258,6 @@
 				};
 				this.$store.dispatch('changeData', data);
 				this.$emit('selection', data);
-				this.steps++;
-			},
-			next() {
-				this.$emit('next');
 			},
 		},
 	};

@@ -50,7 +50,7 @@ export default {
 	},
 
 	// Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-	plugins: ['~/plugins/croppa', '~/plugins/functions'],
+	plugins: ['~/plugins/cropper', '~/plugins/functions'],
 
 	// Auto import components: https://go.nuxtjs.dev/config-components
 	components: true,

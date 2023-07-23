@@ -246,9 +246,10 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 		},
 		updateAvatar: async (image) => {
 			try {
+				console.log('image in func', image);
 				let data = new FormData();
 				data.append('user[avatar]', image);
-				await $axios.$post('users/avatar', data, config);
+				$axios.$post('users/avatar', data, config);
 			} catch (err) {
 				throw err;
 			}

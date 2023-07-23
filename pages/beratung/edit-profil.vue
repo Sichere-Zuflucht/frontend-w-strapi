@@ -49,11 +49,6 @@
 								:info="user"
 								:avatar="avatarPreview ? avatarPreview : user.avatar"
 								@selection="updateProfile"
-								@next="
-									() => {
-										stepper++;
-									}
-								"
 							/>
 							<v-btn
 								text
@@ -184,6 +179,7 @@
 						professional_background: data.professional_background,
 					})
 					.then(() => {
+						this.loading = false;
 						this.success = true;
 						this.bioSaved = true;
 					})

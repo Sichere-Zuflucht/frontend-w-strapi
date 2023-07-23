@@ -108,6 +108,7 @@
 		},
 
 		async mounted() {
+			console.log('this.allPropsFalse', this.allPropsFalse);
 			if (this.allPropsFalse) {
 				this.loadFAQcatergory('women');
 				this.loadFAQcatergory('coaches');
@@ -143,10 +144,13 @@
 				}
 			},
 			catTopics(cat) {
+				console.log('cat', cat, typeof cat);
 				return typeof cat != Boolean ? cat : null;
 			},
 			async loadContent(title, route, topics) {
+				console.log(topics);
 				const filter = topics ? { slug: { $in: topics } } : {};
+				console.log(filter);
 				this.faqList.push({
 					label: title,
 					faqs: await this.$content(`faq/${route}`)
