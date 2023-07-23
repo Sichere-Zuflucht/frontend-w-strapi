@@ -1,151 +1,97 @@
 <template>
-	<div class="file-upload d-flex flex-column align-center">
-		<div
-			class="drop-zone"
-			:style="`border: 1px dashed ${
-				size_error ? $vuetify.theme.themes.light.error : 'grey'
-			}`"
-			@dragenter="handleDragEnter"
-			@dragover="handleDragOver"
-			@dragleave="handleDragLeave"
-			@drop="handleDrop"
-			@click="handleBrowse"
-		>
-			<input
-				ref="fileInput"
-				type="file"
-				style="display: none"
-				accept="image/*"
-				@change="handleFileInputChange"
+	<v-form @submit.prevent="saveCropImage">
+		<div class="d-flex flex-column align-center justify-center">
+			<croppa
+				v-model="croppa"
+				:initial-image="initialImage"
+				:show-remove-button="true"
+				:show-loading="true"
+				:prevent-white-space="true"
+				:zoom-speed="8"
+				accept="image/*, .heic"
+				class="mb-4"
+				:file-size-limit="2000000"
+				@file-size-exceed="
+					() => {
+						error = 'Bild ist zu groß. Das Bild muss kleinter als 2MB sein.';
+					}
+				"
 			/>
-			<div v-if="!file" class="pa-4">
-				<span class="filepond--label-action">Tippe hier</span><br />oder ziehe
-				ein Foto einfach in den Kreis.
+			<div v-if="isImage" class="mb-4">
+				<v-icon @click="croppa.moveUpwards(10)">mdi-arrow-up</v-icon>
+				<v-icon @click="croppa.moveDownwards(10)">mdi-arrow-down</v-icon>
+				<v-icon @click="croppa.moveLeftwards(10)">mdi-arrow-left</v-icon>
+				<v-icon @click="croppa.moveRightwards(10)">mdi-arrow-right</v-icon>
+				<v-icon @click="croppa.zoomIn()">mdi-magnify-plus-outline</v-icon>
+				<v-icon @click="croppa.zoomOut()">mdi-magnify-minus-outline</v-icon>
 			</div>
-			<div v-else style="position: relative">
-				<img
-					v-if="isImage"
-					:src="file.name ? filePreview : file"
-					alt="Preview"
-				/>
-				<div v-if="file" class="input--button d-flex align-end justify-center">
-					<v-btn fab x-small @click="deleteImage"
-						><v-icon small>mdi-reload</v-icon></v-btn
-					>
-				</div>
-			</div>
+			<v-alert
+				v-if="error"
+				type="error"
+				outlined
+				color="error"
+				class="caption my-2"
+				dense
+			>
+				{{ error }}
+			</v-alert>
+			<v-btn color="primary" block :disabled="!isImage" type="submit">
+				<v-icon class="pr-1">mdi-content-save</v-icon> Profil speichern
+			</v-btn>
 		</div>
-		<v-alert
-			v-if="size_error"
-			type="error"
-			outlined
-			color="error"
-			class="caption mt-2"
-			dense
-		>
-			Das ausgewählte Foto ist leider zu groß. Bitte wählen Sie ein Foto mit
-			max. 2MB aus.
-		</v-alert>
-	</div>
+	</v-form>
 </template>
 
 <script>
 	export default {
 		props: {
-			file: null,
+			file: {
+				type: String,
+				default: '',
+			},
 		},
 		data() {
 			return {
 				filePreview: '',
-				size_error: false,
-				isImage: false,
+				error: false,
+				croppa: {},
 			};
 		},
+		computed: {
+			isImage() {
+				return this.croppa.imageSet;
+			},
+			initialImage() {
+				return this.file;
+			},
+		},
 		methods: {
-			handleDragEnter(event) {
-				event.preventDefault();
-				event.stopPropagation();
-			},
-			handleDragOver(event) {
-				event.preventDefault();
-				event.stopPropagation();
-			},
-			handleDragLeave(event) {
-				event.preventDefault();
-				event.stopPropagation();
-			},
-			handleDrop(event) {
-				event.preventDefault();
-				event.stopPropagation();
-
-				const fileList = event.dataTransfer.files;
-				if (fileList.length > 0) {
-					this.handleFile(fileList[0]);
+			async saveCropImage() {
+				//console.log('done');
+				try {
+					await this.$func.updateAvatar(this.croppa.img.currentSrc);
+					this.$emit('done');
+				} catch (err) {
+					this.error = err;
 				}
-			},
-			handleBrowse() {
-				this.$refs.fileInput.click();
-			},
-			handleFileInputChange(event) {
-				const fileList = event.target.files;
-				if (fileList.length > 0) {
-					this.handleFile(fileList[0]);
-				}
-			},
-			handleFile(file) {
-				if (file.type.startsWith('image/')) {
-					if (file.size <= 2 * 1024 * 1024) {
-						// Maximum size of 2MB
-						const reader = new FileReader();
-						reader.onload = () => {
-							this.file = file;
-							this.filePreview = reader.result;
-							this.isImage = true;
-							this.$func.updateAvatar(file);
-						};
-						reader.readAsDataURL(file);
-						this.size_error = false;
-					} else {
-						this.size_error = true;
-						this.isImage = false;
-					}
-				} else {
-					this.file = file;
-					this.isImage = false;
-				}
-			},
-			deleteImage() {
-				//this.file = null;
-				//this.filePreview = '';
 			},
 		},
 	};
 </script>
 
-<style scoped>
-	.drop-zone {
-		width: 200px;
-		height: 200px;
-		padding-top: 4px;
-		text-align: center;
-		display: flex;
-		align-items: center;
-		justify-items: center;
-		border-radius: 50%;
-		background-color: rgb(235, 235, 235);
+<style>
+	.croppa-container {
+		background-color: lightgrey;
+		border: 2px solid grey;
+		border-radius: 100%;
+		width: 204px;
+		height: 204px;
 		overflow: hidden;
+		align-self: center !important;
 	}
-
-	.drop-zone img {
-		max-width: 200px;
-		max-height: 200px;
-	}
-	.drop-zone .input--button {
-		width: 200px;
-		height: 200px;
-		position: absolute;
-		top: 0;
-		left: 0;
-		padding-bottom: 15px;
+	.croppa-container svg.icon-remove {
+		margin-top: calc(89% - 5px);
+		margin-right: calc(50% - 5px);
+		box-shadow: 0px -3px 20px 10px white;
 	}
 </style>
