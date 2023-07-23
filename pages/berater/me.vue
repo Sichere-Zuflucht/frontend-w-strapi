@@ -119,12 +119,17 @@
 											euer Online-Beratungsraum wird reserviert.
 										</li>
 									</ol>
-									<SharedFaq
-										simple
-										:price="['costs']"
-										:coaches="['how']"
-										:women="['emergency']"
-									/> </v-col
+									<p class="caption">
+										<nuxt-link target="_blank" to="/footer/faq"
+											>Wie läuft das Beratungsgespräch ab?</nuxt-link
+										><br />
+										<nuxt-link target="_blank" to="/footer/faq"
+											>Infos zur Termineinhaltung </nuxt-link
+										><br />
+										<nuxt-link target="_blank" to="/footer/faq">
+											zu Preisen</nuxt-link
+										>
+									</p> </v-col
 								><v-col cols="12" md="4">
 									<div class="d-flex flex-row-reverse mb-4">
 										<v-btn
@@ -173,7 +178,7 @@
 				><v-container> <WomanPriceInfo /> </v-container
 			></v-sheet>
 			<v-container>
-				<SharedFaq />
+				<SharedFaq coaches price coaching />
 			</v-container>
 			<v-divider class="mt-16 mb-6" />
 			<v-container>
