@@ -136,16 +136,11 @@
 							<v-alert v-if="error" color="error" dark>
 								{{ error }}
 							</v-alert>
-							<!--<h2 class="text-h2 secondary--text pb-4 pt-12">HÄUFIGE FRAGEN</h2>-->
-							<!--<nuxt-link to="/footer/faq">
-                Wie erstelle ich ein Konto bei Stripe?
-              </nuxt-link>-->
-						</v-stepper-content></v-stepper-items
-					></v-stepper
-				>
-			</v-container></v-col
-		></v-row
-	>
+							<SharedFaq
+								:price="['how-stripe']"
+							/> </v-stepper-content></v-stepper-items
+				></v-stepper> </v-container></v-col
+	></v-row>
 </template>
 
 <script>

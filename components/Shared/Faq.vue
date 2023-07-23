@@ -13,6 +13,7 @@
 				cols="12"
 				:sm="!simple ? 6 : 12"
 				:md="!simple ? 4 : 12"
+				:class="`${simple ? 'py-0' : 'py-1'}`"
 			>
 				<p v-if="!simple" class="font-weight-bold">{{ cat.label }}</p>
 				<v-expansion-panels style="box-shadow: none !important">
@@ -23,7 +24,12 @@
 						style="box-shadow: none !important"
 					>
 						<!----<nuxt-content :document="faq" />-->
-						<v-expansion-panel-header class="primary--text align-start">
+						<v-expansion-panel-header
+							:class="`primary--text align-start ${
+								simple ? 'py-0 caption' : 'py-1'
+							}`"
+							:style="`min-height: ${simple ? '0px' : '48px'}`"
+						>
 							{{ faq.question }}
 						</v-expansion-panel-header>
 						<v-expansion-panel-content class="caption bluegray--text">
@@ -98,11 +104,11 @@
 		computed: {
 			allPropsFalse() {
 				return (
-					!this.coaches &&
-					!this.women &&
-					!this.price &&
-					!this.safety &&
-					!this.coaching
+					this.coaches == false &&
+					this.women == false &&
+					this.price == false &&
+					this.safety == false &&
+					this.coaching == false
 				);
 			},
 		},
@@ -130,16 +136,32 @@
 						this.loadContent('Für Frauen', 'women', this.catTopics(this.women));
 						break;
 					case 'coaches':
-						this.loadContent('Für Berater*innen', 'coaches');
+						this.loadContent(
+							'Für Berater*innen',
+							'coaches',
+							this.catTopics(this.coaches)
+						);
 						break;
 					case 'price':
-						this.loadContent('Bezahlung und Preise', 'price');
+						this.loadContent(
+							'Bezahlung und Preise',
+							'price',
+							this.catTopics(this.price)
+						);
 						break;
 					case 'coaching':
-						this.loadContent('Online-Beratung', 'coaching');
+						this.loadContent(
+							'Online-Beratung',
+							'coaching',
+							this.catTopics(this.coaching)
+						);
 						break;
 					case 'safety':
-						this.loadContent('Sicherheit', 'safety');
+						this.loadContent(
+							'Sicherheit',
+							'safety',
+							this.catTopics(this.safety)
+						);
 						break;
 				}
 			},
