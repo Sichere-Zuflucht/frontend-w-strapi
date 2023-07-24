@@ -70,7 +70,8 @@
 				this.croppa.generateBlob(async (blob) => {
 					await this.$func
 						.updateAvatar(blob)
-						.then(() => {
+						.then((img_url) => {
+							this.$store.dispatch('changeAvatar', img_url);
 							this.$emit('done');
 						})
 						.catch((err) => {

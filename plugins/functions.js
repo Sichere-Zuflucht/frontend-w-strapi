@@ -254,9 +254,10 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 					}
 				);
 				console.log('File Upload', file, typeof file);
-				let data = new FormData();
-				data.append('user[avatar]', file);
-				await $axios.$post('users/avatar', data, config);
+				let form = new FormData();
+				form.append('user[avatar]', file);
+				const { data } = await $axios.$post('users/avatar', form, config);
+				return data.attributes.avatar_content_url;
 			} catch (err) {
 				throw err;
 			}

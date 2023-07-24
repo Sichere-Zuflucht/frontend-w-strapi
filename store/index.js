@@ -35,7 +35,6 @@ export const mutations = {
 		console.log('setUserData', state.user);
 	},
 	setUserAvatar(state, newAvatar) {
-		this.$strapi.user.avatar = newAvatar;
-		state.user = this.$strapi.user;
+		state.user.avatar_content_url = newAvatar;
 	},
 };
