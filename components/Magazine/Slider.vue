@@ -2,7 +2,7 @@
 	<v-slide-group v-if="list" show-arrows class="py-4">
 		<v-slide-item v-for="(magazine, n) in list" :key="n" class="my-4">
 			<MagazineTeaserBox
-				:magazine-data="magazine"
+				:article="magazine.attributes"
 				:class="
 					(n == 0 ? 'ml-8 mr-2' : n == list.length - 1 ? 'ml-2 mr-8' : 'mx-2') +
 					' my-2'
@@ -19,11 +19,13 @@
 
 <script>
 	export default {
-		props: {
-			list: {
-				type: Array,
-				default: null,
-			},
+		data() {
+			return {
+				list: null,
+			};
+		},
+		async mounted() {
+			this.list = await this.$func.loadAllArticles();
 		},
 	};
 </script>

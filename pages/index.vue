@@ -62,7 +62,7 @@
 				Sichere Zuflucht-Magazin
 			</h3>
 		</v-container>
-		<MagazineSlider v-if="magazineList" :list="magazineList" />
+		<MagazineSlider />
 		<v-divider class="mt-md-8" />
 		<v-container class="pt-16">
 			<v-row style="max-width: 700px" class="mx-auto">
@@ -135,18 +135,3 @@
 		<UtilsDonation />
 	</div>
 </template>
-
-<script>
-	export default {
-		data() {
-			return {
-				magazineList: null,
-			};
-		},
-		async mounted() {
-			this.magazineList = (
-				await this.$strapi.$magazines.find({ populate: '*' })
-			).data;
-		},
-	};
-</script>
