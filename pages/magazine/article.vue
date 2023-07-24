@@ -109,8 +109,6 @@
 		async asyncData({ query, $func }) {
 			const article = await $func.loadSingleArticle(query.title);
 			const relatedArticles = await $func.loadRelatedArticles(article.id);
-			console.log(article);
-			console.log(relatedArticles);
 
 			return {
 				article,

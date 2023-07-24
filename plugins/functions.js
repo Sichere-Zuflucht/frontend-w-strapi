@@ -244,10 +244,18 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 				throw err;
 			}
 		},
-		updateAvatar: async (image) => {
+		updateAvatar: async (blob) => {
 			try {
+				var file = new File(
+					[blob],
+					'profilimage.' + blob.type.replace('image/', ''),
+					{
+						type: blob.type,
+					}
+				);
+				console.log('File Upload', file, typeof file);
 				let data = new FormData();
-				data.append('user[avatar]', image);
+				data.append('user[avatar]', file);
 				await $axios.$post('users/avatar', data, config);
 			} catch (err) {
 				throw err;

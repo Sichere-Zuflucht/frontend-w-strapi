@@ -19,7 +19,7 @@
 		<h2 class="text-h2 secondary--text text-center pt-16">
 			Das Sichere Zuflucht-Magazin
 		</h2>
-		<MagazineSlider :list="magazineList" />
+		<MagazineSlider />
 		<v-container class="pb-16 pt-0">
 			<UtilsBtn text="Zum Magazin" link="/magazine" classname="pb-0" />
 		</v-container>
@@ -99,18 +99,3 @@
 		<SharedQuotes />
 	</div>
 </template>
-
-<script>
-	export default {
-		data() {
-			return {
-				magazineList: null,
-			};
-		},
-		async mounted() {
-			this.magazineList = (
-				await this.$strapi.$magazines.find({ populate: '*' })
-			).data;
-		},
-	};
-</script>
