@@ -4,8 +4,8 @@
 			><v-avatar color="primary" size="162">
 				<v-img
 					v-if="coachData.avatar_content_url"
-					:lazy-src="coachData.avatar_content_url"
-					:src="coachData.avatar_content_url"
+					:lazy-src="`${coachData.avatar_content_url}?${new Date.getTime()}`"
+					:src="`${coachData.avatar_content_url}?${new Date.getTime()}`"
 					data-cookiescript="accepted"
 					data-cookiecategory="functionality"
 			/></v-avatar>

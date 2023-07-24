@@ -17,8 +17,10 @@
 			<v-avatar color="primary ma-5" size="90" contain>
 				<v-img
 					v-if="meeting.coach_avatar_content_url"
-					:lazy-src="meeting.coach_avatar_content_url"
-					:src="meeting.coach_avatar_content_url"
+					:lazy-src="`${
+						meeting.coach_avatar_content_url
+					}?${new Date.getTime()}`"
+					:src="`${meeting.coach_avatar_content_url}?${new Date.getTime()}`"
 				/>
 			</v-avatar>
 			<div class="ma-5 ml-2 d-flex flex-column justify-center">
