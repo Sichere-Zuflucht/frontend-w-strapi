@@ -1,7 +1,7 @@
 <template>
 	<div class="inner-steps">
 		<v-expand-transition class="px-0">
-			<v-stepper v-model="step" :vertical="false" class="mx-auto" elevation="0">
+			<v-stepper v-model="step" :vertical="true" class="mx-auto" elevation="0">
 				<v-stepper-step
 					:complete="step > 1"
 					:editable="step > 1"
@@ -197,7 +197,7 @@
 				};
 				this.$store.dispatch('changeData', data);
 				this.$emit('selection', data);
-				this.steps++;
+				this.step++;
 			},
 			next() {
 				this.$emit('next');

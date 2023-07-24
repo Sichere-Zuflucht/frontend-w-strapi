@@ -49,11 +49,7 @@
 								:info="user"
 								:avatar="avatarPreview ? avatarPreview : user.avatar"
 								@selection="updateProfile"
-								@next="
-									() => {
-										stepper++;
-									}
-								"
+								@next="next"
 							/>
 							<v-btn
 								text
@@ -178,15 +174,14 @@
 						personal_background: data.personal_background,
 						professional_background: data.professional_background,
 					})
-					.then(() => {
-						this.success = true;
-						this.bioSaved = true;
-					})
 					.catch((e) => {
 						e.location = 'edit-profil updateMe';
 						this.$errorhandling(e);
 					});
-				// this.$router.push('/berater/' + this.user.public.uid)
+			},
+			next() {
+				this.success = true;
+				this.bioSaved = true;
 			},
 			addStripe() {
 				this.loading = true;
