@@ -25,7 +25,6 @@
 				<v-icon @click="croppa.zoomIn()">mdi-magnify-plus-outline</v-icon>
 				<v-icon @click="croppa.zoomOut()">mdi-magnify-minus-outline</v-icon>
 			</div>
-			<v-img v-if="testimg" :src="testimg" />
 			<v-alert
 				v-if="error"
 				type="error"
@@ -56,7 +55,6 @@
 				filePreview: '',
 				error: false,
 				croppa: {},
-				testimg: null,
 			};
 		},
 		computed: {

@@ -150,7 +150,7 @@
 				changeCitation: null,
 				changePersonalBackground: null,
 				changeProfessionalBackground: null,
-				step: 3,
+				step: 1,
 				cropImage: false,
 				cropData: null,
 				isLoading: false,
