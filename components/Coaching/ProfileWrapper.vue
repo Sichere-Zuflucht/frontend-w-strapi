@@ -11,10 +11,8 @@
 				<v-avatar color="primary" class="my-5" size="80"
 					><v-img
 						v-if="pubCoachData.avatar_content_url"
-						:lazy-src="`${
-							pubCoachData.avatar_content_url
-						}?${new Date.getTime()}`"
-						:src="`${pubCoachData.avatar_content_url}?${new Date.getTime()}`"
+						:lazy-src="`${pubCoachData.avatar_content_url}?${Date.now()}`"
+						:src="`${pubCoachData.avatar_content_url}?${Date.now()}`"
 						data-cookiescript="accepted"
 						data-cookiecategory="functionality"
 					/> </v-avatar

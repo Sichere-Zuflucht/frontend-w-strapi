@@ -3,6 +3,8 @@
 		<div class="d-flex flex-column align-center justify-center">
 			<croppa
 				v-model="croppa"
+				:placeholder="'Klicke hier, um Foto hochzuladen'"
+				:placeholder-font-size="12"
 				:initial-image="initialImage"
 				:show-remove-button="true"
 				:show-loading="true"

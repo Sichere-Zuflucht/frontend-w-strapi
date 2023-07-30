@@ -169,10 +169,6 @@
 								Bitte schauen Sie in Ihr E-Mail-Postfach. Kontrolliere ggf. auch
 								den Spam Ordner.
 							</p>
-							<p class="caption">
-								Sollte nichts angekommen sein, können Sie sich die E-mail noch
-								einmal zusenden lassen.
-							</p>
 							<v-btn color="primary" class="mb-4" href="/registration/signin"
 								>Einloggen</v-btn
 							>

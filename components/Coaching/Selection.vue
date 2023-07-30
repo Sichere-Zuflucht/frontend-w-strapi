@@ -168,7 +168,7 @@
 			initialAvatar() {
 				const user = this.$store.getters['getCurrentUser'];
 				return user.avatar_content_url.length > 0
-					? (this.avatar = `${user.avatar_content_url}?${new Date.getTime()}`)
+					? (this.avatar = `${user.avatar_content_url}?${Date.now()}`)
 					: null;
 			},
 		},

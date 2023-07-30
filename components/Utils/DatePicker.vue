@@ -137,7 +137,7 @@
 				date: '',
 				time: '',
 				modal: false,
-				today: new Date(new Date().getTime() + 1000 * 60 * 60 * 24),
+				today: new Date(Date.now() + 1000 * 60 * 60 * 24),
 			};
 		},
 		computed: {
