@@ -2,7 +2,6 @@ let Authorization = `Bearer ${localStorage.getItem('ruby_jwt')}`;
 let config = {
 	headers: {
 		'Content-Type': 'application/json',
-		'Cache-Control': 'no-cache',
 		Authorization,
 	},
 	//data: data
