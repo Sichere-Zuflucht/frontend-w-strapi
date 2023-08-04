@@ -2,6 +2,7 @@ let Authorization = `Bearer ${localStorage.getItem('ruby_jwt')}`;
 let config = {
 	headers: {
 		'Content-Type': 'application/json',
+		'Cache-Control': 'no-cache',
 		Authorization,
 	},
 	//data: data
@@ -228,7 +229,7 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 						...user,
 					},
 				});
-				$axios.$put('users/me', data, config);
+				await $axios.$put('users/me', data, config);
 			} catch (err) {
 				throw err;
 			}
@@ -296,9 +297,7 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 
 			try {
 				const data = await $axios.$post(
-					`authentication?email=${encodeURIComponent(
-						email
-					)}&password=${password}`
+					`authentication?email=${email}&password=${password}`
 				);
 				store.dispatch('changeData', data.user.attributes);
 
