@@ -294,10 +294,13 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 			const expirationDate = new Date();
 			expirationDate.setDate(expirationDate.getDate() + 7);
 
+			const input = JSON.stringify({
+				email,
+				password,
+			});
+
 			try {
-				const data = await $axios.$post(
-					`authentication?email=${email}&password=${password}`
-				);
+				const data = await $axios.$post(`authentication`, input, config);
 				store.dispatch('changeData', data.user.attributes);
 
 				localStorage.setItem('ruby_jwt', data.token);
