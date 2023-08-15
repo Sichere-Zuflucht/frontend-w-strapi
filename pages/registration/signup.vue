@@ -1,9 +1,9 @@
 <template>
-  <UtilsSignupSignin title="Registrieren, um Online-Beratung zu erhalten" />
+	<UtilsSignupSignin />
 </template>
 
 <script>
-export default {
-  middleware: 'authAlreadyLoggedin',
-}
+	export default {
+		middleware: 'authAlreadyLoggedin',
+	};
 </script>

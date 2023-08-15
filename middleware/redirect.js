@@ -1,7 +1,7 @@
-export default function ({ redirect, $strapi }) {
-    if ($strapi.user) {
-        if ($strapi.user.roleName == 'coach') redirect('/beratung')
-        else redirect('/frauen')
-        
-    } else redirect('/registration/signin')
-  }
+export default function ({ redirect, store }) {
+	if (store.getters['getCurrentUser']) {
+		if (store.getters['getCurrentUser'].usertype == 'coach')
+			redirect('/beratung');
+		else redirect('/frauen');
+	} else redirect('/registration/signin');
+}

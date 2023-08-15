@@ -1,57 +1,60 @@
 <template>
-  <div>
-    <UtilsBanner url="/teaser-spenden.jpg" />
-    <v-sheet color="grey lighten-5"
-      ><v-container class="text-center">
-        <h1 class="text-h1 primary--text py-8">
-          Ihr könnt die Frauen ganz direkt unterstützen
-        </h1>
-        <p>
-          Häufig <b>möchte man gerne helfen</b>, weiß aber nicht genau wie. So
-          geht es uns auch oft. Deshalb haben wir die Möglichkeit geschaffen,
-          dass ihr unseren <b>Frauen direkt helfen</b> könnt, indem ihr z.B.
-          <b>für ein Beratungsgespräch spendet.</b>
-        </p>
-      </v-container></v-sheet
-    >
-    <v-container id="paytitle" class="py-16">
-      <h2 class="text-h2 text-center secondary--text pb-6">
-        Hier könnt ihr wählen, wie ihr unterstüzen wollt.
-      </h2>
-      <v-row>
-        <v-col
-          v-for="(option, i) in donationOptions"
-          :key="i"
-          cols="12"
-          sm="6"
-          :md="!option.ownVal ? 4 : 12"
-        >
-          <v-card class="my-4 mx-2">
-            <v-sheet
-              color="success"
-              class="pa-8 d-flex align-center justify-center"
-            >
-              <v-icon color="white" size="44">{{ option.icon }}</v-icon><h3 class="white--text ml-2">{{ option.value }}€</h3>
-            </v-sheet>
-            <v-card-title class="primary--text text-h3 font-weight-bold mb-2">{{
-              option.title
-            }}</v-card-title>
-            <v-card-subtitle
-              ><b>{{ option.value }}€ spenden</b> und eine {{!option.ownVal ? option.title : 'Beratung'}} für eine von Gewalt betroffene Frau ermöglichen</v-card-subtitle
-            >
-            <v-card-actions>
-              <v-btn
-                v-if="!option.ownVal ? option.value : validValue"
-                color="secondary"
-                :href="option.link"
-                target="_blank"
-                >Spenden</v-btn
-              ></v-card-actions
-            >
-          </v-card></v-col
-        ></v-row
-      >
-      <!--<v-stepper v-model="donationStep" elevation="0">
+	<div>
+		<UtilsBanner url="/teaser-spenden.jpg" />
+		<v-sheet color="grey lighten-5"
+			><v-container class="text-center">
+				<h1 class="text-h1 primary--text py-8">
+					Ihr könnt die Frauen ganz direkt unterstützen
+				</h1>
+				<p>
+					Häufig <b>möchte man gerne helfen</b>, weiß aber nicht genau wie. So
+					geht es uns auch oft. Deshalb haben wir die Möglichkeit geschaffen,
+					dass ihr unseren <b>Frauen direkt helfen</b> könnt, indem ihr z.B.
+					<b>für ein Beratungsgespräch spendet.</b>
+				</p>
+			</v-container></v-sheet
+		>
+		<v-container id="paytitle" class="py-16">
+			<h2 class="text-h2 text-center secondary--text pb-6">
+				Hier könnt ihr wählen, wie ihr unterstüzen wollt.
+			</h2>
+			<v-row>
+				<v-col
+					v-for="(option, i) in donationOptions"
+					:key="i"
+					cols="12"
+					sm="6"
+					:md="!option.ownVal ? 4 : 12"
+				>
+					<v-card class="my-4 mx-2">
+						<v-sheet
+							color="success"
+							class="pa-8 d-flex align-center justify-center"
+						>
+							<v-icon color="white" size="44">{{ option.icon }}</v-icon>
+							<h3 class="white--text ml-2">{{ option.value }}€</h3>
+						</v-sheet>
+						<v-card-title class="primary--text text-h3 font-weight-bold mb-2">{{
+							option.title
+						}}</v-card-title>
+						<v-card-subtitle
+							><b>{{ option.value }}€ spenden</b> und eine
+							{{ !option.ownVal ? option.title : 'Beratung' }} für eine von
+							Gewalt betroffene Frau ermöglichen</v-card-subtitle
+						>
+						<v-card-actions>
+							<v-btn
+								v-if="!option.ownVal ? option.value : validValue"
+								color="secondary"
+								:href="option.link"
+								target="_blank"
+								>Spenden</v-btn
+							></v-card-actions
+						>
+					</v-card></v-col
+				></v-row
+			>
+			<!--<v-stepper v-model="donationStep" elevation="0">
         <v-stepper-items>
           <v-stepper-content step="1" class="pa-0">
             <v-card
@@ -133,93 +136,93 @@
           </v-stepper-content>
         </v-stepper-items>
       </v-stepper>-->
-      <p class="pt-8 text-center">
-        Ihr könnt für eure Spende direkt eine Spendenquittung erhalten.
-      </p>
-    </v-container>
-    <v-divider />
-    <v-container class="text-center class py-16">
-      <h3 class="text-h3 primary--text pb-4">
-        WAS PASSIERT MIT DEINEN SPENDENGELDERN?
-      </h3>
-      <p class="font-weight-bold">
-        Wir sammeln eure Spenden und geben Sie direkt für eine Frau frei, wenn
-        eine volle Stunde erreicht ist.
-      </p>
-      <p>
-        Da wir nicht alle Frauen und ihre wirtschaftlichen Möglichkeiten kennen,
-        die sich bei uns melden, wollen wir perspektivisch mit Beratungsstellen
-        und Frauenhäusern zusammen arbeiten, die genau wissen, was sich die
-        Frauen, die dort Hilfe suchen, leisten können. Diese sollen eure
-        gespendeten Stunden dann zielgenau einsetzen.
-      </p>
-      <p>
-        Eine Stunde Beratung kostet 50€. Das ist ein wesentlich geringerer
-        Preis, als Beratungen auf dem freien Markt kosten. Berater*innen und
-        Coach*innen spenden somit ihrerseits bei jeder Beratung eine Leistung.
-      </p>
-      <p>
-        In den 50 € sind jeweils 10€ enthalten, die wir als Sichere Zuflucht
-        einbehalten, um unser gemeinnütziges Unternehmen am Laufen halten zu
-        können. Wir finanzieren damit Hostinggebühren, Entwicklungsgebühren,
-        Software-Abos z.B. für die angeschlossenen Zahlungs- und
-        Online-Beratungs-Dienste u.v.m. Wir arbeiten gemeinnützig. D.h. alle
-        erwirtschafteten Gewinne fließen wieder direkt in Sichere Zuflucht. So
-        gewährleisten wir, dass es hier immer voran geht und wir weiter helfen
-        können.
-      </p>
-    </v-container>
-  </div>
+			<p class="pt-8 text-center">
+				Ihr könnt für eure Spende direkt eine Spendenquittung erhalten.
+			</p>
+		</v-container>
+		<v-divider />
+		<v-container class="text-center class py-16">
+			<h3 class="text-h3 primary--text pb-4">
+				WAS PASSIERT MIT DEINEN SPENDENGELDERN?
+			</h3>
+			<p class="font-weight-bold">
+				Wir sammeln eure Spenden und geben Sie direkt für eine Frau frei, wenn
+				eine volle Stunde erreicht ist.
+			</p>
+			<p>
+				Da wir nicht alle Frauen und ihre wirtschaftlichen Möglichkeiten kennen,
+				die sich bei uns melden, wollen wir perspektivisch mit Beratungsstellen
+				und Frauenhäusern zusammen arbeiten, die genau wissen, was sich die
+				Frauen, die dort Hilfe suchen, leisten können. Diese sollen eure
+				gespendeten Stunden dann zielgenau einsetzen.
+			</p>
+			<p>
+				Eine Stunde Beratung kostet 50€. Das ist ein wesentlich geringerer
+				Preis, als Beratungen auf dem freien Markt kosten. Berater*innen und
+				Coach*innen spenden somit ihrerseits bei jeder Beratung eine Leistung.
+			</p>
+			<p>
+				In den 50 € sind jeweils 10€ enthalten, die wir als Sichere Zuflucht
+				einbehalten, um unser gemeinnütziges Unternehmen am Laufen halten zu
+				können. Wir finanzieren damit Hostinggebühren, Entwicklungsgebühren,
+				Software-Abos z.B. für die angeschlossenen Zahlungs- und
+				Online-Beratungs-Dienste u.v.m. Wir arbeiten gemeinnützig. D.h. alle
+				erwirtschafteten Gewinne fließen wieder direkt in Sichere Zuflucht. So
+				gewährleisten wir, dass es hier immer voran geht und wir weiter helfen
+				können.
+			</p>
+		</v-container>
+	</div>
 </template>
 
 <script>
-export default {
-  data() {
-    return {
-      donationStep: 1,
-      donationOptions: [
-        {
-          icon: "mdi-heart-circle",
-          title: "ganze Beratung",
-          value: "50",
-          link: this.$config.donate1 //"https://donate.stripe.com/test_7sI5nr6C20t97T29AI", //process.env.NODE_ENV == "development" doesnt make sense here. because i want both times the testing link
-        },
-        {
-          icon: "mdi-circle-slice-4",
-          title: "1/2 Beratung",
-          value: "25",
-          link: this.$config.donate2,
-        },
-        {
-          icon: "mdi-circle-slice-2",
-          title: "1/4 Beratung",
-          value: "17.50",
-          link: this.$config.donate3,
-        },
-        {
-          icon: "mdi-help-circle",
-          title: "Freien Betrag",
-          ownVal: true,
-          value: "x",
-          link: this.$config.donate4,
-        },
-      ],
-      donationChosen: null,
-      numRule: [
-        (v) => parseInt(v) > 0 || "Betrag muss größer 0 sein.",
-        (v) =>
-          /^\d{0,5}([,.]\d{0,2})?$/.test(v) ||
-          "ungültiger oder zu hoher Betrag.",
-      ],
-      validValue: true,
-    };
-  },
-  methods: {
-    choose(chosen) {
-      this.donationChosen = chosen;
-      this.donationStep = 2;
-      this.$vuetify.goTo("#paytitle");
-    },
-  },
-};
+	export default {
+		data() {
+			return {
+				donationStep: 1,
+				donationOptions: [
+					{
+						icon: 'mdi-heart-circle',
+						title: 'ganze Beratung',
+						value: '50',
+						link: this.$config.donate1, //"https://donate.stripe.com/test_7sI5nr6C20t97T29AI", //process.env.NODE_ENV == "development" doesnt make sense here. because i want both times the testing link
+					},
+					{
+						icon: 'mdi-circle-slice-4',
+						title: '1/2 Beratung',
+						value: '25',
+						link: this.$config.donate2,
+					},
+					{
+						icon: 'mdi-circle-slice-2',
+						title: '1/4 Beratung',
+						value: '17.50',
+						link: this.$config.donate3,
+					},
+					{
+						icon: 'mdi-help-circle',
+						title: 'Freien Betrag',
+						ownVal: true,
+						value: 'x',
+						link: this.$config.donate4,
+					},
+				],
+				donationChosen: null,
+				numRule: [
+					(v) => parseInt(v) > 0 || 'Betrag muss größer 0 sein.',
+					(v) =>
+						/^\d{0,5}([,.]\d{0,2})?$/.test(v) ||
+						'ungültiger oder zu hoher Betrag.',
+				],
+				validValue: true,
+			};
+		},
+		methods: {
+			choose(chosen) {
+				this.donationChosen = chosen;
+				this.donationStep = 2;
+				this.$vuetify.goTo('#paytitle');
+			},
+		},
+	};
 </script>
