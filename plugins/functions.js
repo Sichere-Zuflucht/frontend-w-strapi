@@ -295,7 +295,7 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 			expirationDate.setDate(expirationDate.getDate() + 7);
 
 			const input = JSON.stringify({
-				email,
+				email: email.toLowerCase(),
 				password,
 			});
 
