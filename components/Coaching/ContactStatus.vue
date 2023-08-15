@@ -28,7 +28,6 @@
 				<h3 class="mt-2 text-h5">
 					{{ meeting.coach_profession_line }}
 				</h3>
-				<p>{{ id }}</p>
 			</div>
 		</nuxt-link>
 		<v-card-text class="flex-grow-1 relative">
