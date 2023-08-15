@@ -36,7 +36,7 @@
 					Der Coach hat auf deine Anfrage noch nicht reagiert.
 				</p>
 				<p>
-					Bitte habe ein wenig Gedult. Der*die Berater*in sollte sich innerhalb
+					Bitte habe ein wenig Geduld. Der*die Berater*in sollte sich innerhalb
 					von 24h bei dir melden.
 				</p>
 			</div>

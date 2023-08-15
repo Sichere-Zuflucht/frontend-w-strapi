@@ -12,10 +12,10 @@
 				:zoom-speed="8"
 				accept="image/*, .heic"
 				class="mb-4"
-				:file-size-limit="2000000"
+				:file-size-limit="6000000"
 				@file-size-exceed="
 					() => {
-						error = 'Bild ist zu groß. Das Bild muss kleinter als 2MB sein.';
+						error = 'Bild ist zu groß. Das Bild muss kleiner als 6MB sein.';
 					}
 				"
 			/>
