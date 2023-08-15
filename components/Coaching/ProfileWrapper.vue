@@ -3,8 +3,14 @@
 		elevation="2"
 		nuxt
 		:ripple="false"
-		width="300"
-		class="d-flex flex-column pb-2"
+		:width="
+			$vuetify.breakpoint.smAndUp
+				? $vuetify.breakpoint.mdAndUp
+					? 'calc(25vw - 26px)'
+					: 'calc(50vw - 36px)'
+				: '100%'
+		"
+		class="d-flex flex-column pb-2 mx-2"
 	>
 		<v-card-text class="pt-0 flex-grow-1 flex-shrink-0">
 			<nuxt-link :to="'/berater/me?name=' + pubCoachData.display_name">

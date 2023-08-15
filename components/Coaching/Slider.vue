@@ -1,16 +1,12 @@
 <template>
-	<v-slide-group v-if="!loading" show-arrows class="py-4">
+	<v-slide-group
+		v-if="!loading"
+		show-arrows
+		class="py-4"
+		style="padding: 0 20px 0"
+	>
 		<v-slide-item v-for="(coaching, n) in allCoaches" :key="n" class="my-4">
-			<CoachingProfileWrapper
-				:pub-coach-data="coaching.attributes"
-				:class="
-					(n == 0
-						? 'ml-8 mr-2'
-						: n == allCoaches.length - 1
-						? 'ml-2 mr-8'
-						: 'mx-2') + ' my-2'
-				"
-			/>
+			<CoachingProfileWrapper :pub-coach-data="coaching.attributes" />
 		</v-slide-item>
 	</v-slide-group>
 	<v-alert v-else-if="error.status" type="error">{{ error.text }}</v-alert>
