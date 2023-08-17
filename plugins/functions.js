@@ -376,7 +376,9 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 		resetPassword: async ({ token, password, password_confirmation }) => {
 			try {
 				const resetPassword = await $axios.$post(
-					`authentication/reset_password?token=${token}&password=${password}&password_confirmation=${password_confirmation}`
+					`authentication/reset_password?token=${token}&password=${encodeURIComponent(
+						password
+					)}&password_confirmation=${encodeURIComponent(password_confirmation)}`
 				);
 				return resetPassword;
 			} catch (err) {
