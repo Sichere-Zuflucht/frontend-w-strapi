@@ -6,3 +6,4 @@
 - Psychosoziale Beratung
 - Rechtsberatung
 - Coaching
+- psychologische Beratung

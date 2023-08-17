@@ -127,7 +127,7 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 					config
 				);
 				return {
-					status: 200,
+					meeting,
 				};
 			} catch (err) {
 				errorhandling(err);
@@ -349,9 +349,9 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 			location.href = 'registration/signin';
 		},
 		forgotPassword: async ({ email }) => {
-			const send_to_email = email
-				? email
-				: store.getters['getCurrentUser'].email;
+			var send_to_email = email;
+			if (store.getters['getCurrentUser'])
+				send_to_email = store.getters['getCurrentUser'].email;
 			try {
 				const data = JSON.stringify({
 					user: {

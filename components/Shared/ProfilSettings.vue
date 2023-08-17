@@ -127,8 +127,12 @@
 		methods: {
 			resetPassword() {
 				this.btn.loading = true;
+				console.log(
+					'frontend email',
+					this.$store.getters['getCurrentUser'].email
+				);
 				this.$func
-					.forgotPassword()
+					.forgotPassword({ email: '' })
 					.then(() => {
 						this.btn.loading = false;
 						this.btn.disabled = true;

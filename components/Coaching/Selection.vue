@@ -140,7 +140,12 @@
 					bioSubtitle:
 						'Damit die Frauen Ihr Angebot besser einschätzen können.',
 				},
-				topics: ['psychosoziale Beratung', 'Coaching', 'Rechtsberatung'],
+				topics: [
+					'psychosoziale Beratung',
+					'Coaching',
+					'Rechtsberatung',
+					'psychologische Beratung',
+				],
 				valid: {
 					additional: false,
 				},

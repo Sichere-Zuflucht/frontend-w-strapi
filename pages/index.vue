@@ -27,7 +27,7 @@
 						<p>
 							Unsere Beratungsthemen:<b>
 								<br />- Psychosoziale Beratung <br />- Rechtsberatung <br />-
-								Coaching</b
+								Coaching<br />- psychologische Beratung</b
 							>
 						</p>
 					</v-col>
@@ -77,7 +77,7 @@
 						Sie können beraten in:
 						<br /><b
 							>- Psychosoziale Beratung <br />- Rechtsberatung <br />-
-							Coaching</b
+							Coaching<br />- psychologische Beratung</b
 						>
 					</p>
 				</v-col>

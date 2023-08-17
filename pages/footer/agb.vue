@@ -52,9 +52,10 @@
 				Die Sichere Zuflucht stellt mit ihrer Plattform einen Dienst zur
 				Verfügung, mit dem Kundinnen Hilfe in Form von Informationen zum Thema
 				häusliche Gewalt und persönliche Hilfe in Form von Coaching,
-				Rechtsberatung und psychologischer Beratung bekommen. Sie dient der
-				Vermittlung von Dienstleistungen der entsprechenden Berater. Die
-				Dienstleistung richtet sich ausschließlich an Frauen.
+				Rechtsberatung, psychologische Beratung und psychologischer Beratung
+				bekommen. Sie dient der Vermittlung von Dienstleistungen der
+				entsprechenden Berater. Die Dienstleistung richtet sich ausschließlich
+				an Frauen.
 			</p>
 			<p>Die Dienstleistungen können folgendes umfassen:</p>
 			<ul>
@@ -215,12 +216,12 @@
 			</p>
 			<p>
 				<strong>6.1</strong> Berater sind verpflichtet, jede Sitzung in die
-				jeweils passende Kategorie (persönliches Coaching, Rechtsberatung oder
-				psychologische Beratung) einzustellen und Angebote wahrheitsgemäß und
-				unter Angabe aller relevanten Merkmale und Eigenschaften mit Worten und
-				möglichst auch durch aussagekräftige Bilder zu beschreiben. Berater sind
-				verpflichtet, die Kundinnen nur in der ausgewiesenen Kategorie zu
-				beraten.
+				jeweils passende Kategorie (persönliches Coaching, Rechtsberatung,
+				psychologische Beratung oder psychologische Beratung) einzustellen und
+				Angebote wahrheitsgemäß und unter Angabe aller relevanten Merkmale und
+				Eigenschaften mit Worten und möglichst auch durch aussagekräftige Bilder
+				zu beschreiben. Berater sind verpflichtet, die Kundinnen nur in der
+				ausgewiesenen Kategorie zu beraten.
 			</p>
 			<p>
 				<strong>6.2</strong> Das Verwenden von Texten, Bildern oder sonstigen

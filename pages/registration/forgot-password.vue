@@ -41,6 +41,15 @@
 						>
 					</div>
 				</v-form>
+				<v-alert
+					v-if="success.status"
+					type="success"
+					color="success"
+					class="my-4"
+				>
+					Die Anfrage wurde erfolgreich bearbeitet. In Kürze erhalten Sie eine
+					eMail. Bitte folgen Sie den dort angegebenen Schritten.
+				</v-alert>
 				<v-alert v-if="error.status" type="info" color="secondary" class="my-4">
 					{{ error.message }}
 				</v-alert>
@@ -72,16 +81,22 @@
 					status: false,
 					message: '',
 				},
+				success: {
+					status: false,
+				},
 				loading: false,
 			};
 		},
 		methods: {
 			resetPassword() {
 				this.loading = true;
+				this.error.status = false;
+				this.success.status = false;
 				this.$func
 					.forgotPassword({ email: this.email })
 					.then(() => {
 						this.loading = false;
+						this.success.status = true;
 					})
 					.catch((error) => {
 						this.error.status = true;

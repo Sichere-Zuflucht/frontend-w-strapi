@@ -108,7 +108,7 @@
 					wurde abgesagt.
 				</v-alert>
 			</div>
-			<div v-else-if="status.isPayed">
+			<div v-else-if="status.isPayed && !status.isPassed">
 				<p class="text-uppercase font-weight-bold mb-1 mt-2 caption">
 					Meeting läuft gerade.
 				</p>
@@ -164,6 +164,7 @@
 					Bitte lade kurz vor Beginn die Seite nochmal neu, um den
 					Videocall-Button zu aktivieren. <a @click="reload">neu laden</a>
 				</p>
+				<v-alert v-if="btn.error" type="error">{{ btn.errorMsg }}</v-alert>
 			</div>
 			<!----<div
 				v-else-if="
@@ -408,17 +409,24 @@
 				}*/
 			},
 			async startCapturePayment() {
-				if (this.status != 'isPayed') {
-					await this.$func
-						.womanParticipatesMeetingAndCapturesPayment({
-							meeting_id: this.id,
-						})
-						.then(() => {
+				await this.$func
+					.womanParticipatesMeetingAndCapturesPayment({
+						meeting_id: this.id,
+					})
+					.then((res) => {
+						console.log('res', res);
+						if (res.status === 200) {
 							window.open(this.meeting.personal_videolink, '_blank');
-						});
-				} else {
-					window.open(this.meeting.personal_videolink, '_blank');
-				}
+						} else {
+							this.btn.error = true;
+							this.btn.errorMsg =
+								'Beim Bezahlen scheint leider etwas schief gelaufen zu sein. Bitte wenden Sie sich an technik@sichere-zuflucht.de, falls der Fehler weiterhin bestehen sollte.';
+						}
+					})
+					.catch((err) => {
+						this.btn.error = true;
+						this.btn.errorMsg = err.response.data.message;
+					});
 			},
 			/*standardPayment(v, dI) {
 				this.$stripePayment(this.coach.stripeID, this.id)
