@@ -6,4 +6,4 @@ ranking: 5
 - Psychosoziale Beratung
 - Rechtsberatung
 - Coaching
-- psychologische Beratung
+- Psychosoziale Beratung

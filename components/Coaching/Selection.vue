@@ -141,10 +141,10 @@
 						'Damit die Frauen Ihr Angebot besser einschätzen können.',
 				},
 				topics: [
-					'psychosoziale Beratung',
+					'Psychologische Beratung',
+					'Psychosoziale Beratung',
 					'Coaching',
 					'Rechtsberatung',
-					'psychologische Beratung',
 				],
 				valid: {
 					additional: false,

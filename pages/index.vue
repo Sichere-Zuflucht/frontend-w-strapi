@@ -77,7 +77,7 @@
 						Sie können beraten in:
 						<br /><b
 							>- Psychosoziale Beratung <br />- Rechtsberatung <br />-
-							Coaching<br />- psychologische Beratung</b
+							Coaching<br />- Psychosoziale Beratung</b
 						>
 					</p>
 				</v-col>
