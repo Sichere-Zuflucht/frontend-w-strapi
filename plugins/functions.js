@@ -126,7 +126,9 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 					data,
 					config
 				);
-				return meeting;
+				return {
+					status: 200,
+				};
 			} catch (err) {
 				errorhandling(err);
 				return err;

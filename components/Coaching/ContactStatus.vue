@@ -108,7 +108,23 @@
 					wurde abgesagt.
 				</v-alert>
 			</div>
-			<div v-else-if="status.isPayed">Meeting läuft gerade</div>
+			<div v-else-if="status.isPayed">
+				<p class="text-uppercase font-weight-bold mb-1 mt-2 caption">
+					Meeting läuft gerade.
+				</p>
+				<v-btn
+					class="my-2"
+					color="success"
+					target="_blank"
+					:disabled="status.isAccessable"
+					:href="meeting.personal_videolink"
+					>zurück zum Videocall
+				</v-btn>
+				<v-alert dark text dense color="success"
+					>Der Videocall begann um
+					{{ formatTime(meeting.selected_meeting) }}
+				</v-alert>
+			</div>
 			<div v-else-if="status.isPassed">
 				<p class="text-uppercase font-weight-bold mb-1 mt-2 caption">
 					Vergangener Termin
@@ -131,7 +147,7 @@
 					>zum Videocall
 				</v-btn>
 				<v-btn
-					v-if="meeting.videoType === 'normal'"
+					v-if="meeting.video_type === 'normal'"
 					class="my-2"
 					color="secondary"
 					outlined
@@ -302,7 +318,7 @@
 					case 'woman payment method is valid':
 						hasCreditCard = true;
 						break;
-					case 'woman fee was captchured':
+					case 'woman fee was captured':
 						isPayed = true;
 						break;
 					case 'archived':
@@ -318,7 +334,7 @@
 					const entryTime = new Date(meetingTime.getTime() - 15 * 60 * 1000);
 					const currentTime = new Date();
 					if (currentTime >= entryTime && currentTime < meetingTimeEnd) {
-						isAccessable = true;
+						if (!isPayed) isAccessable = true;
 					} else if (currentTime > meetingTimeEnd) {
 						isPassed = true;
 					}
@@ -331,9 +347,9 @@
 				return {
 					isRequest,
 					hasTimeslots,
-					hasCreditCard,
 					isAccessable,
 					isPayed,
+					hasCreditCard,
 					isPassed,
 					isArchived,
 					borderColor,
@@ -392,12 +408,17 @@
 				}*/
 			},
 			async startCapturePayment() {
-				const payment =
-					await this.$func.womanParticipatesMeetingAndCapturesPayment({
-						meeting_id: this.id,
-					});
-				console.log(payment);
-				//meeting.personal_videolink
+				if (this.status != 'isPayed') {
+					await this.$func
+						.womanParticipatesMeetingAndCapturesPayment({
+							meeting_id: this.id,
+						})
+						.then(() => {
+							window.open(this.meeting.personal_videolink, '_blank');
+						});
+				} else {
+					window.open(this.meeting.personal_videolink, '_blank');
+				}
 			},
 			/*standardPayment(v, dI) {
 				this.$stripePayment(this.coach.stripeID, this.id)
