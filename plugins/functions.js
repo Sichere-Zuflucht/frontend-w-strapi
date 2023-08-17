@@ -380,7 +380,7 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 				);
 				return resetPassword;
 			} catch (err) {
-				return err;
+				throw err;
 			}
 		},
 		/** MAGAZINE */

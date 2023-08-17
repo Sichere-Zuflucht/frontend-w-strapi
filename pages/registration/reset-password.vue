@@ -142,7 +142,7 @@
 					.catch((err) => {
 						this.$errorhandling(err);
 						this.error.status = true;
-						this.error.message = err.response.data.error.message;
+						this.error.message = err.response.data.message;
 					});
 			},
 		},
