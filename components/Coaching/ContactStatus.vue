@@ -127,17 +127,16 @@
 					color="success"
 					target="_blank"
 					:disabled="!status.isAccessable"
-					:href="meeting.personal_videolink"
+					@click="startCapturePayment"
 					>zum Videocall
 				</v-btn>
-				<!---</v-btn>:disabled="!videoStatus.ready" @click="startPaySession"-->
 				<v-btn
 					v-if="meeting.videoType === 'normal'"
 					class="my-2"
 					color="secondary"
 					outlined
 					target="_blank"
-					:href="meeting.personal_videolink"
+					:href="`https://meet.jit.si/womantest-${id}-${Date.now()}`"
 					>Video testen
 				</v-btn>
 				<v-alert dark text dense color="success"
@@ -363,7 +362,6 @@
 					selected_time_index: this.selectedItemIndex,
 					meeting_id: this.id,
 				});
-				console.log(pay_url);
 				location.href = pay_url;
 				/*this.btn.payButtonLoading = true;
 				let redReq, data, video;
@@ -392,6 +390,14 @@
 					this.redirectWarning = true;
 					this.standardPayment(video, dateInput);
 				}*/
+			},
+			async startCapturePayment() {
+				const payment =
+					await this.$func.womanParticipatesMeetingAndCapturesPayment({
+						meeting_id: this.id,
+					});
+				console.log(payment);
+				//meeting.personal_videolink
 			},
 			/*standardPayment(v, dI) {
 				this.$stripePayment(this.coach.stripeID, this.id)

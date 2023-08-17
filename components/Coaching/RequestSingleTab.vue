@@ -239,7 +239,7 @@
 							color="secondary"
 							outlined
 							target="_blank"
-							:href="`https://meet.jit.si/coachtest-${Date.now()}`"
+							:href="`https://meet.jit.si/coachtest-${id}-${Date.now()}`"
 							>Video testen
 						</v-btn>
 						({{

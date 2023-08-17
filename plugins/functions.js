@@ -118,6 +118,20 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 				errorhandling(err);
 			}
 		},
+		womanParticipatesMeetingAndCapturesPayment: async ({ meeting_id }) => {
+			try {
+				const data = JSON.stringify({});
+				const meeting = await $axios.$put(
+					`meetings/${meeting_id}/capture_payment`,
+					data,
+					config
+				);
+				return meeting;
+			} catch (err) {
+				errorhandling(err);
+				return err;
+			}
+		},
 
 		archiveMeeting: (meeting_id) => {
 			return $axios.$put(`meetings/${meeting_id}/archive`, {}, config);

@@ -20,7 +20,7 @@
 					Person, können Sie direkt starten.
 				</p>
 
-				<div v-if="!user.stripe_account_success">
+				<div v-if="!user.stripe_id">
 					<div class="d-flex justify-center mb-2 mt-12">
 						<v-btn
 							:loading="loading"
