@@ -38,9 +38,11 @@
 					<v-text-field
 						v-model="password2"
 						:rules="rules.passwordRules2"
+						:type="hidePassword2 ? 'password' : 'text'"
+						:append-icon="hidePassword2 ? 'mdi-eye' : 'mdi-eye-off'"
 						label="Neues Passwort wiederholen"
-						type="password"
 						class="mt-6"
+						@click:append="() => (hidePassword2 = !hidePassword2)"
 					></v-text-field>
 					<v-btn
 						color="primary"
@@ -88,13 +90,18 @@
 				password: '',
 				password2: '',
 				hidePassword: true,
+				hidePassword2: true,
 				rules: {
-					passwordRules: [this.$rules.password],
+					passwordRules: [
+						(v) => !!v || 'Passwort ist erforderlich',
+						this.$rules.password,
+					],
 					passwordRules2: [
 						(v) => !!v || 'Passwortüberprüfung nicht vergessen',
 						(v) =>
 							(!!v && v === this.password) ||
 							'Passwörter müssen übereinstimmen',
+						this.$rules.password,
 					],
 				},
 				chips: [
