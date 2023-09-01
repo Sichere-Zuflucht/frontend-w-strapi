@@ -110,8 +110,6 @@
 			const article = await $func.loadSingleArticle(query.title);
 			const relatedArticles = await $func.loadRelatedArticles(article.id);
 
-			console.log('article', article);
-
 			return {
 				article,
 				relatedArticles,

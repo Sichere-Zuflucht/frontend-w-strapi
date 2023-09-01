@@ -398,9 +398,14 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 		},
 		loadSingleArticle: async (article_slug) => {
 			try {
-				return await $axios.$get(
+				const article = await $axios.$get(
 					`https://sizu-content.work12.de/article/${article_slug}.json`
 				);
+				const cover_url = `https://sizu-content.work12.de/article/${article_slug}/${article.cover.url
+					.split('/')
+					.pop()}`;
+				article.cover.url = cover_url;
+				return article;
 			} catch (err) {
 				errorhandling(err);
 				return null;
