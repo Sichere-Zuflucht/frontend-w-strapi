@@ -399,7 +399,7 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 		loadSingleArticle: async (article_slug) => {
 			try {
 				return await $axios.$get(
-					`https://sizu-content.work12.de/article/${article_slug}`
+					`https://sizu-content.work12.de/article/${article_slug}.json`
 				);
 			} catch (err) {
 				errorhandling(err);
