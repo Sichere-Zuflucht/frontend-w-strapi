@@ -13,7 +13,7 @@
 		class="d-flex flex-column pb-2 mx-2"
 	>
 		<v-card-text class="pt-0 flex-grow-1 flex-shrink-0">
-			<nuxt-link :to="'/berater/me?name=' + pubCoachData.display_name">
+			<nuxt-link :to="'/berater/me?name=' + pubCoachData.slug">
 				<v-avatar color="primary" class="my-5" size="80"
 					><v-img
 						v-if="pubCoachData.avatar_content_url"
