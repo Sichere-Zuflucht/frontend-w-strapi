@@ -9,13 +9,6 @@
 		</v-btn>
 		<v-btn
 			icon
-			href="https://twitter.com/SichereZuflucht"
-			target="_blank"
-			:color="color ? '#1DA1F2' : null"
-			><v-icon>mdi-twitter</v-icon>
-		</v-btn>
-		<v-btn
-			icon
 			href="https://www.instagram.com/sicherezuflucht/"
 			target="_blank"
 			:color="color ? '#C13584' : null"

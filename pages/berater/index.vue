@@ -25,6 +25,7 @@
 				coaching
 			/><!-- filter="???price" price onlinecoaching />-->
 		</v-container>
+		<SharedTypeInfos />
 	</div>
 </template>
 

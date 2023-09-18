@@ -376,11 +376,13 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 		resetPassword: async ({ token, password, password_confirmation }) => {
 			try {
 				const resetPassword = await $axios.$post(
-					`authentication/reset_password?token=${token}&password=${password}&password_confirmation=${password_confirmation}`
+					`authentication/reset_password?token=${token}&password=${encodeURIComponent(
+						password
+					)}&password_confirmation=${encodeURIComponent(password_confirmation)}`
 				);
 				return resetPassword;
 			} catch (err) {
-				return err;
+				throw err;
 			}
 		},
 		/** MAGAZINE */
@@ -396,9 +398,14 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 		},
 		loadSingleArticle: async (article_slug) => {
 			try {
-				return await $axios.$get(
-					`https://sizu-content.work12.de/article/${article_slug}`
+				const article = await $axios.$get(
+					`https://sizu-content.work12.de/article/${article_slug}.json`
 				);
+				const cover_url = `https://sizu-content.work12.de/article/${article_slug}/${article.cover.url
+					.split('/')
+					.pop()}`;
+				article.cover.url = cover_url;
+				return article;
 			} catch (err) {
 				errorhandling(err);
 				return null;

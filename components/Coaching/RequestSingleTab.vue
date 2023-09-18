@@ -225,6 +225,12 @@
 							<span class="caption">(50min)</span>
 						</b>
 						<v-divider></v-divider>
+						<v-alert type="success" icon="mdi-key">
+							<b>Login als Moderator*in</b><br />
+							Username:
+							{{ $store.getters['getCurrentUser'].slug }} <br />
+							Passwort: {{ $store.getters['getCurrentUser'].id.slice(0, 4) }}
+						</v-alert>
 						<v-btn
 							class="my-2"
 							color="success"
@@ -239,7 +245,7 @@
 							color="secondary"
 							outlined
 							target="_blank"
-							:href="`https://meet.jit.si/coachtest-${id}-${Date.now()}`"
+							:href="`https://meetings.sichere-zuflucht.de/coachtest-${id}-${Date.now()}`"
 							>Video testen
 						</v-btn>
 						({{
@@ -247,6 +253,7 @@
 								? 'standard Videoanbieter '
 								: 'zertifizierter Videoanbieter'
 						}})
+
 						<p class="caption">
 							Der Zugang zum Videocall wird
 							<b>15min vor Beginn</b> freigeschaltet. Bitte laden Sie kurz vor
