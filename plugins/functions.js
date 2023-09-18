@@ -389,6 +389,7 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 		loadAllArticles: async () => {
 			try {
 				return (
+					// hier sitzt der Fehler, oder?
 					await $axios.$get('https://prod-zuflucht.work12.de/api/v1/articles')
 				).data;
 			} catch (err) {
@@ -399,6 +400,7 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 		loadSingleArticle: async (article_slug) => {
 			try {
 				const article = await $axios.$get(
+					// übrigens sollte das hier auch eine Umgebungsvariable sein
 					`https://sizu-content.work12.de/article/${article_slug}.json`
 				);
 				const cover_url = `https://sizu-content.work12.de/article/${article_slug}/${article.cover.url
@@ -414,6 +416,7 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 		loadRelatedArticles: async (article_id) => {
 			try {
 				const allArticles = (
+					// noch eine Stelle, wo wir die Variable brauchen
 					await $axios.$get('https://prod-zuflucht.work12.de/api/v1/articles')
 				).data;
 

@@ -111,6 +111,7 @@ export default {
 		// WARNING: baseURL and proxy cannot be used at the same time,
 		// so when the proxy option is in use, you need to define prefix
 		// instead of baseURL
+		// wir nehmen baseURL, oder?
 		baseURL: process.env.RUBY_URL, //'https://zuflucht.workspace-001.de/api/v1/', //'http://localhost:2901/api/v1/',
 
 		// WARNING: proxy doesn't work with nuxt generate,
