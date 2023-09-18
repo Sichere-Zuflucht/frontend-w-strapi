@@ -389,7 +389,7 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 		loadAllArticles: async () => {
 			try {
 				return (
-					await $axios.$get('https://prod-zuflucht.work12.de/api/v1/articles')
+					await $axios.$get('articles')
 				).data;
 			} catch (err) {
 				errorhandling(err);
@@ -414,7 +414,7 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 		loadRelatedArticles: async (article_id) => {
 			try {
 				const allArticles = (
-					await $axios.$get('https://prod-zuflucht.work12.de/api/v1/articles')
+					await $axios.$get('articles')
 				).data;
 
 				const max = allArticles.length;
