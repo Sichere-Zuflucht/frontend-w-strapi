@@ -45,7 +45,7 @@ jobs:
           DONATION_4: ${{ vars.DONATION_4 }}
           RUBY_URL: ${{ vars.RUBY_URL }}
         run: |
-          echo "env : ${{ vars.RUBY_URL }}"
+          echo "env : ${{ env.NODE_ENV }}"
           npm install --global yarn
           yarn install --frozen-lockfile
           yarn build
