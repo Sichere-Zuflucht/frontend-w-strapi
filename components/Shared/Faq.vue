@@ -39,30 +39,6 @@
 				</v-expansion-panels>
 			</v-col>
 		</v-row>
-		<!----<v-row v-if="faqList.length != 0" id="faqwrapper" class="pb-8">
-			<v-col v-for="(cat, i) in faqList" :key="i" cols="12" sm="6" md="4">
-				<div v-if="cat">
-					<p class="font-weight-bold">{{ cat.catTitle }}</p>
-					<v-expansion-panels style="box-shadow: none !important">
-						<v-expansion-panel
-							v-for="faq in cat.faqs"
-							:key="faq.id"
-							style="box-shadow: none !important"
-						>
-							<v-expansion-panel-header class="primary--text align-start">
-								{{ faq.question }}
-							</v-expansion-panel-header>
-							<v-expansion-panel-content
-								v-if="faq.answer"
-								class="caption bluegray--text"
-							>
-								<p v-html="$md.render(faq.answer)"></p>
-							</v-expansion-panel-content>
-						</v-expansion-panel>
-					</v-expansion-panels>
-				</div>
-			</v-col>
-		</v-row>-->
 	</div>
 </template>
 

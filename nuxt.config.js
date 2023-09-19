@@ -101,75 +101,16 @@ export default {
 	},
 
 	axios: {
-		// WARNING: baseURL and proxy cannot be used at the same time,
-		// so when the proxy option is in use, you need to define prefix
-		// instead of baseURL
-		baseURL: process.env.RUBY_URL, //'https://zuflucht.workspace-001.de/api/v1/', //'http://localhost:2901/api/v1/',
-
-		// WARNING: proxy doesn't work with nuxt generate,
-		// have to use a prefix and set an API_URL
-		// prefix: 'http://localhost:2901/api/v1',
-		// proxy: true,
-		//baseURL: process.env.STRAPI_URL, // || 'http://localhost:1337', // Used as fallback if no runtime config is provided
-	},
-
-	strapi: {
-		url: 'http://localhost:1337/api', // process.env.STRAPI_URL, //process.env.STRAPI_URL, //|| 'http://localhost:1337/api', // erased + '/api'
-		entities: ['meetings', 'users', 'magazines', 'tags', 'faq'],
-		expires: '1d',
-		cookie: {
-			path: '/',
-		},
-	},
-
-	markdownit: {
-		runtime: true, // Support `$md()`
+		baseURL: process.env.RUBY_URL,
 	},
 
 	publicRuntimeConfig: {
-		rubyurl: process.env.RUBY_URL,
-		strapi: {
-			url: process.env.STRAPI_URL,
-		},
-		stripe: {
-			publishableKey: process.env.STRIPE_PK,
-		},
 		slackUrl: process.env.SLACK_WEBHOOK,
 		donate1: process.env.DONATION_1,
 		donate2: process.env.DONATION_2,
 		donate3: process.env.DONATION_3,
 		donate4: process.env.DONATION_4,
-		status: process.env.NODE_ENV,
-	},
-
-	generate: {
-		// create an array of all routes for generating static pages
-		// careful, this is only used by `npm run generate`. These must match SPA mode routes
-		/*routes: async function () {
-			const userRoute = await axios
-				.get(process.env.STRAPI_URL + '/users')
-				.then(async (response) => {
-					let users = response.data.map((user) => {
-						return {
-							route: '/berater/' + user.username,
-							payload: user,
-						};
-					});
-					return [...users];
-				});
-			const magazineRoute = await axios
-				.get(process.env.STRAPI_URL + '/magazines')
-				.then((response) => {
-					let magazines = response.data.data.map((magazin) => {
-						return {
-							route: '/magazine/' + magazin.attributes.slug,
-							payload: magazin,
-						};
-					});
-					return [...magazines];
-				});
-			return [...userRoute, ...magazineRoute];
-		},*/
+		//status: process.env.NODE_ENV,
 	},
 
 	// Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
