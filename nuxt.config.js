@@ -62,14 +62,7 @@ export default {
 	],
 
 	// Modules: https://go.nuxtjs.dev/config-modules
-	modules: [
-		'@nuxtjs/axios',
-		'@nuxtjs/strapi',
-		'@nuxtjs/markdownit',
-		'@nuxt/content',
-		'nuxt-stripe-module',
-		'@dansmaculotte/nuxt-security',
-	],
+	modules: ['@nuxtjs/axios', '@nuxt/content', 'nuxt-stripe-module'],
 
 	security: {
 		hsts: {
