@@ -21,6 +21,7 @@ jobs:
   build-project:
     name: build frontend-w-strapi
     runs-on: ubuntu-latest
+    environment: ${{ github.ref }}
     steps:
       - name: checkout
         uses: actions/checkout@v3
