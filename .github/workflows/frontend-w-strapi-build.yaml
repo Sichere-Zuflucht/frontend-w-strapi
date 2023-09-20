@@ -1,7 +1,7 @@
 # To better understand this file read this:
 # https://docs.ionos.space/docs/github-actions-customization/
 
-name: "Deploy Now: Execute Build"
+name: 'Deploy Now: Execute Build'
 
 on:
   workflow_call:
@@ -17,7 +17,7 @@ env:
   DEPLOYMENT_FOLDER: dist
 
 jobs:
-# Please do not rename this job
+  # Please do not rename this job
   build-project:
     name: build frontend-w-strapi
     runs-on: ubuntu-latest
@@ -35,20 +35,20 @@ jobs:
       - name: Build Node assets
         env:
           CI: true
-          DONATION_1: https://donate.stripe.com/14k4gCaxOe1efCw28c
-          DONATION_2: https://donate.stripe.com/4gw00m0Xe6yM0HC7sx
-          DONATION_3: https://donate.stripe.com/aEU14qgWc6yM61W5kq
-          DONATION_4: https://donate.stripe.com/28ocN8eO4g9m3TO4gn
-          RUBY_URL: https://prod-zuflucht.work12.de/api/v1
+          DONATION_1: ${{ vars.DONATION_1 }}
+          DONATION_2: ${{ vars.DONATION_2 }}
+          DONATION_3: ${{ vars.DONATION_3 }}
+          DONATION_4: ${{ vars.DONATION_4 }}
+          RUBY_URL: ${{ vars.RUBY_URL }}
           SITE_URL: ${{ inputs.site-url }}
-          STRIPE_PK: pk_live_51IbjZeFRsEq5IriE1Tu2QkxIT3XX30EHDxf6WrI1o1rWoS4xzEPEI6pPsmoUtLCrXNaNWH8Wet6pFvSdtznkdbPE00b5blmvzY
+          STRIPE_PK: ${{ vars.STRIPE_PK }}
         run: |
           npm install --global yarn
           yarn install --frozen-lockfile
           yarn build
           yarn generate
 
-# Please do not touch the following action
+      # Please do not touch the following action
       - name: Store deployment content
         uses: ionos-deploy-now/artifact-action@v1
         with:
