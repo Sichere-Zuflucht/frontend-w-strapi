@@ -21,7 +21,7 @@ jobs:
   build-project:
     name: build frontend-w-strapi
     runs-on: ubuntu-latest
-    environment: ${{ github.ref || github.event.client_payload.ref}}
+    environment: ${{ github.ref }}
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -36,16 +36,14 @@ jobs:
       - name: Build Node assets
         env:
           CI: true
-          SITE_URL: ${{ inputs.site-url }}
-          STRAPI_URL: ${{ vars.STRAPI_URL }}
-          STRIPE_PK: ${{ vars.STRIPE_PK }}
           DONATION_1: ${{ vars.DONATION_1 }}
           DONATION_2: ${{ vars.DONATION_2 }}
           DONATION_3: ${{ vars.DONATION_3 }}
           DONATION_4: ${{ vars.DONATION_4 }}
           RUBY_URL: ${{ vars.RUBY_URL }}
+          SITE_URL: ${{ inputs.site-url }}
+          STRIPE_PK: ${{ vars.STRIPE_PK }}
         run: |
-          echo "env : ${{ github.ref }}"
           npm install --global yarn
           yarn install --frozen-lockfile
           yarn build
@@ -57,7 +55,7 @@ jobs:
         with:
           api-key: ${{ secrets.IONOS_API_KEY }}
           service-host: api-eu.ionos.space
-          project-id: 77285c6f-760a-46d2-a7fa-8504971a469c
+          project-id: d929f2fc-32eb-44a9-9e77-9868402cd261
           branch-id: ${{ inputs.branch-id }}
           version: ${{ github.sha }}
           folder: ${{ env.DEPLOYMENT_FOLDER }}
