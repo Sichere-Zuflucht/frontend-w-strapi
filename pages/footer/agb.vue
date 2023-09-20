@@ -25,9 +25,9 @@
 				Apps.
 			</p>
 			<p>
-				<em>„Berater“</em> sind Coaches, Rechtsanwälte, psychosoziale Berater
-				und psychologische Berater, die über die Plattform ihre Dienstleistungen
-				anbieten und registriert haben.
+				<em>„Berater“</em> sind Coaches, Rechtsanwälte und psychosoziale
+				Berater, die über die Plattform ihre Dienstleistungen anbieten und
+				registriert haben.
 			</p>
 			<p>
 				<em>„Kundin“/„Kundinnen“</em> bezeichnet von Gewalt betroffene Frauen,
@@ -36,8 +36,8 @@
 			<p>
 				<em>„Dienstleistung“</em> bezeichnet alle Services, die von auf der
 				Plattform registrierten Beratern angeboten werden und umfassen
-				allgemeine Beratungsleistungen, psychologische Hilfe, psychosoziale
-				Beratung und Rechtsberatung.
+				allgemeine Beratungsleistungen, psychosoziale Beratung und
+				Rechtsberatung.
 			</p>
 			<p>
 				<em>„coachen“/„beraten“</em> betrifft die tatsächliche und entsprechende
@@ -53,10 +53,9 @@
 				Die Sichere Zuflucht stellt mit ihrer Plattform einen Dienst zur
 				Verfügung, mit dem Kundinnen Hilfe in Form von Informationen zum Thema
 				häusliche Gewalt und persönliche Hilfe in Form von Coaching,
-				Rechtsberatung, psychosoziale Beratung und psychologischer Beratung
-				bekommen. Sie dient der Vermittlung von Dienstleistungen der
-				entsprechenden Berater. Die Dienstleistung richtet sich ausschließlich
-				an Frauen.
+				Rechtsberatung und psychosoziale Beratung bekommen. Sie dient der
+				Vermittlung von Dienstleistungen der entsprechenden Berater. Die
+				Dienstleistung richtet sich ausschließlich an Frauen.
 			</p>
 			<p>Die Dienstleistungen können folgendes umfassen:</p>
 			<ul>
@@ -135,10 +134,9 @@
 			<p></p>
 			<p><strong>3 Nutzungsberechtigung</strong></p>
 			<p>
-				<strong>3.1</strong> Rechtsanwälte, psychosoziale Berater,psychologische
-				Berater und Coaches können über die Plattform ihre Dienstleistungen
-				anbieten und sind nach Registrierung Berater im Sinne dieser
-				Nutzungsbedingungen.
+				<strong>3.1</strong> Rechtsanwälte, psychosoziale Berater und Coaches
+				können über die Plattform ihre Dienstleistungen anbieten und sind nach
+				Registrierung Berater im Sinne dieser Nutzungsbedingungen.
 			</p>
 			<p>
 				<strong>3.2</strong> Ausschließlich betroffene und registrierte Frauen
@@ -218,12 +216,12 @@
 			</p>
 			<p>
 				<strong>6.1</strong> Berater sind verpflichtet, jede Sitzung in die
-				jeweils passende Kategorie (persönliches Coaching, Rechtsberatung,
-				psychosoziale Beratung oder psychologische Beratung) einzustellen und
-				Angebote wahrheitsgemäß und unter Angabe aller relevanten Merkmale und
-				Eigenschaften mit Worten und möglichst auch durch aussagekräftige Bilder
-				zu beschreiben. Berater sind verpflichtet, die Kundinnen nur in der
-				ausgewiesenen Kategorie zu beraten.
+				jeweils passende Kategorie (persönliches Coaching, Rechtsberatung oder
+				psychosoziale Beratung) einzustellen und Angebote wahrheitsgemäß und
+				unter Angabe aller relevanten Merkmale und Eigenschaften mit Worten und
+				möglichst auch durch aussagekräftige Bilder zu beschreiben. Berater sind
+				verpflichtet, die Kundinnen nur in der ausgewiesenen Kategorie zu
+				beraten.
 			</p>
 			<p>
 				<strong>6.2</strong> Das Verwenden von Texten, Bildern oder sonstigen

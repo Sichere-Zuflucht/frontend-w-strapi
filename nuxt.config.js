@@ -64,53 +64,20 @@ export default {
 	// Modules: https://go.nuxtjs.dev/config-modules
 	modules: ['@nuxtjs/axios', '@nuxt/content', 'nuxt-stripe-module'],
 
-	security: {
-		hsts: {
-			maxAge: 31536000,
-			includeSubDomains: true,
-			preload: true,
-		},
-		referrer: 'same-origin',
-		csp: {
-			directives: {
-				defaultSrc: ["'self'"],
-				scriptSrc: ["'self'"],
-				objectSrc: ["'self'"],
-			},
-			reportOnly: false,
-		},
-		permissions: {
-			notifications: ['none'],
-		},
-		securityFile: {
-			contacts: ['mailto:support@sichere-zuflucht.de'],
-			// or contacts: 'mailto:security@example.com'
-			canonical: 'https://sichere-zuflucht.de/.well-know/security.txt',
-			preferredLanguages: 'de',
-			// or preferredLanguages: 'fr',
-			encryptions: ['https://sichere-zuflucht.de/pgp-key.txt'],
-			// or encryptions: 'https://example.com/pgp-key.txt',
-			//acknowledgments: ['https://sichere-zuflucht.de/hall-of-fame.html'],
-			// or acknowledgments: 'https://example.com/hall-of-fame.html',
-			policies: ['https://sichere-zuflucht.de/footer/impressum'],
-			// or policies: 'https://example.com/policy.html',
-			//hirings: ['https://sichere-zuflucht.de/jobs.html']
-			// or hirings: 'https://example.com/jobs.html'
-		},
-		additionalHeaders: true,
-	},
-
 	axios: {
 		baseURL: process.env.RUBY_URL,
 	},
 
 	publicRuntimeConfig: {
+		rubyurl: process.env.RUBY_URL,
+		stripe: {
+			publishableKey: process.env.STRIPE_PK,
+		},
 		slackUrl: process.env.SLACK_WEBHOOK,
 		donate1: process.env.DONATION_1,
 		donate2: process.env.DONATION_2,
 		donate3: process.env.DONATION_3,
 		donate4: process.env.DONATION_4,
-		//status: process.env.NODE_ENV,
 	},
 
 	// Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
