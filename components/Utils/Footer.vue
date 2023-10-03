@@ -97,21 +97,31 @@
 				GmbH</span
 			>
 		</v-row>
-		<!--<v-banner v-if="!aktiveCookieBanner" color="primary" class="white--text" rounded
-      style="position: fixed; bottom: 10px;">
-      <v-avatar slot="icon" size="40">
-        <v-icon icon="mdi-lock" color="white">
-          mdi-cookie
-        </v-icon>
-      </v-avatar>
+		<v-banner
+			v-if="!cookieBannerActive"
+			color="primary"
+			class="white--text"
+			rounded
+			style="position: fixed; bottom: 10px"
+		>
+			<v-avatar slot="icon" size="40">
+				<v-icon icon="mdi-lock" color="white"> mdi-cookie </v-icon>
+			</v-avatar>
 
-      Wir nutzen ausschließlich funktionale Cookies.
+			Wir nutzen ausschließlich funktionale Cookies.
 
-
-      <v-btn class="mx-4" @click="closeCookieBanner">
-        Verstanden
-      </v-btn>
-    </v-banner>-->
+			<v-btn class="mx-4" @click="closeCookieBanner"> Verstanden </v-btn>
+		</v-banner>
+		<v-btn
+			v-if="cookieBannerActive"
+			color="primary"
+			class="white--text"
+			style="position: fixed; bottom: 0px; left: 20px"
+		>
+			<v-icon icon="mdi-lock" color="white" @click="openCookieBanner">
+				mdi-cookie
+			</v-icon>
+		</v-btn>
 	</v-footer>
 </template>
 
@@ -152,16 +162,9 @@
 						title: 'FAQ',
 						to: '/footer/faq',
 					},
-					/*{
-          title: "Hilfe",
-          to: "/footer/hilfe",
-        },*/
 				],
-				aktiveCookieBanner: true,
+				cookieBannerActive: this.getCookieBanner('cookiebanner'),
 			};
-		},
-		mounted() {
-			this.aktiveCookieBanner = this.getCookieBanner('cookiebanner') === 'true';
 		},
 		methods: {
 			closeCookieBanner() {
@@ -169,7 +172,10 @@
 				d.setTime(d.getTime() + 14 * 24 * 60 * 60 * 1000);
 				let expires = 'expires=' + d.toUTCString();
 				document.cookie = 'cookiebanner=true;' + expires + ';path=/';
-				this.aktiveCookieBanner = true;
+				this.cookieBannerActive = true;
+			},
+			openCookieBanner() {
+				this.cookieBannerActive = false;
 			},
 			getCookieBanner(cname) {
 				let name = cname + '=';

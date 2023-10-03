@@ -182,10 +182,17 @@
 				donationStep: 1,
 				donationOptions: [
 					{
+						icon: 'mdi-help-circle',
+						title: 'Freien Betrag',
+						ownVal: true,
+						value: 'x',
+						link: this.$config.donate4,
+					},
+					{
 						icon: 'mdi-heart-circle',
 						title: 'ganze Beratung',
 						value: '50',
-						link: this.$config.donate1, //"https://donate.stripe.com/test_7sI5nr6C20t97T29AI", //process.env.NODE_ENV == "development" doesnt make sense here. because i want both times the testing link
+						link: this.$config.donate1,
 					},
 					{
 						icon: 'mdi-circle-slice-4',
@@ -198,13 +205,6 @@
 						title: '1/4 Beratung',
 						value: '12.50',
 						link: this.$config.donate3,
-					},
-					{
-						icon: 'mdi-help-circle',
-						title: 'Freien Betrag',
-						ownVal: true,
-						value: 'x',
-						link: this.$config.donate4,
 					},
 				],
 				donationChosen: null,

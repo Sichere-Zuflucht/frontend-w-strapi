@@ -14,6 +14,13 @@
 			:color="color ? '#C13584' : null"
 			><v-icon>mdi-instagram</v-icon>
 		</v-btn>
+		<v-btn
+			icon
+			href="https://de.linkedin.com/company/sichere-zuflucht"
+			target="_blank"
+			><v-icon>mdi-linkedin</v-icon>
+		</v-btn>
+
 		<!--<v-btn icon href="https://www.youtube.com/" target="_blank"
           ><v-icon>mdi-youtube</v-icon>
         </v-btn>-->
