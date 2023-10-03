@@ -12,6 +12,7 @@
 				in Form einer persönlichen Online-Beratung an.
 			</p>
 		</v-container>
+		<CoachingSlider />
 		<v-sheet color="grey lighten-5 py-md-16"
 			><v-container>
 				<v-row

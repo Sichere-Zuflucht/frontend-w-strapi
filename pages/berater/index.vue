@@ -28,19 +28,3 @@
 		<SharedTypeInfos />
 	</div>
 </template>
-
-<script>
-	export default {
-		name: 'FindCoach',
-		data() {
-			return {
-				allCoaches: [],
-				user: this.$store.getters['modules/user/user'],
-				coachingTypes: [],
-				tagsSelected: null,
-				loading: true,
-				error: null,
-			};
-		},
-	};
-</script>

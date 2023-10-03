@@ -196,7 +196,7 @@
 					{
 						icon: 'mdi-circle-slice-2',
 						title: '1/4 Beratung',
-						value: '17.50',
+						value: '12.50',
 						link: this.$config.donate3,
 					},
 					{
