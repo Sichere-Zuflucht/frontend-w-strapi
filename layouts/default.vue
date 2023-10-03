@@ -316,6 +316,9 @@
 		async fetch() {
 			//this.$store.dispatch('checkAuth');
 		},
+		mounted() {
+			this.$matomo.trackPageView();
+		},
 		computed: {
 			user() {
 				return this.$store.getters['getCurrentUser'];
