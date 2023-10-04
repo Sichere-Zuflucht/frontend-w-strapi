@@ -53,7 +53,7 @@ export default {
 	plugins: [
 		'~/plugins/croppa',
 		'~/plugins/functions',
-		{ src: '~/plugins/vue-matomo', mode: 'client' },
+		{ src: '~/plugins/vue-matomo', mode: 'client', ssr: false },
 	],
 
 	// Auto import components: https://go.nuxtjs.dev/config-components

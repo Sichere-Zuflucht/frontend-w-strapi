@@ -1,5 +1,35 @@
 <template>
 	<div>
+		<v-dialog v-model="dialog" width="500">
+			<template v-slot:activator="{ on, attrs }">
+				<v-banner type="info" color="primary" class="text-center"
+					>Wir sind im Radio. Schau dir unseren Werbespot an.
+					<v-btn v-bind="attrs" v-on="on">Anschauen</v-btn></v-banner
+				>
+			</template>
+
+			<v-card>
+				<v-card-title class="text-h5 grey lighten-2">
+					Unser Antenne Bayern Radiospot
+				</v-card-title>
+
+				<v-card-text>
+					<video>
+						<source src="" type="" />
+					</video>
+				</v-card-text>
+
+				<v-divider></v-divider>
+
+				<v-card-actions>
+					<v-spacer></v-spacer>
+					<v-btn color="primary" text @click="dialog = false">
+						schließen
+					</v-btn>
+				</v-card-actions>
+			</v-card>
+		</v-dialog>
+
 		<v-container class="py-md-8" style="min-height: calc(50vh - 74px)">
 			<h1 class="text-h1 mb-4 text-center primary--text pt-12">
 				Niemand muss <br />häusliche Gewalt aushalten.
@@ -135,3 +165,13 @@
 		<UtilsDonation />
 	</div>
 </template>
+
+<script>
+	export default {
+		data() {
+			return {
+				dialog: false,
+			};
+		},
+	};
+</script>
