@@ -202,4 +202,8 @@
 	#faq .v-expansion-panel-header__icon {
 		margin-left: 0px;
 	}
+
+	#faq video {
+		width: 100%;
+	}
 </style>
