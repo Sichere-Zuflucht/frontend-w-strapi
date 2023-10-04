@@ -12,7 +12,6 @@
 				in Form einer persönlichen Online-Beratung an.
 			</p>
 		</v-container>
-		<CoachingSlider />
 		<v-sheet color="grey lighten-5 py-md-16"
 			><v-container>
 				<v-row
@@ -47,13 +46,19 @@
 								<b>einfach, sicher und anonym</b> von überall aus, mit dem
 								<b>Handy</b>.
 								<v-btn color="secondary my-4" nuxt exact to="berater">
-									Berater*innen ansehen
+									Alle Berater*innen ansehen
 								</v-btn>
 							</v-card-subtitle>
 						</v-card></v-col
 					></v-row
 				>
+				<h2
+					class="text-h3 text-md-h1 text-uppercase text-center primary--text mb-2 mt-16"
+				>
+					Unsere Berater*innen
+				</h2>
 			</v-container>
+			<CoachingSlider />
 		</v-sheet>
 		<v-container class="pt-md-16">
 			<h3
