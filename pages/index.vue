@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<v-container class="py-md-8" style="max-width: 700px">
+		<!--<v-container class="py-md-8" style="max-width: 700px">
 			<v-row>
 				<v-col cols="12" sm="6">
 					<div
@@ -83,7 +83,7 @@
 				Wir bieten <b>Frauen und ihren Kindern aus Gewaltbeziehungen</b> Hilfe
 				in Form einer persönlichen Online-Beratung an.
 			</p>
-		</v-container>
+		</v-container> -->
 		<v-sheet color="grey lighten-5 py-md-16"
 			><v-container>
 				<v-row
