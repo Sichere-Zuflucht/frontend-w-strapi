@@ -18,7 +18,7 @@
 							data-poster="/antenne-bayern-video-poster.png"
 						>
 							<source
-								src="https://edef3.pcloud.com/cBZunzAcjZh7cYaCZZZSuznykZQ5ZZXLXZkZ83DIZsVZU0ZXFZNVZsJZ25ZQXZH0ZWJZYVZvFZyXZ55ZW0ZTjKWZoqsA6JimBmQL68KA8t4fGVNDO4yX/SZ-Spot-Antenne-Bayern.mp4"
+								src="https://filedn.eu/lp99rBq7eYVubX4DyHGOVvF/SZ-Spot-Antenne-Bayern.mp4"
 								type="video/mp4"
 							/>
 						</video>
@@ -104,7 +104,7 @@
 						</p>
 					</v-col>
 					<v-col cols="12" md="6">
-						<v-card class="mx-auto" max-width="320">
+						<v-card max-width="320">
 							<v-img src="/le-buzz-tVnm9I9jb8I-unsplash.jpg" height="200px" />
 
 							<v-card-title
