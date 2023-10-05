@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<v-container class="py-md-8" style="max-width: 700px">
+		<!--<v-container class="py-md-8" style="max-width: 700px">
 			<v-row>
 				<v-col cols="12" sm="6">
 					<div
@@ -71,7 +71,7 @@
 					</p>
 				</v-col>
 			</v-row>
-		</v-container>
+		</v-container>-->
 		<v-container class="py-md-8" style="min-height: calc(50vh - 74px)">
 			<h1 class="text-h1 mb-4 text-center primary--text pt-12">
 				Niemand muss <br />häusliche Gewalt aushalten.
