@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<!--<v-container class="py-md-8" style="max-width: 700px">
+		<v-container class="py-md-8" style="max-width: 700px">
 			<v-row>
 				<v-col cols="12" sm="6">
 					<div
@@ -71,6 +71,16 @@
 					</p>
 				</v-col>
 			</v-row>
+			<div class="text-center">
+				<v-btn color="secondary mt-8" nuxt exact to="berater">
+					Alle Berater*innen ansehen
+				</v-btn>
+			</div>
+			<div class="text-center">
+				<v-btn color="primary mt-4" nuxt exact to="footer/spenden">
+					Sichere Zuflucht unterstützten
+				</v-btn>
+			</div>
 		</v-container>
 		<v-container class="py-md-8" style="min-height: calc(50vh - 74px)">
 			<h1 class="text-h1 mb-4 text-center primary--text pt-12">
@@ -83,7 +93,7 @@
 				Wir bieten <b>Frauen und ihren Kindern aus Gewaltbeziehungen</b> Hilfe
 				in Form einer persönlichen Online-Beratung an.
 			</p>
-		</v-container> -->
+		</v-container>
 		<v-sheet color="grey lighten-5 py-md-16"
 			><v-container>
 				<v-row
