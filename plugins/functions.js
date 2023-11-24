@@ -131,7 +131,7 @@ export default ({ $axios, redirect, store, $cookies }, inject) => {
 				};
 			} catch (err) {
 				errorhandling(err);
-				return err;
+				throw err;
 			}
 		},
 
