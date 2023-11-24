@@ -415,6 +415,9 @@
 						})
 						.then(() => {
 							window.open(this.meeting.personal_videolink, '_blank');
+						})
+						.catch((err) => {
+							this.error = err;
 						});
 				} else {
 					window.open(this.meeting.personal_videolink, '_blank');
