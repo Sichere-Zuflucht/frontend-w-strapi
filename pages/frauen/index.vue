@@ -6,11 +6,10 @@
 		<div v-if="upcomingMeetings.length != 0 || completedMeetings.length != 0">
 			<v-container v-if="upcomingMeetings.length == 1">
 				<h2 class="text-h4 font-weight-bold primary--text mb-3">
-					Deine Korrespondenz
+					Bitte aktualisiere die Seite, um ggf. Antworten sehen zu können.
 				</h2>
 				<v-btn outlined color="primary" @click="loadMeetings"
-					><v-icon small class="mr-1">mdi-update</v-icon>Nach Updates
-					suchen</v-btn
+					><v-icon small class="mr-1">mdi-update</v-icon>Aktualisieren</v-btn
 				>
 			</v-container>
 			<v-sheet class="mx-auto">
