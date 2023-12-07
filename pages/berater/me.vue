@@ -15,7 +15,7 @@
 				{{ coachData.display_name }}
 			</h1>
 			<h2 class="text-center text-h4 mb-4">
-				{{ coachData.profession_line }}
+				<div v-html="coachData.profession_line"></div>
 			</h2>
 			<div
 				v-if="coachData.topic_areas"
@@ -25,12 +25,10 @@
 					{{ coachData.topic_areas }}
 				</v-chip>
 			</div>
-			<div v-if="coachData.quote" class="text-center">
-				<p>
-					<b>"{{ coachData.citation }}"</b>
-				</p>
+			<div v-if="coachData.citation" class="text-center mb-16">
+				<div v-html="coachData.citation"></div>
 			</div>
-			<div v-if="coachData.professional_background" class="coach-box">
+			<div v-if="coachData.professional_background" class="coach-box mb-8">
 				<label class="mb-0 caption"> Mein beruflicher Hintergrund: </label>
 				<div class="d-flex flex-wrap">
 					<div v-html="coachData.professional_background"></div>

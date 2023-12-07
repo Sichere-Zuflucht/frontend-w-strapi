@@ -26,6 +26,7 @@
 					>
 				</div>
 				<div
+					v-if="!simple"
 					label="header1"
 					type="is-dark"
 					:class="`${
@@ -45,6 +46,7 @@
 					>
 				</div>
 				<div
+					v-if="!simple"
 					label="header2"
 					type="is-dark"
 					:class="`${
@@ -64,6 +66,7 @@
 					>
 				</div>
 				<div
+					v-if="!simple"
 					label="header3"
 					type="is-dark"
 					:class="`${
@@ -129,6 +132,7 @@
 					>
 				</div>
 				<div
+					v-if="!simple"
 					label="bulleted list"
 					type="is-dark"
 					:class="`${editor.isActive('bulletList') ? 'is-active' : ''}`"
@@ -144,6 +148,7 @@
 					>
 				</div>
 				<div
+					v-if="!simple"
 					label="ordered list"
 					type="is-dark"
 					:class="`${editor.isActive('orderedList') ? 'is-active' : ''}`"
@@ -159,6 +164,7 @@
 					>
 				</div>
 				<div
+					v-if="!simple"
 					label="code"
 					type="is-dark"
 					:class="`${editor.isActive('code') ? 'is-active' : ''}`"
@@ -205,7 +211,10 @@
 					>
 				</div>
 			</div>
-			<editor-content class="input-field" :editor="editor" />
+			<editor-content
+				:class="`input-field ${simple ? 'simple' : ''}`"
+				:editor="editor"
+			/>
 		</div>
 	</div>
 </template>
@@ -220,6 +229,10 @@
 		},
 
 		props: {
+			simple: {
+				type: Boolean,
+				default: false,
+			},
 			value: {
 				type: String,
 				default: '',
@@ -311,6 +324,10 @@
 		overflow-y: scroll;
 		border: none !important;
 		outline: none !important;
+	}
+	.editor-wrapper .input-field.simple {
+		max-height: 45px;
+		overflow-y: hidden;
 	}
 	.editor-wrapper .ProseMirror {
 		outline: none !important;

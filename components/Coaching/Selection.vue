@@ -56,13 +56,14 @@
 				<v-stepper-content step="2">
 					<UtilsTiptap
 						v-model="changeProfession"
+						simple
 						label="Beruf:"
 						value="Jobbezeichnung"
 						@filled="(e) => allFilled(e)"
 					/>
-					{{ changeProfession }}
 					<UtilsTiptap
 						v-model="changeCitation"
+						simple
 						label="Persönliches Zitat:"
 						value="Ein Zitat, mit dem Sie Ihre Weltsicht oder Arbeitweise umschreiben."
 						@filled="(e) => allFilled(e)"
