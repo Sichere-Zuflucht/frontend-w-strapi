@@ -1,76 +1,6 @@
 <template>
 	<div>
 		<v-container class="py-md-8" style="max-width: 700px">
-			<v-row>
-				<v-col cols="12" sm="6">
-					<div
-						:class="`d-flex ${
-							$vuetify.breakpoint.smAndUp ? 'justify-end' : 'justify-center'
-						}`"
-						style="position: relative"
-					>
-						<video
-							id="antenne-bayern"
-							:width="$vuetify.breakpoint.smAndUp ? '100%' : '250px'"
-							class="align-right"
-							:controls="videoplay"
-							poster="/antenne-bayern-video-poster.png"
-							data-poster="/antenne-bayern-video-poster.png"
-						>
-							<source
-								src="https://filedn.eu/lp99rBq7eYVubX4DyHGOVvF/SZ-Spot-Antenne-Bayern.mp4"
-								type="video/mp4"
-							/>
-						</video>
-						<div
-							v-if="!videoplay"
-							class="d-flex justify-center align-center"
-							:style="`position: absolute; top: 0%; right: auto; left: auto; bottom: 0%; background-color: rgba(0, 0, 0, 0.3); width: ${
-								$vuetify.breakpoint.smAndUp ? '100%' : '250px'
-							}`"
-						>
-							<v-btn icon large @click="startVideo"
-								><div
-									class="pa-4"
-									style="
-										background-color: white;
-										position: absolute;
-										border-radius: 50%;
-									"
-								></div>
-								<v-icon color="primary" x-large>mdi-play-circle</v-icon></v-btn
-							>
-						</div>
-					</div>
-				</v-col>
-				<v-col
-					cols="12"
-					sm="6"
-					class="d-flex flex-column justify-center align-start"
-				>
-					<v-img
-						src="/antenne-bayern-logo.jpg"
-						max-width="100"
-						max-height="57.8"
-					/>
-					<p class="text-h1 mb-4 primary--text pt-4">
-						DU HÖRST UNS AUF<br />ANTENNE BAYERN
-					</p>
-					<p>
-						Danke Antenne Bayern, dass Ihr uns die Möglichkeit gebt, viele
-						Frauen in eurem Senderadius zu erreichen!
-						<br /><br />
-						Du bist von häuslicher Gewalt betroffen? Dann kannst du dich hier
-						individuell von einer unserer <b>Berater*innen</b> beraten lassen
-						oder dich erst einmal in unserem <b>Magazin</b> umschauen, und dir
-						einen Überblick über deine Situation verschaffen. <br /><br />
-						<b>
-							Toll, dass du diesen Schritt – dir selbst zu helfen – gegangen
-							bist!
-						</b>
-					</p>
-				</v-col>
-			</v-row>
 			<div class="text-center">
 				<v-btn color="secondary mt-8" nuxt exact to="berater">
 					Alle Berater*innen ansehen
@@ -229,6 +159,7 @@
 		data() {
 			return {
 				videoplay: false,
+				test: null,
 			};
 		},
 		methods: {

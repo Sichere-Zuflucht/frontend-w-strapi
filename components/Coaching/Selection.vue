@@ -16,7 +16,7 @@
 					<small>{{ coach.helpSubtitle }}</small>
 				</v-stepper-step>
 				<v-stepper-content step="1">
-					<v-form @submit.prevent="step++">
+					<v-form @submit.prevent="topicSelected()">
 						<v-chip-group v-model="selectedTopic" column>
 							<v-chip
 								v-for="(t, i) in topics"
@@ -54,55 +54,47 @@
 					<small>{{ coach.bioSubtitle }}</small>
 				</v-stepper-step>
 				<v-stepper-content step="2">
-					<v-form v-model="valid.additional" @submit.prevent="saveSteps">
-						<v-text-field
-							v-model="changeProfession"
-							outlined
-							class="pt-2"
-							label="Beruf:"
-							:rules="rules.obligatory"
-							placeholder="Jobbezeichnung"
-						></v-text-field>
-						<v-textarea
-							v-model="changeCitation"
-							outlined
-							label="Persönliches Zitat:"
-							:rules="rules.obligatory"
-							placeholder="Ein Zitat, mit dem Sie Ihre Weltsicht oder Arbeitweise umschreiben."
-							height="100"
-						></v-textarea>
-						<v-textarea
-							v-model="changeProfessionalBackground"
-							outlined
-							label="Beruflicher Hintergrund / Schwerpunkte:"
-							placeholder="z.B. was Sie vorher gemacht haben oder was Sie bewegt"
-							counter="600"
-							:rules="rules.to_long"
-						></v-textarea>
-						<v-textarea
-							v-model="changePersonalBackground"
-							outlined
-							label="Eisbrecher (etwas persönliches über Sie)"
-							placeholder="Schreiben Sie etwas persönliches über sich, das ein Eisbrecher sein könnte. Gern einfach in Form von Stichpunkten. z.B. 
+					<UtilsTiptap
+						v-model="changeProfession"
+						label="Beruf:"
+						value="Jobbezeichnung"
+						@filled="(e) => allFilled(e)"
+					/>
+					{{ changeProfession }}
+					<UtilsTiptap
+						v-model="changeCitation"
+						label="Persönliches Zitat:"
+						value="Ein Zitat, mit dem Sie Ihre Weltsicht oder Arbeitweise umschreiben."
+						@filled="(e) => allFilled(e)"
+					/>
+					<UtilsTiptap
+						v-model="changeProfessionalBackground"
+						label="Beruflicher Hintergrund / Schwerpunkte:"
+						value="z.B. was Sie vorher gemacht haben oder was Sie bewegt"
+						@filled="(e) => allFilled(e)"
+					/>
+					<UtilsTiptap
+						v-model="changePersonalBackground"
+						label="Eisbrecher (etwas persönliches über Sie)"
+						value="<p>Schreiben Sie etwas persönliches über sich, das ein Eisbrecher sein könnte. Gern einfach in Form von Stichpunkten. z.B. <ul><li>Hobbies</li></ul>
 - Hobbies 
 - Interessen 
 - Lebenstationen 
 - Familie 
 
-… was Sie wollen"
-							counter="600"
-							:rules="rules.to_long"
-						></v-textarea>
-						<v-btn
-							color="primary"
-							:disabled="!valid.additional"
-							block
-							type="submit"
-						>
-							<v-icon class="pr-1">mdi-arrow-down</v-icon>
-							weiter
-						</v-btn>
-					</v-form>
+… was Sie wollen</p>"
+						@filled="(e) => allFilled(e)"
+					/>
+					<v-btn
+						color="primary"
+						block
+						type="submit"
+						:disabled="!allfilled"
+						@click="saveSteps()"
+					>
+						<v-icon class="pr-1">mdi-arrow-down</v-icon>
+						weiter
+					</v-btn>
 				</v-stepper-content>
 				<v-stepper-step
 					:complete="step > 3"
@@ -155,6 +147,7 @@
 				cropData: null,
 				isLoading: false,
 				overlay: false,
+				allfilled: false,
 				rules: {
 					to_long: [
 						this.$rules.obligatory,
@@ -180,8 +173,21 @@
 			this.changeProfessionalBackground = user.professional_background;
 			this.changeCitation = user.citation;
 		},
-		//fetchOnServer: false,
 		methods: {
+			topicSelected() {
+				this.allFilled();
+				this.step++;
+			},
+			allFilled() {
+				if (
+					this.changeProfession.length > 9 &&
+					this.changePersonalBackground.length > 9 &&
+					this.changeProfessionalBackground.length > 9 &&
+					this.changeCitation.length > 9
+				)
+					this.allfilled = true;
+				else this.allfilled = false;
+			},
 			removeImage() {
 				this.avatar = [];
 			},

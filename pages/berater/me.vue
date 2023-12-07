@@ -30,20 +30,16 @@
 					<b>"{{ coachData.citation }}"</b>
 				</p>
 			</div>
-			<div v-if="coachData.professional_background">
-				<p class="font-weight-bold mb-0 mt-4 caption">
-					Mein beruflicher Hintergrund:
-				</p>
+			<div v-if="coachData.professional_background" class="coach-box">
+				<label class="mb-0 caption"> Mein beruflicher Hintergrund: </label>
 				<div class="d-flex flex-wrap">
-					{{ coachData.professional_background }}
+					<div v-html="coachData.professional_background"></div>
 				</div>
 			</div>
-			<div v-if="coachData.personal_background">
-				<p class="font-weight-bold mb-0 mt-4 caption">
-					Etwas Persönliches über mich:
-				</p>
+			<div v-if="coachData.personal_background" class="coach-box">
+				<label class="mb-0 caption"> Etwas Persönliches über mich: </label>
 				<div class="d-flex flex-wrap">
-					{{ coachData.personal_background }}
+					<div v-html="coachData.personal_background"></div>
 				</div>
 			</div>
 		</v-container>
@@ -319,3 +315,20 @@
 		},
 	};
 </script>
+
+<style lang="scss" scoped>
+	.coach-box {
+		border: 1px solid lightgrey;
+		border-radius: 5px;
+		margin-bottom: 15px;
+		padding: 15px 10px 12px;
+		position: relative;
+	}
+	.coach-box label {
+		position: absolute;
+		top: -10px;
+		background-color: white;
+		padding: 0 2px;
+		color: grey;
+	}
+</style>
