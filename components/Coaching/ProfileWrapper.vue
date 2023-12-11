@@ -31,9 +31,8 @@
 						{{ pubCoachData.display_name }}
 					</h2>
 					<h3 class="text-h5">
-						{{ pubCoachData.profession_line }}
-					</h3></nuxt-link
-				>
+						<div v-html="pubCoachData.profession_line"></div></h3
+				></nuxt-link>
 			</div>
 			<v-divider class="my-3" />
 			<p class="font-weight-bold mb-1 mt-2 caption">Fachgebiet</p>
