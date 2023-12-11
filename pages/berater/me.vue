@@ -1,15 +1,31 @@
 <template>
 	<div v-if="coachData">
-		<v-sheet class="d-flex justify-center pt-8" style="position: relative"
-			><v-avatar color="primary" size="162">
+		<v-sheet
+			color="primary"
+			style="height: 150px; overflow: hidden; position: relative"
+			><v-img
+				v-if="coachData.avatar_content_url"
+				:lazy-src="`${coachData.avatar_content_url}?${Date.now()}`"
+				:src="`${coachData.avatar_content_url}?${Date.now()}`"
+				style="filter: blur(10px); transform: scale(1.1)"
+				height="150" /><v-sheet
+				color="black"
+				height="150"
+				width="100%"
+				style="position: absolute; opacity: 0.4; top: 0px"
+			></v-sheet
+		></v-sheet>
+		<div
+			class="d-flex justify-center pt-8"
+			style="position: relative; margin-top: -100px"
+		>
+			<v-avatar color="primary" size="162">
 				<v-img
 					v-if="coachData.avatar_content_url"
 					:lazy-src="`${coachData.avatar_content_url}?${Date.now()}`"
 					:src="`${coachData.avatar_content_url}?${Date.now()}`"
-					data-cookiescript="accepted"
-					data-cookiecategory="functionality"
 			/></v-avatar>
-		</v-sheet>
+		</div>
 		<v-container>
 			<h1 class="text-center text-h1 primary--text text-uppercase">
 				{{ coachData.display_name }}
