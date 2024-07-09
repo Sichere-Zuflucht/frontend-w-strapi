@@ -1,5 +1,6 @@
 <template>
-	<UtilsSignupSignin />
+	<p>Aktuell ist keine Registrierung möglich.</p>
+	<!--<UtilsSignupSignin />-->
 </template>
 
 <script>
